@@ -71,6 +71,11 @@
     <span class="nav-icon">⚡</span>
     <span id="nav-flash-text">Flashcards</span>
   </div>
+  <div class="nav-item" onclick="showView('mocktest')">
+    <span class="nav-icon">🏆</span>
+    <span id="nav-mock-text">Mock Tests</span>
+    <span class="nav-badge" id="mock-done-badge">6</span>
+  </div>
 
   <div class="nav-section-label" id="nav-progress-label">PROGRESS</div>
   <div class="nav-item" onclick="showView('progress')">
@@ -87,22 +92,49 @@
 <!-- MAIN -->
 <main id="main">
 
+<!-- WELCOME VIEW -->
+<div class="view active" id="view-welcome" style="max-width:680px">
+  <div class="welcome-logo">
+    <div class="wl-tag" id="wl-tag">ServiceNow Cert · April 2026</div>
+    <h1 class="wl-title">CIS-CSM<br><span id="wl-sub">Study App</span></h1>
+    <p class="wl-tagline" id="wl-tagline">Certified Implementation Specialist · Customer Service Management</p>
+  </div>
+
+  <div class="welcome-disclaimer">
+    <div class="wd-header">
+      <span class="wd-emoji">👋</span>
+      <span class="wd-title" id="wd-title">Hey, quick heads-up!</span>
+    </div>
+    <p class="wd-text" id="wd-text"></p>
+  </div>
+
+  <div class="welcome-features">
+    <div class="wf-item"><span class="wf-icon">📖</span><div><strong id="wf-t1">Theory</strong><span id="wf-d1"> · 5 domains, full explanations, diagrams, bilingual EN/IT</span></div></div>
+    <div class="wf-item"><span class="wf-icon">🎯</span><div><strong id="wf-t2">Exam Quiz</strong><span id="wf-d2"> · 120 questions in 3 blocks of 40, immediate feedback</span></div></div>
+    <div class="wf-item"><span class="wf-icon">⚡</span><div><strong id="wf-t3">Flashcards</strong><span id="wf-d3"> · 30 key concepts, flip & mark what you know</span></div></div>
+    <div class="wf-item"><span class="wf-icon">🏆</span><div><strong id="wf-t4">Mock Tests</strong><span id="wf-d4"> · 6 full exams, 340 questions, optional 90-min timer</span></div></div>
+    <div class="wf-item"><span class="wf-icon">📊</span><div><strong id="wf-t5">Progress</strong><span id="wf-d5"> · Exam readiness score, all stats saved locally</span></div></div>
+  </div>
+
+  <div class="welcome-cta">
+    <button class="btn-primary welcome-enter-btn" onclick="showView('home')" id="wl-enter-btn">
+      → Let's study
+    </button>
+    <div class="wl-snow-link">
+      <span id="wl-snow-pre">The official path is on </span><a href="https://learning.servicenow.com/lxp/en/pages/now-learning-get-certified?id=amap_detail&achievement_id=548ed977dbc27f40de3cdb85ca9619d2" target="_blank" rel="noopener" class="hb-link">ServiceNow Now Learning →</a>
+    </div>
+  </div>
+</div>
+
 <!-- HOME VIEW -->
-<div class="view active" id="view-home">
+<div class="view" id="view-home">
   <div class="view-header">
     <div class="breadcrumb" id="bc-home">HOME</div>
     <h2 id="home-title">CIS-CSM 2026 Study Hub</h2>
     <p id="home-sub">ServiceNow Certified Implementation Specialist · Customer Service Management</p>
   </div>
-  <div class="home-banner" id="home-banner">
-    <div class="hb-icon">📘</div>
-    <div class="hb-body">
-      <div class="hb-title" id="hb-title">About this app</div>
-      <p class="hb-text" id="hb-text">All theory content, quiz questions and flashcards have been compiled from the official ServiceNow documentation and the 2026 CIS-CSM exam blueprint. For deeper study or to enrol in the official courses, visit <a href="https://learning.servicenow.com/lxp/en/pages/now-learning-get-certified?id=amap_detail&achievement_id=548ed977dbc27f40de3cdb85ca9619d2" target="_blank" rel="noopener" class="hb-link" id="hb-link">ServiceNow Now Learning →</a></p>
-    </div>
-  </div>
   <div class="home-hero">
-    <div class="hero-tag">Exam Overview</div>
+    <div class="hero-tag" id="hero-tag">Exam Overview</div>
     <div class="exam-badges">
       <span class="exam-badge" id="badge-q">60 questions</span>
       <span class="exam-badge" id="badge-t">90 minutes</span>
@@ -146,10 +178,12 @@
       <div class="hc-desc" id="hc-d4">Track quiz scores, topics completed, and readiness level.</div>
       <div class="hc-arrow" id="hc-a4">→ View stats</div>
     </div>
-  </div>
-  <div class="card" style="border-left:3px solid var(--amber)">
-    <div class="card-title" id="lp-title">📚 Official Now Learning Path (2026)</div>
-    <p id="lp-body">Required: <strong>CSM Essentials</strong> + <strong>CSM Essentials Simulator</strong> + <strong>Now Create Methodology</strong> + <strong>ServiceNow Administration Fundamentals</strong>. Recommended add-ons: Playbooks &amp; PAD · Knowledge Mgmt for CSM · CSM Best Practices · Workspace &amp; UI Builder · Virtual Agent Fundamentals · Now Assist for CSM · CCaaS Integration · CRM Customer Data/Product Fundamentals.</p>
+    <div class="home-card home-card-mock" onclick="showView('mocktest')">
+      <div class="hc-icon">🏆</div>
+      <div class="hc-title" id="hc-t5">Full Exam Simulations</div>
+      <div class="hc-desc" id="hc-d5">6 full mock tests with 340 real-style questions. Instant explanations.</div>
+      <div class="hc-arrow" id="hc-a5">→ Simulate exam</div>
+    </div>
   </div>
 </div>
 
@@ -189,6 +223,16 @@
   <div id="flashcard-area"></div>
 </div>
 
+<!-- MOCK TEST VIEW -->
+<div class="view" id="view-mocktest">
+  <div class="view-header">
+    <div class="breadcrumb" id="bc-mock">PRACTICE</div>
+    <h2 id="mock-title">Mock Tests</h2>
+    <p id="mock-sub">Full-length exam simulations · 340 questions across 6 tests · Immediate feedback</p>
+  </div>
+  <div id="mock-area"></div>
+</div>
+
 <!-- PROGRESS VIEW -->
 <div class="view" id="view-progress">
   <div class="view-header">
@@ -209,6 +253,9 @@
 <script src="data/theory-data.js"></script>
 <script src="data/quiz-data.js"></script>
 <script src="data/flashcards-data.js"></script>
+<script src="data/mock-data-part1.js"></script>
+<script src="data/mock-data-part2.js"></script>
+<script src="data/mock-data.js"></script>
 
 <!-- CORE -->
 <script src="js/app.js"></script>
@@ -216,5 +263,6 @@
 <script src="js/quiz.js"></script>
 <script src="js/flashcards.js"></script>
 <script src="js/progress.js"></script>
+<script src="js/mocktest.js"></script>
 </body>
 </html>

@@ -43,6 +43,7 @@ function setLang(l) {
     else if (id === 'quiz')       renderQuizSetup();
     else if (id === 'flashcards') renderFlashcards();
     else if (id === 'progress')   renderProgress();
+    else if (id === 'mocktest')   renderMockTests();
   }
 }
 
@@ -70,6 +71,11 @@ function t(key) {
     '120+ exam-style questions in blocks of 40. Full explanations.': { it: '120+ domande da esame in blocchi da 40. Spiegazioni complete.' },
     'Quick concept review — flip cards, mark what you know.': { it: 'Ripasso rapido — gira le card, segna cosa conosci.' },
     'Track quiz scores, topics completed, and readiness level.': { it: 'Traccia punteggi, argomenti completati e livello di preparazione.' },
+    'Mock Tests':           { it: 'Mock Test' },
+    'Full-length exam simulations · 340 questions across 6 tests · Immediate feedback': { it: 'Simulazioni esame complete · 340 domande in 6 test · Feedback immediato' },
+    'Full Exam Simulations': { it: 'Simulazioni Esame Complete' },
+    '6 full mock tests with 340 real-style questions. Instant explanations.': { it: '6 mock test completi con 340 domande reali. Spiegazioni immediate.' },
+    '→ Simulate exam':      { it: '→ Simula l\'esame' },
     '→ Start learning':    { it: '→ Inizia a studiare' },
     '→ Test yourself':     { it: '→ Mettiti alla prova' },
     '→ Quick review':      { it: '→ Ripasso rapido' },
@@ -112,11 +118,13 @@ function applyLang() {
   set('nav-theory-text',    t('Study Domains'));
   set('nav-quiz-text',      t('Exam Quiz'));
   set('nav-flash-text',     t('Flashcards'));
+  set('nav-mock-text',      t('Mock Tests'));
   set('nav-progress-text',  t('My Progress'));
   set('reset-btn',          t('↺ Reset Progress'));
 
-  // Home
+  // Home dashboard
   set('bc-home',            'HOME');
+  set('hero-tag',           l ? 'Exam Overview' : 'Panoramica esame');
   set('home-title',         t('CIS-CSM 2026 Study Hub'));
   set('home-sub',           t('ServiceNow Certified Implementation Specialist · Customer Service Management'));
   set('domain-chart-label', t('Domain Weights'));
@@ -133,29 +141,51 @@ function applyLang() {
   set('hc-d3',              t('Quick concept review — flip cards, mark what you know.'));
   set('hc-t4',              t('My Progress'));
   set('hc-d4',              t('Track quiz scores, topics completed, and readiness level.'));
+  set('hc-t5',              t('Full Exam Simulations'));
+  set('hc-d5',              t('6 full mock tests with 340 real-style questions. Instant explanations.'));
   set('hc-a1',              t('→ Start learning'));
   set('hc-a2',              t('→ Test yourself'));
   set('hc-a3',              t('→ Quick review'));
   set('hc-a4',              t('→ View stats'));
-  set('hb-title',           t('About this app'));
-  setHTML('hb-text',        (l
-    ? 'All theory content, quiz questions and flashcards have been compiled from the official ServiceNow documentation and the 2026 CIS-CSM exam blueprint. For deeper study or to enrol in the official courses, visit '
-    : 'Tutti i contenuti teorici, le domande del quiz e le flashcard sono stati raccolti dalla documentazione ufficiale ServiceNow e dal blueprint 2026 dell\'esame CIS-CSM. Per approfondire o iscriversi ai corsi ufficiali, visita ')
-    + '<a href="https://learning.servicenow.com/lxp/en/pages/now-learning-get-certified?id=amap_detail&achievement_id=548ed977dbc27f40de3cdb85ca9619d2" target="_blank" rel="noopener" class="hb-link">' + (l ? 'ServiceNow Now Learning →' : 'ServiceNow Now Learning →') + '</a>');
-  set('lp-title',           t('📚 Official Now Learning Path (2026)'));
-  setHTML('lp-body',        l
-    ? 'Required: <strong>CSM Essentials</strong> + <strong>CSM Essentials Simulator</strong> + <strong>Now Create Methodology</strong> + <strong>ServiceNow Administration Fundamentals</strong>. Recommended add-ons: Playbooks &amp; PAD · Knowledge Mgmt for CSM · CSM Best Practices · Workspace &amp; UI Builder · Virtual Agent Fundamentals · Now Assist for CSM · CCaaS Integration · CRM Customer Data/Product Fundamentals.'
-    : 'Obbligatori: <strong>CSM Essentials</strong> + <strong>CSM Essentials Simulator</strong> + <strong>Now Create Methodology</strong> + <strong>ServiceNow Administration Fundamentals</strong>. Consigliati: Playbooks &amp; PAD · Knowledge Mgmt for CSM · CSM Best Practices · Workspace &amp; UI Builder · Virtual Agent Fundamentals · Now Assist for CSM · Integrazione CCaaS · CRM Customer Data/Product Fundamentals.');
+  set('hc-a5',              t('→ Simulate exam'));
+  // Welcome page
+  set('wl-tag',        'ServiceNow Cert · April 2026');
+  set('wl-sub',        l ? 'Study App' : 'App di Studio');
+  set('wl-tagline',    l ? 'Certified Implementation Specialist · Customer Service Management'
+                         : 'Certified Implementation Specialist · Customer Service Management');
+  set('wd-title',      l ? 'Hey, quick heads-up!' : 'Ehi, una cosa importante!');
+  setHTML('wd-text',   l
+    ? `We tried, but ServiceNow still wants you to sit the actual exam. No shortcuts here. 😅<br><br>
+       What this app <em>will</em> do is help you walk in prepared: theory, quizzes, flashcards and 6 full mock tests — all with explanations. Think of it as a very dedicated study buddy: always available, never judges you for getting the same question wrong four times, and doesn't eat your snacks.<br><br>
+       For the official courses and labs that are part of the certification path, head over to <strong>ServiceNow Now Learning</strong> — the link is right below. Use both. 👇`
+    : `Abbiamo provato, ma ServiceNow vuole ancora che tu faccia il vero esame. Nessuna scorciatoia. 😅<br><br>
+       Quello che questa app <em>farà</em> è aiutarti ad arrivare preparato: teoria, quiz, flashcard e 6 mock test completi — tutti con spiegazioni. Considerala il tuo compagno di studio ideale: sempre disponibile, non ti giudica se sbagli la stessa domanda quattro volte, e non mangia le tue merendine.<br><br>
+       Per i corsi e i lab ufficiali che fanno parte del percorso di certificazione, vai su <strong>ServiceNow Now Learning</strong> — il link è qui sotto. Usali entrambi. 👇`);
+  set('wf-t1', l ? 'Theory'            : 'Teoria');
+  set('wf-d1', l ? ' · 5 domains, full explanations, diagrams, bilingual EN/IT'    : ' · 5 domini, spiegazioni complete, diagrammi, bilingue EN/IT');
+  set('wf-t2', l ? 'Exam Quiz'         : 'Quiz d\'esame');
+  set('wf-d2', l ? ' · 120 questions in 3 blocks of 40, immediate feedback'        : ' · 120 domande in 3 blocchi da 40, feedback immediato');
+  set('wf-t3', l ? 'Flashcards'        : 'Flashcard');
+  set('wf-d3', l ? ' · 30 key concepts, flip & mark what you know'                 : ' · 30 concetti chiave, gira e segna cosa conosci');
+  set('wf-t4', l ? 'Mock Tests'        : 'Mock Test');
+  set('wf-d4', l ? ' · 6 full exams, 340 questions, optional 90-min timer'         : ' · 6 esami completi, 340 domande, timer 90 min opzionale');
+  set('wf-t5', l ? 'Progress'          : 'Progressi');
+  set('wf-d5', l ? ' · Exam readiness score, all stats saved locally'              : ' · Punteggio di prontezza esame, statistiche salvate localmente');
+  set('wl-enter-btn',  l ? '→ Let\'s study' : '→ Iniziamo a studiare');
+  set('wl-snow-pre',   l ? 'The official path is on ' : 'Il percorso ufficiale è su ');
 
   // Module static headers
   set('bc-quiz',            t('PRACTICE'));
   set('bc-flash',           t('PRACTICE'));
+  set('bc-mock',            t('PRACTICE'));
   set('bc-prog',            t('PROGRESS'));
   set('quiz-title',         t('Exam Quiz'));
   set('quiz-sub',           t('Blocks of 40 questions · English · Answer and read explanation immediately'));
   set('qs-select-label',    t('Select a question block:'));
   set('fc-title',           t('Flashcards'));
   set('fc-sub',             t('Click card to reveal answer · Mark what you know'));
+  set('mock-title',         t('Mock Tests'));
+  set('mock-sub',           t('Full-length exam simulations · 340 questions across 6 tests · Immediate feedback'));
   set('prog-title',         t('My Progress'));
   set('prog-sub',           t('Your personal study stats — saved locally in your browser'));
 
@@ -173,6 +203,7 @@ function showView(name) {
   if (name === 'quiz')       renderQuizSetup();
   if (name === 'flashcards') renderFlashcards();
   if (name === 'progress')   renderProgress();
+  if (name === 'mocktest')   renderMockTests();
 }
 
 function toggleTheoryNav() {
@@ -227,6 +258,7 @@ function showToast(msg, type = 'info') {
 // ── Init
 function init() {
   fcState.deck = shuffleArray([...FLASHCARDS.keys()]);
+  applyLang();
   updateSidebarProgress();
   renderQuizSetup();
 }

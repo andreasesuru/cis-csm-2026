@@ -4,6 +4,18 @@ Interactive study app for the ServiceNow **Certified Implementation Specialist �
 
 > Updated: **April 2026** — aligned with the official Now Learning path and 2026 exam blueprint.
 
+---
+
+## 👋 Hey, quick heads-up!
+
+We tried, but ServiceNow still wants you to sit the actual exam. No shortcuts here. 😅
+
+What this app *will* do is help you walk in prepared: theory, quizzes, flashcards and 6 full mock tests — all with explanations. Think of it as a very dedicated study buddy: always available, never judges you for getting the same question wrong four times, and doesn't eat your snacks.
+
+For the official courses and labs that are part of the certification path, head over to **[ServiceNow Now Learning](https://learning.servicenow.com)** — use both. 👇
+
+---
+
 ## 🚀 Quick Start
 
 Just open `index.html` in any browser — no server, no build step, no dependencies.
@@ -16,11 +28,33 @@ To share with the team, enable **GitHub Pages** (`Settings → Pages → main br
 
 | Section | Description |
 |---------|-------------|
-| 📖 **Theory** | 5 domains with full explanations, diagrams, tables, callout boxes, knowledge checks |
+| 📖 **Theory** | 5 domains with full explanations, diagrams, tables, callout boxes, and inline knowledge checks |
 | 🎯 **Exam Quiz** | 120 questions across 3 blocks of 40 — immediate feedback + explanation per answer |
 | ⚡ **Flashcards** | 30 key concepts — flip, mark what you know, filter by domain |
-| 📊 **Progress** | Per-user stats in **localStorage** — private, no server needed |
-| 🌐 **Bilingual** | Switch between EN/IT at any time — all UI and content update instantly |
+| 🏆 **Mock Tests** | 6 full-length exam simulations, 340 questions total — optional 90-min countdown, full review after each test |
+| 📊 **Progress** | Per-user stats in **localStorage** — theory, quiz, flashcards and mock test scores all tracked |
+| 🌐 **Bilingual** | Switch between EN/IT at any time — all UI and content updates instantly |
+
+---
+
+## 🏆 Mock Tests
+
+Six full exam simulations based on real-style CIS-CSM questions:
+
+| Test | Questions | Source |
+|------|-----------|--------|
+| Mock Test 1 | 60 | Exam-style practice set |
+| Mock Test 2 | 60 | Exam-style practice set |
+| Mock Test 3 | 60 | Exam-style practice set |
+| Mock Test 4 | 60 | Exam-style practice set |
+| Mock Test 5 | 50 | Exam-style practice set |
+| Mock Test 6 | 50 | Exam-style practice set |
+
+Each question has a **verified correct answer + explanation**. Multi-select questions are fully supported. You can choose to run each test with or without the **official 90-minute countdown** — if the timer runs out, the test auto-submits just like the real thing.
+
+Results feed directly into the **Exam Readiness** score on the Progress page.
+
+---
 
 ## 📚 Exam Coverage
 
@@ -32,6 +66,8 @@ To share with the team, enable **GitHub Pages** (`Settings → Pages → main br
 | D4 — Workspace, Portals & Analytics | 15% | CSP, Service Catalog, Performance Analytics, KPIs, Reporting |
 | D5 — Knowledge Management & Best Practices | 10% | KCS, article lifecycle, Now Create Methodology, 2026 AI features |
 
+---
+
 ## 🔧 Exam Details
 
 | Detail | Info |
@@ -42,6 +78,8 @@ To share with the team, enable **GitHub Pages** (`Settings → Pages → main br
 | Cost | $315 |
 | Prerequisite | CSA certification |
 | Delivery | Kryterion (online proctored or test center) |
+
+---
 
 ## 📋 Official Learning Path (Now Learning)
 
@@ -58,42 +96,53 @@ To share with the team, enable **GitHub Pages** (`Settings → Pages → main br
 - CSM Best Practices · Workspaces and UI Builder · Virtual Agent Fundamentals
 - Now Assist for CSM · CCaaS Integration
 
+---
+
 ## 🏗️ Project Structure
 
 ```
 cis-csm-2026/
-├── index.html              ← entry point — all views inlined, no server required
+├── index.html                    ← entry point — all views inlined, no server required
 ├── assets/
-│   └── style.css           ← all styles and design tokens
+│   └── style.css                 ← all styles and design tokens
 ├── data/
-│   ├── theory-data.js      ← 5 domains, bilingual content
-│   ├── quiz-data.js        ← 120 questions + 3 blocks
-│   └── flashcards-data.js  ← 30 flashcards
+│   ├── theory-data.js            ← 5 domains, bilingual content
+│   ├── quiz-data.js              ← 120 questions + 3 blocks
+│   ├── flashcards-data.js        ← 30 flashcards
+│   ├── mock-data-part1.js        ← mock tests 1–3 (180 questions + answers + explanations)
+│   ├── mock-data-part2.js        ← mock tests 4–6 (160 questions + answers + explanations)
+│   └── mock-data.js              ← merges part1 + part2 into MOCK_TESTS global
 ├── js/
-│   ├── app.js              ← state, language, navigation, progress tracking
-│   ├── theory.js           ← theory view logic
-│   ├── quiz.js             ← quiz logic
-│   ├── flashcards.js       ← flashcard logic
-│   └── progress.js         ← progress dashboard logic
-└── modules/                ← HTML view templates (reference)
-    ├── theory.html
-    ├── quiz.html
-    ├── flashcards.html
-    └── progress.html
+│   ├── app.js                    ← state, language, navigation, progress tracking
+│   ├── theory.js                 ← theory view logic
+│   ├── quiz.js                   ← quiz logic
+│   ├── flashcards.js             ← flashcard logic
+│   ├── progress.js               ← progress dashboard logic
+│   └── mocktest.js               ← mock test engine (timer, multi-select, review)
+└── modules/                      ← HTML view templates (reference)
 ```
+
+---
 
 ## 📊 Progress Tracking
 
-Progress is saved automatically in the browser's `localStorage` under the key `cis_csm_progress_v2`. Each user on their own device has a fully private, independent progress record. The **Exam Readiness Estimate** blends:
+All progress is saved automatically in `localStorage` — private per device, no server needed.
 
-- 40% theory topics completed
-- 40% quiz accuracy
-- 20% flashcard knowledge
+Two separate stores:
+- `cis_csm_progress_v2` — theory topics, quiz results, flashcard marks, global answer counts
+- `cis_csm_mock_progress_v1` — mock test results (score, date, timed/untimed) per test
+
+The **Exam Readiness Estimate** adapts based on what you've done:
+
+| Condition | Formula |
+|-----------|---------|
+| No mock tests attempted yet | Theory 40% · Quiz 40% · Flashcards 20% |
+| At least one mock test done | Theory 30% · Quiz 20% · Flashcards 15% · **Mock Tests 35%** |
+
+Mock tests carry the most weight once you start them — they're the closest thing to the real exam in this app.
 
 ---
 
-*Built for the April 2026 CIS-CSM exam cycle. Based on official ServiceNow Now Learning path documentation.*
+*Built for the April 2026 CIS-CSM exam cycle. Based on official ServiceNow Now Learning path documentation and real-style exam questions.*
 
----
-
-Built by **Andrea Sesuru**
+Built by **Andrea Sesuru** 🚀
