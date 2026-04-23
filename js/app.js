@@ -83,6 +83,7 @@ function t(key) {
     '$315 fee':            { it: 'Costo $315' },
     'Prereq: CSA':         { it: 'Prerequisito: CSA' },
     'ServiceNow Certified Implementation Specialist · Customer Service Management': { it: 'ServiceNow Certified Implementation Specialist · Customer Service Management' },
+    'About this app':      { it: 'Informazioni sull\'app' },
     'All':                 { it: 'Tutti' },
     'No flashcards for this filter.': { it: 'Nessuna flashcard per questo filtro.' },
     '% complete':          { it: '% completato' },
@@ -136,6 +137,11 @@ function applyLang() {
   set('hc-a2',              t('→ Test yourself'));
   set('hc-a3',              t('→ Quick review'));
   set('hc-a4',              t('→ View stats'));
+  set('hb-title',           t('About this app'));
+  setHTML('hb-text',        (l
+    ? 'All theory content, quiz questions and flashcards have been compiled from the official ServiceNow documentation and the 2026 CIS-CSM exam blueprint. For deeper study or to enrol in the official courses, visit '
+    : 'Tutti i contenuti teorici, le domande del quiz e le flashcard sono stati raccolti dalla documentazione ufficiale ServiceNow e dal blueprint 2026 dell\'esame CIS-CSM. Per approfondire o iscriversi ai corsi ufficiali, visita ')
+    + '<a href="https://learning.servicenow.com/lxp/en/pages/now-learning-get-certified?id=amap_detail&achievement_id=548ed977dbc27f40de3cdb85ca9619d2" target="_blank" rel="noopener" class="hb-link">' + (l ? 'ServiceNow Now Learning →' : 'ServiceNow Now Learning →') + '</a>');
   set('lp-title',           t('📚 Official Now Learning Path (2026)'));
   setHTML('lp-body',        l
     ? 'Required: <strong>CSM Essentials</strong> + <strong>CSM Essentials Simulator</strong> + <strong>Now Create Methodology</strong> + <strong>ServiceNow Administration Fundamentals</strong>. Recommended add-ons: Playbooks &amp; PAD · Knowledge Mgmt for CSM · CSM Best Practices · Workspace &amp; UI Builder · Virtual Agent Fundamentals · Now Assist for CSM · CCaaS Integration · CRM Customer Data/Product Fundamentals.'
