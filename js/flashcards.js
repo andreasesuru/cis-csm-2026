@@ -1,0 +1,104 @@
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderFlashcards() {
+  const allLabel = lang === 'en' ? 'All' : 'Tutti';
+  const domains = ['All', ...new Set(FLASHCARDS.map(f => f.domain))];
+  const selHtml = '<div class="block-selector">' + domains.map(d =>
+    `<button class="block-btn ${fcState.domainFilter===d?'active':''}" onclick="setFcDomain('${d}')">${d === 'All' ? allLabel : d}</button>`
+  ).join('') + '</div>';
+  document.getElementById('fc-domain-select').innerHTML = selHtml;
+  renderFcCard();
+}
+
+function setFcDomain(domain) {
+  fcState.domainFilter = domain;
+  const deck = domain === 'All'
+    ? [...FLASHCARDS.keys()]
+    : FLASHCARDS.map((f,i) => f.domain===domain ? i : -1).filter(i => i>=0);
+  fcState.deck = shuffleArray(deck);
+  fcState.idx = 0; fcState.flipped = false; fcState.knew = 0; fcState.missed = 0;
+  renderFlashcards();
+}
+
+function initFcDeck() {
+  if (fcState.deck.length === 0) {
+    fcState.deck = shuffleArray([...FLASHCARDS.keys()]);
+    fcState.idx = 0; fcState.flipped = false; fcState.knew = 0; fcState.missed = 0;
+  }
+}
+
+function renderFcCard() {
+  initFcDeck();
+  const area = document.getElementById('flashcard-area');
+  const deck = fcState.deck;
+
+  if (deck.length === 0) {
+    area.innerHTML = `<div class="card"><p>${lang==='en'?'No flashcards for this filter.':'Nessuna flashcard per questo filtro.'}</p></div>`;
+    return;
+  }
+
+  if (fcState.idx >= deck.length) {
+    area.innerHTML = `<div class="card" style="text-align:center;padding:32px">
+      <div style="font-size:32px;margin-bottom:12px">🏁</div>
+      <div style="font-size:18px;font-weight:600;margin-bottom:8px">${lang==='en'?'Deck complete!':'Mazzo completato!'}</div>
+      <div style="font-size:14px;color:var(--text2);margin-bottom:20px">${lang==='en'?'Knew':'Sapevo'}: <span style="color:var(--green)">${fcState.knew}</span> · ${lang==='en'?'Missed':'Mancati'}: <span style="color:var(--red)">${fcState.missed}</span></div>
+      <button class="btn-primary" onclick="restartDeck()">${lang==='en'?'↺ Restart deck':'↺ Ricomincia'}</button>
+    </div>`;
+    return;
+  }
+
+  const card = FLASHCARDS[deck[fcState.idx]];
+  const isFlipped = fcState.flipped;
+
+  area.innerHTML = `
+    <div class="flashcard-container">
+      <div class="flashcard ${isFlipped ? 'flipped' : ''}" onclick="flipCard()">
+        <div class="flashcard-front">
+          <div class="fc-label">${card.domain} · Q ${fcState.idx+1}/${deck.length}</div>
+          <div class="fc-q">${card.q}</div>
+          ${!isFlipped ? `<div style="font-size:11px;color:var(--text3);margin-top:16px">${lang==='en'?'Click to reveal answer':'Clicca per la risposta'}</div>` : ''}
+        </div>
+        <div class="flashcard-back">
+          <div class="fc-a-label">${lang==='en'?'Answer':'Risposta'}</div>
+          <div class="fc-a">${card.a}</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-controls">
+      <button class="fc-result-btn missed" ${!isFlipped?'disabled':''} onclick="fcResult(false)">✗ ${lang==='en'?'Missed':'Non sapevo'}</button>
+      <button class="fc-result-btn knew"   ${!isFlipped?'disabled':''} onclick="fcResult(true)">✓ ${lang==='en'?'Knew it':'Sapevo'}</button>
+    </div>
+    <div class="fc-progress">${fcState.idx+1} / ${deck.length} · ${lang==='en'?'Knew':'Sapevo'}: ${fcState.knew} · ${lang==='en'?'Missed':'Mancati'}: ${fcState.missed}</div>
+  `;
+}
+
+function flipCard() { fcState.flipped = !fcState.flipped; renderFcCard(); }
+
+function fcResult(knew) {
+  if (knew) fcState.knew++;
+  else fcState.missed++;
+  fcState.idx++;
+  fcState.flipped = false;
+  const cardIdx = fcState.deck[fcState.idx-1];
+  if (knew) {
+    if (!progress.fcKnew.includes(cardIdx)) progress.fcKnew.push(cardIdx);
+    progress.fcMissed = progress.fcMissed.filter(i => i !== cardIdx);
+  } else {
+    if (!progress.fcMissed.includes(cardIdx)) progress.fcMissed.push(cardIdx);
+  }
+  saveProgress();
+  renderFcCard();
+}
+
+function restartDeck() {
+  fcState.deck = shuffleArray(fcState.deck);
+  fcState.idx = 0; fcState.flipped = false; fcState.knew = 0; fcState.missed = 0;
+  renderFcCard();
+}
