@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIS-CSM 2026 — Study App</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #21262d;
+  --bg4: #30363d;
+  --border: #30363d;
+  --border2: #484f58;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --text3: #6e7681;
+  --blue: #58a6ff;
+  --blue-dim: #1f3b5c;
+  --green: #3fb950;
+  --green-dim: #1a3a22;
+  --red: #f85149;
+  --red-dim: #3b1c1c;
+  --amber: #d29922;
+  --amber-dim: #3b2e0e;
+  --purple: #a5a0f0;
+  --purple-dim: #2d2a5e;
+  --teal: #39c5cf;
+  --teal-dim: #0d3035;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --font: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --font-display: 'Playfair Display', serif;
+  --transition: 0.18s ease;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
+a { color: var(--blue); text-decoration: none; }
+button { font-family: var(--font); cursor: pointer; border: none; outline: none; }
+input, select { font-family: var(--font); }
+
+/* ── LAYOUT ── */
+#app { display: flex; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+#sidebar {
+  width: 260px; min-width: 260px; background: var(--bg2); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 100;
+}
+.sidebar-logo {
+  padding: 20px 20px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo .logo-tag {
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3);
+  font-family: var(--font-mono); margin-bottom: 4px;
+}
+.sidebar-logo h1 {
+  font-family: var(--font-display); font-size: 22px; color: var(--blue);
+  line-height: 1.1;
+}
+.sidebar-logo .logo-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+/* lang toggle */
+.lang-toggle {
+  margin: 12px 16px;
+  display: flex; background: var(--bg3); border-radius: var(--radius); padding: 3px; border: 1px solid var(--border);
+}
+.lang-btn {
+  flex: 1; padding: 5px; border-radius: 6px; font-size: 12px; font-weight: 500;
+  background: transparent; color: var(--text2); transition: var(--transition);
+}
+.lang-btn.active { background: var(--blue); color: #fff; }
+
+/* progress mini */
+.sidebar-progress {
+  margin: 0 16px 12px;
+  background: var(--bg3); border-radius: var(--radius); padding: 10px 12px; border: 1px solid var(--border);
+}
+.sidebar-progress .sp-label { font-size: 11px; color: var(--text3); margin-bottom: 6px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; }
+.progress-bar-bg { background: var(--bg4); border-radius: 99px; height: 5px; margin-bottom: 4px; }
+.progress-bar-fill { height: 5px; border-radius: 99px; background: linear-gradient(90deg, var(--blue), var(--teal)); transition: width 0.5s ease; }
+.sp-stats { display: flex; justify-content: space-between; font-size: 11px; color: var(--text2); }
+
+/* nav sections */
+.nav-section-label {
+  padding: 10px 16px 4px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--text3); font-family: var(--font-mono);
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px; padding: 8px 16px;
+  cursor: pointer; border-radius: 6px; margin: 1px 8px;
+  transition: var(--transition); font-size: 13px; color: var(--text2); font-weight: 400;
+  border: 1px solid transparent;
+}
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { background: var(--blue-dim); color: var(--blue); border-color: var(--blue); font-weight: 500; }
+.nav-item .nav-icon { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
+.nav-item .nav-badge {
+  margin-left: auto; font-size: 10px; padding: 1px 6px; border-radius: 99px;
+  background: var(--bg4); color: var(--text3); font-family: var(--font-mono);
+}
+.nav-item.active .nav-badge { background: var(--blue); color: #fff; }
+
+.nav-sub-item {
+  display: flex; align-items: center; gap: 8px; padding: 6px 16px 6px 36px;
+  cursor: pointer; border-radius: 6px; margin: 1px 8px;
+  transition: var(--transition); font-size: 12px; color: var(--text3);
+}
+.nav-sub-item:hover { background: var(--bg3); color: var(--text2); }
+.nav-sub-item.active { color: var(--blue); }
+.nav-sub-item .check { width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--border2); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 9px; }
+.nav-sub-item.done .check { background: var(--green); border-color: var(--green); color: #fff; }
+
+.sidebar-bottom { margin-top: auto; padding: 12px 16px; border-top: 1px solid var(--border); }
+.reset-btn {
+  width: 100%; padding: 7px; background: transparent; border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text3); font-size: 12px;
+  transition: var(--transition);
+}
+.reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* ── MAIN CONTENT ── */
+#main { flex: 1; overflow-y: auto; }
+.view { display: none; padding: 32px 40px; max-width: 900px; margin: 0 auto; }
+.view.active { display: block; }
+
+/* ── HEADER BAR ── */
+.view-header { margin-bottom: 28px; }
+.view-header .breadcrumb { font-size: 11px; color: var(--text3); font-family: var(--font-mono); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.08em; }
+.view-header h2 { font-size: 28px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.view-header p { color: var(--text2); font-size: 14px; }
+
+/* ── CARDS ── */
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 16px; }
+.card-title { font-weight: 600; font-size: 14px; margin-bottom: 8px; }
+.card p { color: var(--text2); font-size: 14px; line-height: 1.7; }
+.card ul { padding-left: 18px; color: var(--text2); font-size: 14px; line-height: 1.8; }
+.card li { margin-bottom: 2px; }
+
+/* ── THEORY VIEW ── */
+.theory-section-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  padding: 16px 20px; background: var(--bg2); border-radius: var(--radius-lg);
+  border: 1px solid var(--border); border-left: 3px solid var(--blue);
+}
+.theory-section-header .tsh-pct {
+  font-size: 28px; font-weight: 600; color: var(--blue); font-family: var(--font-mono); min-width: 60px;
+}
+.theory-section-header .tsh-info h3 { font-size: 18px; font-weight: 600; color: var(--text); }
+.theory-section-header .tsh-info p { font-size: 12px; color: var(--text2); }
+
+.concept-block {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  margin-bottom: 12px; overflow: hidden;
+}
+.concept-block-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; cursor: pointer; transition: var(--transition);
+  user-select: none;
+}
+.concept-block-header:hover { background: var(--bg3); }
+.concept-block-header h4 { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 10px; }
+.concept-block-header .arrow { color: var(--text3); transition: transform var(--transition); font-size: 12px; }
+.concept-block.open .arrow { transform: rotate(90deg); }
+.concept-block-body { display: none; padding: 0 18px 16px; border-top: 1px solid var(--border); }
+.concept-block.open .concept-block-body { display: block; }
+.concept-block-body p { color: var(--text2); font-size: 14px; line-height: 1.75; margin-top: 12px; margin-bottom: 8px; }
+.concept-block-body ul, .concept-block-body ol { padding-left: 20px; color: var(--text2); font-size: 14px; line-height: 1.8; }
+.concept-block-body li { margin-bottom: 4px; }
+.concept-block-body strong { color: var(--text); font-weight: 500; }
+.concept-block-body code { background: var(--bg3); color: var(--amber); padding: 1px 5px; border-radius: 4px; font-family: var(--font-mono); font-size: 12px; }
+
+/* callout boxes */
+.callout {
+  display: flex; gap: 12px; padding: 12px 14px; border-radius: var(--radius);
+  margin: 10px 0; font-size: 13px; line-height: 1.6;
+}
+.callout.info { background: var(--blue-dim); border-left: 3px solid var(--blue); color: #a0c8ff; }
+.callout.warn { background: var(--amber-dim); border-left: 3px solid var(--amber); color: #f5d87a; }
+.callout.success { background: var(--green-dim); border-left: 3px solid var(--green); color: #7ee89a; }
+.callout.danger { background: var(--red-dim); border-left: 3px solid var(--red); color: #ffaaaa; }
+.callout .callout-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+/* diagram */
+.diagram-wrap { margin: 14px 0; overflow-x: auto; }
+.diagram-wrap svg { max-width: 100%; height: auto; }
+
+/* table */
+.info-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+.info-table th { background: var(--bg3); color: var(--blue); font-weight: 500; padding: 8px 12px; text-align: left; border: 1px solid var(--border); font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+.info-table td { padding: 8px 12px; border: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+.info-table tr:nth-child(even) td { background: var(--bg3); }
+
+/* mark done btn */
+.mark-done-btn {
+  margin-top: 16px; padding: 8px 16px; background: transparent;
+  border: 1px solid var(--green); border-radius: var(--radius); color: var(--green); font-size: 13px;
+  transition: var(--transition);
+}
+.mark-done-btn:hover, .mark-done-btn.done { background: var(--green); color: #fff; }
+
+/* ── QUIZ VIEW ── */
+.quiz-nav-bar {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
+  padding: 12px 16px; background: var(--bg2); border-radius: var(--radius-lg); border: 1px solid var(--border);
+}
+.quiz-nav-bar .qnb-info { font-size: 13px; color: var(--text2); }
+.quiz-nav-bar .qnb-info span { color: var(--text); font-weight: 500; }
+.quiz-score-badge { margin-left: auto; font-family: var(--font-mono); font-size: 13px; color: var(--blue); background: var(--blue-dim); padding: 4px 10px; border-radius: 99px; }
+
+.question-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 22px 24px; margin-bottom: 12px;
+}
+.question-card .q-meta { font-size: 11px; color: var(--text3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.question-card .q-meta .domain-tag { background: var(--bg3); border: 1px solid var(--border); border-radius: 99px; padding: 2px 8px; }
+.question-card .q-text { font-size: 15px; font-weight: 500; color: var(--text); line-height: 1.6; margin-bottom: 16px; }
+
+.options { display: flex; flex-direction: column; gap: 8px; }
+.option-btn {
+  display: flex; align-items: flex-start; gap: 10px; padding: 11px 14px;
+  background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius);
+  text-align: left; font-size: 14px; color: var(--text); transition: var(--transition);
+  cursor: pointer; line-height: 1.5;
+}
+.option-btn:hover:not(:disabled) { border-color: var(--blue); color: var(--text); background: var(--blue-dim); }
+.option-btn .opt-letter {
+  width: 22px; height: 22px; border-radius: 5px; flex-shrink: 0; margin-top: 1px;
+  background: var(--bg4); border: 1px solid var(--border2); font-size: 11px; font-family: var(--font-mono);
+  display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--text2);
+}
+.option-btn.correct { border-color: var(--green); background: var(--green-dim); color: #7ee89a; }
+.option-btn.correct .opt-letter { background: var(--green); border-color: var(--green); color: #fff; }
+.option-btn.wrong { border-color: var(--red); background: var(--red-dim); color: #ffaaaa; }
+.option-btn.wrong .opt-letter { background: var(--red); border-color: var(--red); color: #fff; }
+.option-btn:disabled { cursor: default; }
+
+.explanation {
+  margin-top: 14px; padding: 12px 14px; border-radius: var(--radius);
+  background: var(--bg3); border-left: 3px solid var(--blue); font-size: 13px;
+  line-height: 1.65; color: var(--text2); display: none;
+}
+.explanation.show { display: block; }
+.explanation strong { color: var(--text); font-weight: 500; }
+
+/* quiz controls */
+.quiz-controls { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+.btn-primary { padding: 9px 18px; background: var(--blue); border-radius: var(--radius); color: #fff; font-size: 13px; font-weight: 500; transition: var(--transition); }
+.btn-primary:hover { background: #79baff; }
+.btn-secondary { padding: 9px 18px; background: transparent; border: 1px solid var(--border2); border-radius: var(--radius); color: var(--text2); font-size: 13px; transition: var(--transition); }
+.btn-secondary:hover { border-color: var(--text); color: var(--text); }
+.btn-danger { padding: 9px 18px; background: transparent; border: 1px solid var(--red); border-radius: var(--radius); color: var(--red); font-size: 13px; transition: var(--transition); }
+.btn-danger:hover { background: var(--red-dim); }
+
+/* progress dots */
+.q-progress-dots { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px; }
+.q-dot {
+  width: 22px; height: 22px; border-radius: 5px; background: var(--bg3);
+  border: 1px solid var(--border); cursor: pointer; font-size: 10px; font-family: var(--font-mono);
+  display: flex; align-items: center; justify-content: center; color: var(--text3);
+  transition: var(--transition);
+}
+.q-dot:hover { border-color: var(--blue); }
+.q-dot.current { border-color: var(--blue); color: var(--blue); background: var(--blue-dim); }
+.q-dot.answered-correct { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+.q-dot.answered-wrong { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+
+/* block selector */
+.block-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.block-btn {
+  padding: 7px 14px; border-radius: var(--radius); border: 1px solid var(--border);
+  background: var(--bg2); color: var(--text2); font-size: 13px; transition: var(--transition);
+  display: flex; align-items: center; gap: 6px;
+}
+.block-btn:hover { border-color: var(--blue); color: var(--blue); }
+.block-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+.block-btn .b-check { width: 14px; height: 14px; border-radius: 3px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 9px; }
+
+/* ── FLASHCARD VIEW ── */
+.flashcard-container { perspective: 1000px; margin: 20px auto; max-width: 600px; }
+.flashcard {
+  width: 100%; height: 240px; position: relative; cursor: pointer;
+  transform-style: preserve-3d; transition: transform 0.5s ease;
+}
+.flashcard.flipped { transform: rotateY(180deg); }
+.flashcard-front, .flashcard-back {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px; text-align: center;
+}
+.flashcard-back { transform: rotateY(180deg); border-color: var(--green); background: var(--bg2); }
+.flashcard-front .fc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text3); font-family: var(--font-mono); margin-bottom: 12px; }
+.flashcard-front .fc-q { font-size: 16px; font-weight: 500; color: var(--text); line-height: 1.5; }
+.flashcard-back .fc-a-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--green); font-family: var(--font-mono); margin-bottom: 12px; }
+.flashcard-back .fc-a { font-size: 14px; color: var(--text); line-height: 1.6; }
+.fc-controls { display: flex; gap: 10px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+.fc-result-btn {
+  padding: 8px 18px; border-radius: var(--radius); font-size: 13px; transition: var(--transition);
+}
+.fc-result-btn.knew { background: var(--green-dim); border: 1px solid var(--green); color: var(--green); }
+.fc-result-btn.knew:hover { background: var(--green); color: #fff; }
+.fc-result-btn.missed { background: var(--red-dim); border: 1px solid var(--red); color: var(--red); }
+.fc-result-btn.missed:hover { background: var(--red); color: #fff; }
+.fc-result-btn:disabled { opacity: 0.4; cursor: default; }
+.fc-progress { font-family: var(--font-mono); font-size: 12px; color: var(--text3); text-align: center; margin-top: 10px; }
+
+/* ── DASHBOARD VIEW ── */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.stat-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 16px 18px;
+}
+.stat-card .sc-label { font-size: 11px; color: var(--text3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.stat-card .sc-value { font-size: 28px; font-weight: 600; color: var(--text); font-family: var(--font-mono); }
+.stat-card .sc-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+.domain-progress-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 12px; }
+.dpc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.dpc-header h4 { font-size: 14px; font-weight: 500; }
+.dpc-header .dpc-pct { font-family: var(--font-mono); font-size: 13px; color: var(--blue); }
+.dpc-bar-bg { background: var(--bg4); border-radius: 99px; height: 6px; }
+.dpc-bar-fill { height: 6px; border-radius: 99px; background: linear-gradient(90deg, var(--blue), var(--teal)); transition: width 0.8s ease; }
+.dpc-sub { font-size: 12px; color: var(--text3); margin-top: 5px; }
+
+/* ── HOME VIEW ── */
+.home-hero {
+  text-align: center; padding: 32px 0 24px;
+}
+.home-hero .hero-tag { font-size: 11px; font-family: var(--font-mono); color: var(--blue); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 10px; }
+.home-hero h2 { font-family: var(--font-display); font-size: 42px; color: var(--text); line-height: 1.1; margin-bottom: 10px; }
+.home-hero p { color: var(--text2); font-size: 15px; max-width: 540px; margin: 0 auto 24px; }
+.exam-badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
+.exam-badge {
+  padding: 6px 14px; border-radius: 99px; font-size: 12px; font-family: var(--font-mono);
+  border: 1px solid var(--border); background: var(--bg3); color: var(--text2);
+}
+.home-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 28px; }
+.home-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 20px; cursor: pointer; transition: var(--transition);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.home-card:hover { border-color: var(--blue); transform: translateY(-2px); }
+.home-card .hc-icon { font-size: 24px; }
+.home-card .hc-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.home-card .hc-desc { font-size: 13px; color: var(--text2); line-height: 1.5; }
+.home-card .hc-arrow { font-size: 12px; color: var(--text3); margin-top: auto; }
+
+/* domain weight chart */
+.weight-chart { display: flex; gap: 4px; height: 60px; align-items: flex-end; margin: 16px 0 4px; }
+.wc-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.wc-bar { width: 100%; border-radius: 4px 4px 0 0; background: var(--blue); opacity: 0.7; min-height: 8px; }
+.wc-label { font-size: 9px; color: var(--text3); font-family: var(--font-mono); text-align: center; }
+.wc-pct { font-size: 10px; color: var(--blue); font-family: var(--font-mono); font-weight: 600; }
+
+/* notification toast */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; background: var(--bg3);
+  border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px 18px;
+  font-size: 13px; color: var(--text); box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  transform: translateY(80px); opacity: 0; transition: all 0.3s ease; z-index: 999;
+  max-width: 300px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { border-left: 3px solid var(--green); }
+.toast.info { border-left: 3px solid var(--blue); }
+
+/* quiz result screen */
+.result-screen { text-align: center; padding: 32px 20px; }
+.result-screen .rs-score { font-size: 72px; font-weight: 600; font-family: var(--font-mono); margin-bottom: 8px; }
+.result-screen .rs-label { font-size: 18px; font-weight: 500; color: var(--text2); margin-bottom: 24px; }
+.result-screen .rs-pass { color: var(--green); }
+.result-screen .rs-fail { color: var(--red); }
+.result-breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 20px 0; text-align: left; }
+.rb-item { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; }
+.rb-domain { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+.rb-score { font-size: 18px; font-weight: 600; font-family: var(--font-mono); }
+
+/* tag pill */
+.tag { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-family: var(--font-mono); }
+.tag.blue { background: var(--blue-dim); color: var(--blue); }
+.tag.green { background: var(--green-dim); color: var(--green); }
+.tag.amber { background: var(--amber-dim); color: var(--amber); }
+.tag.red { background: var(--red-dim); color: var(--red); }
+.tag.purple { background: var(--purple-dim); color: var(--purple); }
+.tag.teal { background: var(--teal-dim); color: var(--teal); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  #sidebar { width: 200px; min-width: 200px; }
+  .view { padding: 20px 16px; }
+  .home-hero h2 { font-size: 30px; }
+}
+@media (max-width: 580px) {
+  #app { flex-direction: column; }
+  #sidebar { width: 100%; height: auto; position: relative; flex-direction: row; flex-wrap: wrap; min-height: unset; }
+  #sidebar .sidebar-logo { border-bottom: none; border-right: 1px solid var(--border); }
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border2); }
+
+/* SVG diagrams inline */
+.diagram svg { background: var(--bg3); border-radius: var(--radius); padding: 8px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ══ SIDEBAR ══ -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-tag">ServiceNow Cert</div>
+    <h1>CIS-CSM</h1>
+    <div class="logo-sub">2026 Study App · Updated Apr 2026</div>
+  </div>
+
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">🇬🇧 EN</button>
+    <button class="lang-btn" id="btn-it" onclick="setLang('it')">🇮🇹 IT</button>
+  </div>
+
+  <div class="sidebar-progress">
+    <div class="sp-label" id="sp-label">Overall Progress</div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="overall-bar" style="width:0%"></div></div>
+    <div class="sp-stats">
+      <span id="sp-topics">0/20 topics</span>
+      <span id="sp-pct">0%</span>
+    </div>
+  </div>
+
+  <div class="nav-section-label" id="nav-home-label">HOME</div>
+  <div class="nav-item active" onclick="showView('home')">
+    <span class="nav-icon">🏠</span>
+    <span id="nav-home-text">Dashboard</span>
+  </div>
+
+  <div class="nav-section-label" id="nav-theory-label">THEORY</div>
+  <div class="nav-item" onclick="toggleTheoryNav()">
+    <span class="nav-icon">📖</span>
+    <span id="nav-theory-text">Study Domains</span>
+    <span class="nav-badge" id="theory-done-badge">0/5</span>
+  </div>
+  <div id="theory-subnav" style="display:none">
+    <div class="nav-sub-item" onclick="showTheory(0)" id="subnav-0">
+      <span class="check" id="check-0"></span>D1 · Data Model
+    </div>
+    <div class="nav-sub-item" onclick="showTheory(1)" id="subnav-1">
+      <span class="check" id="check-1"></span>D2 · Configuration
+    </div>
+    <div class="nav-sub-item" onclick="showTheory(2)" id="subnav-2">
+      <span class="check" id="check-2"></span>D3 · Case Mgmt
+    </div>
+    <div class="nav-sub-item" onclick="showTheory(3)" id="subnav-3">
+      <span class="check" id="check-3"></span>D4 · Workspace & Analytics
+    </div>
+    <div class="nav-sub-item" onclick="showTheory(4)" id="subnav-4">
+      <span class="check" id="check-4"></span>D5 · Knowledge & BP
+    </div>
+  </div>
+
+  <div class="nav-section-label" id="nav-practice-label">PRACTICE</div>
+  <div class="nav-item" onclick="showView('quiz')">
+    <span class="nav-icon">🎯</span>
+    <span id="nav-quiz-text">Exam Quiz</span>
+  </div>
+  <div class="nav-item" onclick="showView('flashcards')">
+    <span class="nav-icon">⚡</span>
+    <span id="nav-flash-text">Flashcards</span>
+  </div>
+
+  <div class="nav-section-label" id="nav-progress-label">PROGRESS</div>
+  <div class="nav-item" onclick="showView('progress')">
+    <span class="nav-icon">📊</span>
+    <span id="nav-progress-text">My Progress</span>
+  </div>
+
+  <div class="sidebar-bottom">
+    <button class="reset-btn" onclick="confirmReset()" id="reset-btn">↺ Reset Progress</button>
+  </div>
+</nav>
+
+<!-- ══ MAIN ══ -->
+<main id="main">
+
+<!-- HOME VIEW -->
+<div class="view active" id="view-home">
+  <div class="view-header">
+    <div class="breadcrumb" id="bc-home">HOME</div>
+    <h2 id="home-title">CIS-CSM 2026 Study Hub</h2>
+    <p id="home-sub">ServiceNow Certified Implementation Specialist · Customer Service Management</p>
+  </div>
+  <div class="home-hero">
+    <div class="hero-tag">Exam Overview</div>
+    <div class="exam-badges">
+      <span class="exam-badge" id="badge-q">60 questions</span>
+      <span class="exam-badge" id="badge-t">90 minutes</span>
+      <span class="exam-badge" id="badge-p">~70% to pass</span>
+      <span class="exam-badge" id="badge-c">$315 fee</span>
+      <span class="exam-badge" id="badge-pre">Prereq: CSA</span>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:16px">
+      <div style="font-size:12px;color:var(--text3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px" id="domain-chart-label">Domain Weights</div>
+      <div class="weight-chart">
+        <div class="wc-bar-wrap"><div class="wc-bar" style="height:60%;background:var(--blue)"></div><div class="wc-pct">25%</div><div class="wc-label">Data Model</div></div>
+        <div class="wc-bar-wrap"><div class="wc-bar" style="height:100%;background:var(--teal)"></div><div class="wc-pct">30%</div><div class="wc-label">Config</div></div>
+        <div class="wc-bar-wrap"><div class="wc-bar" style="height:67%;background:var(--purple)"></div><div class="wc-pct">20%</div><div class="wc-label">Case Mgmt</div></div>
+        <div class="wc-bar-wrap"><div class="wc-bar" style="height:50%;background:var(--amber)"></div><div class="wc-pct">15%</div><div class="wc-label">WS & Analytics</div></div>
+        <div class="wc-bar-wrap"><div class="wc-bar" style="height:33%;background:var(--red)"></div><div class="wc-pct">10%</div><div class="wc-label">Knowledge</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="home-cards">
+    <div class="home-card" onclick="showView('theory')">
+      <div class="hc-icon">📖</div>
+      <div class="hc-title" id="hc-t1">Study Theory</div>
+      <div class="hc-desc" id="hc-d1">5 domains, full explanations with diagrams. Switch EN/IT.</div>
+      <div class="hc-arrow">→ Start learning</div>
+    </div>
+    <div class="home-card" onclick="showView('quiz')">
+      <div class="hc-icon">🎯</div>
+      <div class="hc-title" id="hc-t2">Take a Quiz</div>
+      <div class="hc-desc" id="hc-d2">120+ exam-style questions in blocks of 40. Full explanations.</div>
+      <div class="hc-arrow">→ Test yourself</div>
+    </div>
+    <div class="home-card" onclick="showView('flashcards')">
+      <div class="hc-icon">⚡</div>
+      <div class="hc-title" id="hc-t3">Flashcards</div>
+      <div class="hc-desc" id="hc-d3">Quick concept review — flip cards, mark what you know.</div>
+      <div class="hc-arrow">→ Quick review</div>
+    </div>
+    <div class="home-card" onclick="showView('progress')">
+      <div class="hc-icon">📊</div>
+      <div class="hc-title" id="hc-t4">My Progress</div>
+      <div class="hc-desc" id="hc-d4">Track quiz scores, topics completed, and readiness level.</div>
+      <div class="hc-arrow">→ View stats</div>
+    </div>
+  </div>
+  <div class="card" style="border-left:3px solid var(--amber)">
+    <div class="card-title" id="lp-title">📚 Official Now Learning Path (2026)</div>
+    <p id="lp-body">Required: <strong>CSM Essentials</strong> + <strong>CSM Essentials Simulator</strong> + <strong>Now Create Methodology</strong> + <strong>ServiceNow Administration Fundamentals</strong>. Recommended add-ons: Playbooks & PAD · Knowledge Mgmt for CSM · CSM Best Practices · Workspace & UI Builder · Virtual Agent Fundamentals · Now Assist for CSM · CCaaS Integration · CRM Customer Data/Product Fundamentals.</p>
+  </div>
+</div>
+
+<!-- THEORY VIEW -->
+<div class="view" id="view-theory">
+  <div class="view-header">
+    <div class="breadcrumb" id="bc-theory">THEORY</div>
+    <h2 id="theory-title">Study Domains</h2>
+    <p id="theory-sub">Select a domain from the sidebar to begin.</p>
+  </div>
+  <div id="theory-content"></div>
+</div>
+
+<!-- QUIZ VIEW -->
+<div class="view" id="view-quiz">
+  <div class="view-header">
+    <div class="breadcrumb">PRACTICE</div>
+    <h2 id="quiz-title">Exam Quiz</h2>
+    <p id="quiz-sub">Blocks of 40 questions · English · Answer and read explanation immediately</p>
+  </div>
+  <div id="quiz-setup">
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-title" id="qs-select-label">Select a question block:</div>
+      <div class="block-selector" id="block-selector"></div>
+    </div>
+    <div id="quiz-area"></div>
+  </div>
+  <div id="quiz-result" style="display:none"></div>
+</div>
+
+<!-- FLASHCARDS VIEW -->
+<div class="view" id="view-flashcards">
+  <div class="view-header">
+    <div class="breadcrumb">PRACTICE</div>
+    <h2 id="fc-title">Flashcards</h2>
+    <p id="fc-sub">Click card to reveal answer · Mark what you know</p>
+  </div>
+  <div id="fc-domain-select" style="margin-bottom:16px"></div>
+  <div id="flashcard-area"></div>
+</div>
+
+<!-- PROGRESS VIEW -->
+<div class="view" id="view-progress">
+  <div class="view-header">
+    <div class="breadcrumb" id="bc-prog">PROGRESS</div>
+    <h2 id="prog-title">My Progress</h2>
+    <p id="prog-sub">Your personal study stats — saved locally in your browser</p>
+  </div>
+  <div id="progress-content"></div>
+</div>
+
+</main>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+// DATA — THEORY CONTENT (EN + IT)
+// ════════════════════════════════════════════════════════════
+const THEORY = [
+  {
+    id: 0,
+    pct: "25%",
+    color: "#58a6ff",
+    title: { en: "Domain 1: CSM Foundational Data Model", it: "Dominio 1: Data Model Fondamentale CSM" },
+    subtitle: { en: "Accounts, Contacts, Consumers, Entitlements, Install Base", it: "Account, Contatti, Consumer, Entitlement, Install Base" },
+    topics: [
+      {
+        title: { en: "B2B vs B2C Business Models", it: "Modelli B2B vs B2C" },
+        tag: "blue",
+        body: {
+          en: `<p>ServiceNow CSM supports two primary business models. Understanding which to use is one of the most-tested concepts on the exam.</p>
+          <div class='callout info'><span class='callout-icon'>ℹ️</span><div><strong>B2B (Business-to-Business):</strong> Your customers are companies. Uses <strong>Account</strong> (the company) and <strong>Contact</strong> (the person at that company). Every Case is linked to an Account and optionally a Contact.</div></div>
+          <div class='callout success'><span class='callout-icon'>✅</span><div><strong>B2C (Business-to-Consumer):</strong> Your customers are individual end-users. Uses <strong>Consumer</strong> — a standalone entity with NO parent Account. Typical in telecoms, utilities, retail.</div></div>
+          <div class='callout warn'><span class='callout-icon'>⚠️</span><div><strong>Exam Trap:</strong> Contact belongs to an Account (B2B). Consumer is standalone (B2C). Never mix them up. The system property <code>glide.cs.enable.b2b</code> controls which model is active.</div></div>
+          <div class='diagram-wrap'>
+            <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px">
+              <rect x="10" y="10" width="240" height="160" rx="8" fill="#1f3b5c" stroke="#58a6ff" stroke-width="1"/>
+              <text x="130" y="32" text-anchor="middle" fill="#58a6ff" font-family="monospace" font-size="11" font-weight="600">B2B MODEL</text>
+              <rect x="30" y="45" width="90" height="36" rx="6" fill="#21262d" stroke="#58a6ff" stroke-width="1"/>
+              <text x="75" y="67" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="sans-serif">Account</text>
+              <rect x="140" y="45" width="90" height="36" rx="6" fill="#21262d" stroke="#58a6ff" stroke-width="1"/>
+              <text x="185" y="67" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="sans-serif">Contact</text>
+              <line x1="120" y1="63" x2="140" y2="63" stroke="#58a6ff" stroke-width="1" stroke-dasharray="4,2"/>
+              <text x="130" y="78" text-anchor="middle" fill="#8b949e" font-size="9">has many</text>
+              <rect x="80" y="108" width="90" height="36" rx="6" fill="#0f6e56" stroke="#3fb950" stroke-width="1"/>
+              <text x="125" y="130" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="sans-serif">Case</text>
+              <line x1="75" y1="81" x2="100" y2="108" stroke="#8b949e" stroke-width="1"/>
+              <line x1="185" y1="81" x2="155" y2="108" stroke="#8b949e" stroke-width="1"/>
+
+              <rect x="310" y="10" width="240" height="160" rx="8" fill="#1a3a22" stroke="#3fb950" stroke-width="1"/>
+              <text x="430" y="32" text-anchor="middle" fill="#3fb950" font-family="monospace" font-size="11" font-weight="600">B2C MODEL</text>
+              <rect x="375" y="45" width="90" height="36" rx="6" fill="#21262d" stroke="#3fb950" stroke-width="1"/>
+              <text x="420" y="67" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="sans-serif">Consumer</text>
+              <text x="420" y="95" text-anchor="middle" fill="#8b949e" font-size="10">(standalone)</text>
+              <rect x="375" y="108" width="90" height="36" rx="6" fill="#0f6e56" stroke="#3fb950" stroke-width="1"/>
+              <text x="420" y="130" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="sans-serif">Case</text>
+              <line x1="420" y1="81" x2="420" y2="108" stroke="#3fb950" stroke-width="1"/>
+            </svg>
+          </div>`,
+          it: `<p>ServiceNow CSM supporta due modelli di business principali. Capire quale usare è uno dei concetti più testati all'esame.</p>
+          <div class='callout info'><span class='callout-icon'>ℹ️</span><div><strong>B2B (Business-to-Business):</strong> I tuoi clienti sono aziende. Si usano <strong>Account</strong> (l'azienda) e <strong>Contact</strong> (la persona in quell'azienda). Ogni Case è collegato a un Account e opzionalmente a un Contact.</div></div>
+          <div class='callout success'><span class='callout-icon'>✅</span><div><strong>B2C (Business-to-Consumer):</strong> I tuoi clienti sono utenti finali privati. Si usa il <strong>Consumer</strong> — un'entità standalone SENZA Account padre. Tipico in telecomunicazioni, utilities, retail.</div></div>
+          <div class='callout warn'><span class='callout-icon'>⚠️</span><div><strong>Trappola d'esame:</strong> Contact appartiene a un Account (B2B). Consumer è standalone (B2C). Non confonderli mai. La proprietà <code>glide.cs.enable.b2b</code> controlla quale modello è attivo.</div></div>`
+        }
+      },
+      {
+        title: { en: "Account & Contact Structure", it: "Struttura Account e Contact" },
+        tag: "blue",
+        body: {
+          en: `<p>The <strong>Account</strong> represents the customer company. The <strong>Contact</strong> is a person at that company who interacts with your support team.</p>
+          <table class='info-table'><thead><tr><th>Entity</th><th>Table</th><th>Parent</th><th>Used For</th></tr></thead><tbody>
+          <tr><td>Account</td><td>customer_account</td><td>None (top level)</td><td>Company record, contracts, hierarchy</td></tr>
+          <tr><td>Contact</td><td>customer_contact</td><td>Account (required)</td><td>Individual person at the company</td></tr>
+          <tr><td>Consumer</td><td>customer_service_consumer</td><td>None (standalone)</td><td>End-user in B2C model</td></tr>
+          </tbody></table>
+          <div class='callout info'><span class='callout-icon'>💡</span><div>Account hierarchy is supported — a parent Account can have child Accounts (e.g. a global company with regional subsidiaries). Cases can be associated at any level of the hierarchy.</div></div>`,
+          it: `<p>L'<strong>Account</strong> rappresenta l'azienda cliente. Il <strong>Contact</strong> è una persona in quell'azienda che interagisce con il tuo team di supporto.</p>
+          <table class='info-table'><thead><tr><th>Entità</th><th>Tabella</th><th>Padre</th><th>Uso</th></tr></thead><tbody>
+          <tr><td>Account</td><td>customer_account</td><td>Nessuno (top level)</td><td>Record azienda, contratti, gerarchia</td></tr>
+          <tr><td>Contact</td><td>customer_contact</td><td>Account (obbligatorio)</td><td>Persona fisica nell'azienda</td></tr>
+          <tr><td>Consumer</td><td>customer_service_consumer</td><td>Nessuno (standalone)</td><td>Utente finale nel modello B2C</td></tr>
+          </tbody></table>
+          <div class='callout info'><span class='callout-icon'>💡</span><div>La gerarchia di Account è supportata — un Account padre può avere Account figli (es. un'azienda globale con filiali regionali). I Case possono essere associati a qualsiasi livello della gerarchia.</div></div>`
+        }
+      },
+      {
+        title: { en: "Products, Install Base & Assets", it: "Prodotti, Install Base e Asset" },
+        tag: "teal",
+        body: {
+          en: `<p>The <strong>Install Base</strong> tracks products actually deployed or activated for a specific customer. This is critical for linking cases to specific hardware or software.</p>
+          <ul><li><strong>Product Model</strong>: Definition of a product (version, category, SKU).</li><li><strong>Install Base Item</strong>: A specific instance of a product active for a customer account.</li><li><strong>Asset</strong>: Can be linked to Install Base Items for asset lifecycle management.</li></ul>
+          <div class='callout success'><span class='callout-icon'>✅</span><div>When a customer opens a Case, they can link it to a specific Install Base Item — so agents immediately see which product version is affected.</div></div>
+          <div class='callout warn'><span class='callout-icon'>⚠️</span><div>Install Base is a CSM-specific concept. Do not confuse with CMDB Configuration Items — they are separate, though integrations exist.</div></div>`,
+          it: `<p>L'<strong>Install Base</strong> traccia i prodotti effettivamente installati/attivati per un cliente specifico. È fondamentale per collegare i case a hardware o software specifici.</p>
+          <ul><li><strong>Product Model</strong>: Definizione di un prodotto (versione, categoria, SKU).</li><li><strong>Install Base Item</strong>: Un'istanza specifica di un prodotto attivo per un account cliente.</li><li><strong>Asset</strong>: Può essere collegato agli Install Base Item per la gestione del ciclo di vita degli asset.</li></ul>
+          <div class='callout success'><span class='callout-icon'>✅</span><div>Quando un cliente apre un Case, può collegarlo a un Install Base Item specifico — così gli agenti vedono subito quale versione del prodotto è coinvolta.</div></div>`
+        }
+      },
+      {
+        title: { en: "Contracts & Entitlements", it: "Contratti ed Entitlement" },
+        tag: "amber",
+        body: {
+          en: `<p>Entitlements define a customer's <em>right</em> to receive support. They are more nuanced than ITSM SLAs and are a heavily tested topic.</p>
+          <table class='info-table'><thead><tr><th>Type</th><th>Description</th><th>Example</th></tr></thead><tbody>
+          <tr><td>Product Entitlement</td><td>Right tied to purchasing a specific product</td><td>Buying Enterprise License gives 24/7 support</td></tr>
+          <tr><td>Service Entitlement</td><td>Right to a specific service level</td><td>Gold Support SLA = 4hr response</td></tr>
+          <tr><td>Allocated Entitlement</td><td>Limited by NUMBER of cases</td><td>Up to 50 cases per quarter</td></tr>
+          <tr><td>Time-Based Entitlement</td><td>Limited by TIME period</td><td>20 support hours per month</td></tr>
+          </tbody></table>
+          <div class='callout info'><span class='callout-icon'>ℹ️</span><div>Entitlement Verification runs automatically when a Case is created — the system checks if the Account/Contact has a valid entitlement. A warning is shown if not, but agents can still proceed.</div></div>
+          <div class='callout warn'><span class='callout-icon'>⚠️</span><div>Exam Tip: "Which type limits the number of cases?" → Allocated. "Which is time-restricted?" → Time-Based. Know both differences cold.</div></div>`,
+          it: `<p>Gli Entitlement definiscono il <em>diritto</em> di un cliente a ricevere supporto. Sono più complessi degli SLA ITSM e sono un argomento molto testato.</p>
+          <table class='info-table'><thead><tr><th>Tipo</th><th>Descrizione</th><th>Esempio</th></tr></thead><tbody>
+          <tr><td>Product Entitlement</td><td>Diritto legato all'acquisto di un prodotto</td><td>Enterprise License → supporto 24/7</td></tr>
+          <tr><td>Service Entitlement</td><td>Diritto a un livello di servizio specifico</td><td>Gold Support SLA = risposta in 4 ore</td></tr>
+          <tr><td>Allocated Entitlement</td><td>Limitato dal NUMERO di case</td><td>Max 50 case per trimestre</td></tr>
+          <tr><td>Time-Based Entitlement</td><td>Limitato dal PERIODO di tempo</td><td>20 ore di supporto al mese</td></tr>
+          </tbody></table>`
+        }
+      }
+    ]
+  },
+  {
+    id: 1,
+    pct: "30%",
+    color: "#39c5cf",
+    title: { en: "Domain 2: CSM Configuration", it: "Dominio 2: Configurazione CSM" },
+    subtitle: { en: "Setup, Routing, Case Types, Workspace, Playbooks, CSM-ITSM", it: "Configurazione, Routing, Tipi Case, Workspace, Playbook, CSM-ITSM" },
+    topics: [
+      {
+        title: { en: "Enabling & Configuring CSM", it: "Abilitazione e Configurazione CSM" },
+        tag: "teal",
+        body: {
+          en: `<p>CSM must be activated on a ServiceNow instance. Key system properties control behavior:</p>
+          <ul><li><strong>CSM Properties</strong> (Customer Service > Administration > Properties): Central configuration for all CSM behaviors.</li><li><strong>Channels</strong>: Enable/disable email, portal, chat, phone.</li><li><strong>B2B vs B2C</strong>: <code>glide.cs.enable.b2b</code> property.</li><li><strong>Workspace settings</strong>: Configure which panels, tabs, and related lists appear for agents.</li></ul>
+          <div class='callout info'><span class='callout-icon'>💡</span><div>The Now Create Methodology (Agile) is the recommended implementation approach — the official learning path requires completing the "Get Started with Now Create Methodology" course before taking the exam.</div></div>`,
+          it: `<p>CSM deve essere attivato su un'istanza ServiceNow. Le proprietà di sistema chiave controllano il comportamento:</p>
+          <ul><li><strong>CSM Properties</strong> (Customer Service > Administration > Properties): Configurazione centrale per tutti i comportamenti CSM.</li><li><strong>Channels</strong>: Abilitazione/disabilitazione email, portale, chat, telefono.</li><li><strong>B2B vs B2C</strong>: Proprietà <code>glide.cs.enable.b2b</code>.</li><li><strong>Workspace settings</strong>: Configura quali pannelli, tab e related list appaiono per gli agenti.</li></ul>`
+        }
+      },
+      {
+        title: { en: "Assignment Rules & AWA (Advanced Work Assignment)", it: "Regole di Assegnazione e AWA" },
+        tag: "teal",
+        body: {
+          en: `<p>CSM uses multiple layers for routing cases to the right agent:</p>
+          <table class='info-table'><thead><tr><th>Method</th><th>How It Works</th><th>Best For</th></tr></thead><tbody>
+          <tr><td>Assignment Rules</td><td>Condition-based rules assign case to group/user</td><td>Simple routing by category, account, priority</td></tr>
+          <tr><td>AWA (Advanced Work Assignment)</td><td>Capacity-aware automatic assignment to available agents</td><td>High-volume contact centers</td></tr>
+          <tr><td>Skills-based Routing</td><td>Match case requirements to agent skill set</td><td>Specialized technical support teams</td></tr>
+          <tr><td>Queue Management</td><td>Unassigned cases wait in queues by channel/category</td><td>Overflow and workload balancing</td></tr>
+          </tbody></table>
+          <div class='callout warn'><span class='callout-icon'>⚠️</span><div>AWA assignment rule order matters — more specific rules should have a lower order number (higher priority). The first matching rule wins.</div></div>
+          <div class='diagram-wrap'>
+            <svg viewBox="0 0 540 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:540px">
+              <rect x="10" y="40" width="80" height="40" rx="6" fill="#21262d" stroke="#39c5cf" stroke-width="1.5"/>
+              <text x="50" y="64" text-anchor="middle" fill="#e6edf3" font-size="11">New Case</text>
+              <polygon points="105,60 115,54 115,66" fill="#8b949e"/>
+              <rect x="120" y="35" width="100" height="50" rx="6" fill="#21262d" stroke="#d29922" stroke-width="1.5"/>
+              <text x="170" y="58" text-anchor="middle" fill="#f5d87a" font-size="11">Assignment</text>
+              <text x="170" y="72" text-anchor="middle" fill="#f5d87a" font-size="11">Rules</text>
+              <polygon points="235,60 245,54 245,66" fill="#8b949e"/>
+              <rect x="250" y="35" width="90" height="50" rx="6" fill="#21262d" stroke="#39c5cf" stroke-width="1.5"/>
+              <text x="295" y="58" text-anchor="middle" fill="#39c5cf" font-size="11">AWA</text>
+              <text x="295" y="72" text-anchor="middle" fill="#39c5cf" font-size="11">Engine</text>
+              <polygon points="355,60 365,54 365,66" fill="#8b949e"/>
+              <rect x="370" y="35" width="90" height="50" rx="6" fill="#1a3a22" stroke="#3fb950" stroke-width="1.5"/>
+              <text x="415" y="58" text-anchor="middle" fill="#7ee89a" font-size="11">Agent</text>
+              <text x="415" y="72" text-anchor="middle" fill="#7ee89a" font-size="11">Assigned</text>
+              <text x="170" y="20" text-anchor="middle" fill="#8b949e" font-size="9">Condition-based</text>
+              <text x="295" y="20" text-anchor="middle" fill="#8b949e" font-size="9">Capacity + Skills</text>
+            </svg>
+          </div>`,
+          it: `<p>CSM usa più livelli per instradare i case all'agente giusto:</p>
+          <table class='info-table'><thead><tr><th>Metodo</th><th>Come Funziona</th><th>Ideale Per</th></tr></thead><tbody>
+          <tr><td>Assignment Rules</td><td>Regole basate su condizioni assegnano il case a gruppo/utente</td><td>Routing semplice per categoria, account, priorità</td></tr>
+          <tr><td>AWA (Advanced Work Assignment)</td><td>Assegnazione automatica agli agenti disponibili con gestione capacità</td><td>Contact center ad alto volume</td></tr>
+          <tr><td>Skills-based Routing</td><td>Abbinamento requisiti case con skill set dell'agente</td><td>Team di supporto tecnico specializzato</td></tr>
+          <tr><td>Queue Management</td><td>Case non assegnati in code per canale/categoria</td><td>Bilanciamento del carico di lavoro</td></tr>
+          </tbody></table>`
+        }
+      },
+      {
+        title: { en: "Case Types & Service Definitions", it: "Tipi di Case e Service Definition" },
+        tag: "teal",
+        body: {
+          en: `<p>Case Types categorize cases and define their behavior:</p>
+          <ul><li>Each Case Type defines: the form layout, workflow, applicable SLAs, mandatory fields, and default assignment group.</li><li><strong>Service Definition</strong>: Links a service offering to entitlement rules and case types. It's the bridge between what the customer bought and how support is delivered.</li><li>Multiple Case Types can be associated with one Service Definition.</li></ul>
+          <div class='callout info'><span class='callout-icon'>💡</span><div>Service Definitions are configured under Customer Service > Service Definitions. When a customer opens a case, the service definition auto-populates entitlement fields.</div></div>`,
+          it: `<p>I Case Type categorizzano i case e definiscono il loro comportamento:</p>
+          <ul><li>Ogni Case Type definisce: layout del form, workflow, SLA applicabili, campi obbligatori e gruppo di assegnazione predefinito.</li><li><strong>Service Definition</strong>: Collega un'offerta di servizio alle regole di entitlement e ai tipi di case. È il ponte tra ciò che il cliente ha acquistato e come viene erogato il supporto.</li><li>Più Case Type possono essere associati a una Service Definition.</li></ul>`
+        }
+      },
+      {
+        title: { en: "Agent Workspace (Configurable Workspace)", it: "Agent Workspace (Configurable Workspace)" },
+        tag: "teal",
+        body: {
+          en: `<p>The Agent Workspace is the primary interface for CSM agents in 2026. The exam focuses on <em>configuration</em>, not just usage:</p>
+          <ul><li><strong>Configurable Workspace</strong>: Layouts, lists, and forms are customized via UI Builder.</li><li><strong>Contextual Side Panels</strong>: Panels showing Account, Contact, or Asset info for the open case.</li><li><strong>Workspace Views</strong>: Configure columns, filters, and sorting in the case list.</li><li><strong>Ribbon/Toolbar</strong>: Quick access to Knowledge, Timeline, Related Cases.</li><li><strong>Special Handling Notes</strong>: Customer-specific instructions displayed automatically.</li></ul>
+          <div class='callout warn'><span class='callout-icon'>⚠️</span><div>2026 Exam Focus: Know the Configurable Workspace approach. Don't just study the classic CSM UI — make sure you understand workspace views, list customization, and form layouts via UI Builder.</div></div>`,
+          it: `<p>L'Agent Workspace è l'interfaccia principale per gli agenti CSM nel 2026. L'esame si concentra sulla <em>configurazione</em>, non solo sull'utilizzo:</p>
+          <ul><li><strong>Configurable Workspace</strong>: Layout, liste e form personalizzati tramite UI Builder.</li><li><strong>Contextual Side Panels</strong>: Pannelli con info Account, Contact o Asset per il case aperto.</li><li><strong>Workspace Views</strong>: Configura colonne, filtri e ordinamenti nella lista case.</li><li><strong>Ribbon/Toolbar</strong>: Accesso rapido a Knowledge, Timeline, Case correlati.</li><li><strong>Special Handling Notes</strong>: Istruzioni specifiche per cliente visualizzate automaticamente.</li></ul>`
+        }
+      },
+      {
+        title: { en: "Playbooks (Process Automation Designer)", it: "Playbook (Process Automation Designer)" },
+        tag: "purple",
+        body: {
+          en: `<p>Playbooks guide agents through standardized resolution steps:</p>
+          <ul><li>Created using <strong>Process Automation Designer (PAD)</strong> — not Workflow Editor or Flow Designer.</li><li><strong>Lanes</strong>: Define who executes each step (agent, supervisor, system).</li><li><strong>Phases</strong>: Group related steps into logical phases (e.g., Diagnose → Escalate → Resolve).</li><li>Playbooks auto-activate on case state change, or can be manually triggered.</li><li>Each step can include: activities, approvals, notifications, integration calls.</li></ul>
+          <div class='callout warn'><span class='callout-icon'>⚠️</span><div>Common mistake: leaving a lane unassigned — the step will have no owner and the playbook gets stuck. Always assign lanes.</div></div>`,
+          it: `<p>I Playbook guidano gli agenti attraverso passi di risoluzione standardizzati:</p>
+          <ul><li>Creati con <strong>Process Automation Designer (PAD)</strong> — non Workflow Editor o Flow Designer.</li><li><strong>Lane</strong>: Definiscono chi esegue ogni passo (agente, supervisor, sistema).</li><li><strong>Fasi</strong>: Raggruppano passi correlati in fasi logiche (es. Diagnosi → Escalation → Risoluzione).</li><li>I Playbook si attivano automaticamente al cambio di stato del case, o manualmente.</li></ul>`
+        }
+      },
+      {
+        title: { en: "CSM-ITSM Integration (Bridge)", it: "Integrazione CSM-ITSM (Bridge)" },
+        tag: "amber",
+        body: {
+          en: `<p>The CSM-ITSM Bridge is one of the most frequently tested configuration topics:</p>
+          <ul><li>Allows creating an <strong>Incident</strong> from a <strong>Case</strong> when internal technical resolution is needed.</li><li>The relationship is <strong>bidirectional</strong>: when the Incident is resolved, a Business Rule updates the Case state automatically.</li><li><strong>Configure</strong>: CSM Properties > Enable "Create Incident from Case" + configure field mapping (Priority → Urgency, Short Description → Short Description).</li><li>The linked Incident appears in the Case's "Related Records" tab.</li></ul>
+          <div class='callout info'><span class='callout-icon'>💡</span><div>The Business Rule "Update Case on Incident Closure" handles the reverse flow. Know this rule name — it appears in exam questions.</div></div>
+          <div class='diagram-wrap'>
+            <svg viewBox="0 0 500 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px">
+              <rect x="20" y="25" width="130" height="60" rx="8" fill="#0f6e56" stroke="#3fb950" stroke-width="1.5"/>
+              <text x="85" y="52" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="sans-serif" font-weight="600">CSM Case</text>
+              <text x="85" y="68" text-anchor="middle" fill="#7ee89a" font-size="10">State: Open</text>
+              <path d="M160 55 Q230 20 300 55" fill="none" stroke="#d29922" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+              <text x="230" y="32" text-anchor="middle" fill="#d29922" font-size="10">Create Incident</text>
+              <rect x="310" y="25" width="160" height="60" rx="8" fill="#3b2e0e" stroke="#d29922" stroke-width="1.5"/>
+              <text x="390" y="52" text-anchor="middle" fill="#e6edf3" font-size="12" font-family="sans-serif" font-weight="600">ITSM Incident</text>
+              <text x="390" y="68" text-anchor="middle" fill="#f5d87a" font-size="10">State: In Progress</text>
+              <path d="M300 75 Q230 100 160 75" fill="none" stroke="#58a6ff" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr2)"/>
+              <text x="230" y="100" text-anchor="middle" fill="#58a6ff" font-size="10">Auto-update Case on close</text>
+              <defs>
+                <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L6,3 L0,6 Z" fill="#d29922"/>
+                </marker>
+                <marker id="arr2" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto">
+                  <path d="M6,0 L0,3 L6,6 Z" fill="#58a6ff"/>
+                </marker>
+              </defs>
+            </svg>
+          </div>`,
+          it: `<p>Il Bridge CSM-ITSM è uno degli argomenti di configurazione più frequentemente testati:</p>
+          <ul><li>Permette di creare un <strong>Incident</strong> da un <strong>Case</strong> quando è necessaria una risoluzione tecnica interna.</li><li>La relazione è <strong>bidirezionale</strong>: quando l'Incident viene risolto, una Business Rule aggiorna lo stato del Case automaticamente.</li><li><strong>Configurare</strong>: CSM Properties > Abilita "Create Incident from Case" + configura field mapping (Priority → Urgency).</li><li>L'Incident collegato appare nella tab "Related Records" del Case.</li></ul>`
+        }
+      }
+    ]
+  },
+  {
+    id: 2,
+    pct: "20%",
+    color: "#a5a0f0",
+    title: { en: "Domain 3: Case Management", it: "Dominio 3: Gestione dei Case" },
+    subtitle: { en: "Lifecycle, Major Issues, Channels, Escalation, SLAs", it: "Ciclo di vita, Major Issue, Canali, Escalation, SLA" },
+    topics: [
+      {
+        title: { en: "Case Lifecycle & State Flow", it: "Ciclo di Vita del Case e Flusso di Stato" },
+        tag: "purple",
+        body: {
+          en: `<p>Every Case progresses through a defined state flow. SLA timers and automation are tied to these states:</p>
+          <div class='diagram-wrap'>
+            <svg viewBox="0 0 580 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:580px">
+              <rect x="5" y="20" width="70" height="40" rx="6" fill="#21262d" stroke="#8b949e" stroke-width="1"/>
+              <text x="40" y="44" text-anchor="middle" fill="#8b949e" font-size="11">New</text>
+              <polygon points="79,40 89,34 89,46" fill="#8b949e"/>
+              <rect x="93" y="20" width="70" height="40" rx="6" fill="#1f3b5c" stroke="#58a6ff" stroke-width="1"/>
+              <text x="128" y="44" text-anchor="middle" fill="#58a6ff" font-size="11">Open</text>
+              <polygon points="167,40 177,34 177,46" fill="#8b949e"/>
+              <rect x="181" y="20" width="90" height="40" rx="6" fill="#3b2e0e" stroke="#d29922" stroke-width="1"/>
+              <text x="226" y="40" text-anchor="middle" fill="#d29922" font-size="10">Awaiting</text>
+              <text x="226" y="52" text-anchor="middle" fill="#d29922" font-size="10">Info ⏸</text>
+              <polygon points="275,40 285,34 285,46" fill="#8b949e"/>
+              <rect x="289" y="20" width="80" height="40" rx="6" fill="#0d3035" stroke="#39c5cf" stroke-width="1"/>
+              <text x="329" y="44" text-anchor="middle" fill="#39c5cf" font-size="11">Resolved</text>
+              <polygon points="373,40 383,34 383,46" fill="#8b949e"/>
+              <rect x="387" y="20" width="70" height="40" rx="6" fill="#1a3a22" stroke="#3fb950" stroke-width="1"/>
+              <text x="422" y="44" text-anchor="middle" fill="#3fb950" font-size="11">Closed</text>
+              <rect x="480" y="20" width="90" height="40" rx="6" fill="#3b1c1c" stroke="#f85149" stroke-width="1"/>
+              <text x="525" y="44" text-anchor="middle" fill="#f85149" font-size="11">Cancelled</text>
+              <text x="226" y="12" text-anchor="middle" fill="#d29922" font-size="9">SLA Paused</text>
+            </svg>
+          </div>
+          <div class='callout info'><span class='callout-icon'>💡</span><div>SLA can be <strong>paused</strong> when the case is in "Awaiting Info" state — the delay is attributed to the customer, not the support team. Configure via Pause Conditions on the SLA definition.</div></div>
+          <ul><li><strong>Auto-close</strong>: Cases in Resolved state auto-close after a configurable number of days (default 5) if no customer response.</li><li><strong>Reopening</strong>: Closed cases can be reopened — this resets SLA calculations.</li></ul>`,
+          it: `<p>Ogni Case progredisce attraverso un flusso di stati definiti. I timer SLA e l'automazione sono legati a questi stati.</p>
+          <div class='callout info'><span class='callout-icon'>💡</span><div>L'SLA può essere <strong>messo in pausa</strong> quando il case è in stato "Awaiting Info" — il ritardo è attribuito al cliente, non al team di supporto. Configura tramite Pause Conditions nella definizione SLA.</div></div>
+          <ul><li><strong>Auto-close</strong>: I case in stato Resolved si chiudono automaticamente dopo un numero configurabile di giorni (default 5) se il cliente non risponde.</li><li><strong>Riapertura</strong>: I case chiusi possono essere riaperti — questo azzera i calcoli SLA.</li></ul>`
+        }
+      },
+      {
+        title: { en: "Major Issue Management", it: "Gestione Major Issue" },
+        tag: "red",
+        body: {
+          en: `<p>When a problem affects many customers simultaneously, use Major Issue Management:</p>
+          <ul><li><strong>Major Case</strong>: The parent case describing the global problem.</li><li><strong>Child Cases</strong>: Individual customer cases linked to the Major Case as children.</li><li><strong>Case Digest</strong>: Automatic communication sent to all customers with linked cases, updating them on resolution status.</li><li><strong>Targeted Communications</strong>: Bulk personalized messages sent to specific groups of impacted customers (filterable by Account, product, case type).</li></ul>
+          <div class='callout warn'><span class='callout-icon'>⚠️</span><div>Exam question pattern: "A problem is affecting 200 customers — which feature do you use to notify them all?" Answer: <strong>Case Digest</strong> or <strong>Targeted Communications</strong>. Know the difference: Digest = automatic update on Major Case progress; Targeted Comm = manual bulk message campaign.</div></div>`,
+          it: `<p>Quando un problema colpisce molti clienti contemporaneamente, usa il Major Issue Management:</p>
+          <ul><li><strong>Major Case</strong>: Il case padre che descrive il problema globale.</li><li><strong>Child Cases</strong>: Case individuali dei clienti collegati al Major Case come figli.</li><li><strong>Case Digest</strong>: Comunicazione automatica inviata a tutti i clienti con case collegati.</li><li><strong>Targeted Communications</strong>: Messaggi personalizzati in bulk inviati a gruppi specifici di clienti impattati.</li></ul>
+          <div class='callout warn'><span class='callout-icon'>⚠️</span><div>Pattern domanda esame: "Un problema colpisce 200 clienti — quale funzionalità usi?" Risposta: <strong>Case Digest</strong> o <strong>Targeted Communications</strong>. Conosci la differenza: Digest = aggiornamento automatico; Targeted Comm = campagna di messaggi bulk manuali.</div></div>`
+        }
+      },
+      {
+        title: { en: "Communication Channels", it: "Canali di Comunicazione" },
+        tag: "purple",
+        body: {
+          en: `<p>CSM supports omnichannel communications:</p>
+          <table class='info-table'><thead><tr><th>Channel</th><th>Mechanism</th><th>Key Config</th></tr></thead><tbody>
+          <tr><td>Email</td><td>Inbound Email Actions create cases from emails</td><td>Email account, routing rules</td></tr>
+          <tr><td>Portal</td><td>Customer opens/updates cases via CSP</td><td>Portal branding, catalog items</td></tr>
+          <tr><td>Chat / Virtual Agent</td><td>Live chat or AI-powered conversations</td><td>Virtual Agent Fundamentals course</td></tr>
+          <tr><td>Phone / CTI</td><td>Integration with Contact Center (CCaaS)</td><td>Screen pop, call logging</td></tr>
+          <tr><td>Engagement Messenger</td><td>Embedded widget on external websites</td><td>Widget snippet added to customer site</td></tr>
+          </tbody></table>
+          <div class='callout info'><span class='callout-icon'>💡</span><div><strong>Special Handling Notes</strong>: Customer-specific instructions that appear automatically in the Agent Workspace when working a case for that customer. E.g., "This account is VIP — reply within 30 min."</div></div>`,
+          it: `<p>CSM supporta comunicazioni omnicanale:</p>
+          <table class='info-table'><thead><tr><th>Canale</th><th>Meccanismo</th><th>Configurazione chiave</th></tr></thead><tbody>
+          <tr><td>Email</td><td>Inbound Email Actions creano case dalle email</td><td>Account email, regole di routing</td></tr>
+          <tr><td>Portale</td><td>Il cliente apre/aggiorna case via CSP</td><td>Branding portale, catalog items</td></tr>
+          <tr><td>Chat / Virtual Agent</td><td>Chat live o conversazioni AI</td><td>Corso Virtual Agent Fundamentals</td></tr>
+          <tr><td>Telefono / CTI</td><td>Integrazione con Contact Center (CCaaS)</td><td>Screen pop, log chiamate</td></tr>
+          <tr><td>Engagement Messenger</td><td>Widget embedded su siti web esterni</td><td>Snippet widget aggiunto al sito del cliente</td></tr>
+          </tbody></table>`
+        }
+      },
+      {
+        title: { en: "Case Escalation & Tasks", it: "Escalation e Attività dei Case" },
+        tag: "purple",
+        body: {
+          en: `<p>Escalation mechanisms ensure critical cases receive proper attention:</p>
+          <ul><li><strong>Case Tasks</strong>: Sub-activities created within a case to track parallel workstreams.</li><li><strong>SLA Escalation</strong>: Automated alerts and notifications when SLA thresholds are breached.</li><li><strong>Approval-based Escalation</strong>: Some escalation flows require manager approval before proceeding.</li><li><strong>Transfer to Field Service</strong>: Cases can be escalated to Field Service Management (FSM) for on-site resolution.</li></ul>
+          <div class='callout success'><span class='callout-icon'>✅</span><div>Case Tasks are different from Case Activities. Tasks are structured work items with their own state and assignment. Activities are timeline entries (notes, emails, state changes).</div></div>`,
+          it: `<p>I meccanismi di escalation garantiscono che i case critici ricevano l'attenzione adeguata:</p>
+          <ul><li><strong>Case Tasks</strong>: Sotto-attività create all'interno di un case per tracciare flussi di lavoro paralleli.</li><li><strong>SLA Escalation</strong>: Alert e notifiche automatici quando le soglie SLA vengono superate.</li><li><strong>Escalation basata su approvazione</strong>: Alcuni flussi richiedono l'approvazione del manager prima di procedere.</li><li><strong>Trasferimento a Field Service</strong>: I case possono essere escalati a Field Service Management (FSM) per risoluzione sul campo.</li></ul>`
+        }
+      }
+    ]
+  },
+  {
+    id: 3,
+    pct: "15%",
+    color: "#d29922",
+    title: { en: "Domain 4: Workspace, Portals & Analytics", it: "Dominio 4: Workspace, Portali e Analytics" },
+    subtitle: { en: "CSP, Service Catalog, Performance Analytics, Reporting", it: "CSP, Service Catalog, Performance Analytics, Reportistica" },
+    topics: [
+      {
+        title: { en: "Customer Service Portal (CSP)", it: "Customer Service Portal (CSP)" },
+        tag: "amber",
+        body: {
+          en: `<p>The Customer Service Portal provides self-service capabilities for customers:</p>
+          <ul><li>Built on <strong>Service Portal</strong> (ServiceNow's AngularJS framework) — not the Next Experience UI.</li><li><strong>Portal Branding</strong>: Customize logo, colors, banners per account/customer group.</li><li><strong>Key Widgets</strong>: My Cases, Knowledge Articles, Service Catalog, Case Status.</li><li><strong>Self-service</strong>: Customers can open cases, check status, and browse knowledge without contacting an agent.</li></ul>
+          <div class='callout info'><span class='callout-icon'>💡</span><div><strong>Engagement Messenger</strong>: A separate embedded widget that can be placed on any external website, allowing customers to interact with support without leaving the customer's site.</div></div>`,
+          it: `<p>Il Customer Service Portal fornisce capacità self-service ai clienti:</p>
+          <ul><li>Basato su <strong>Service Portal</strong> (framework AngularJS di ServiceNow) — non il Next Experience UI.</li><li><strong>Portal Branding</strong>: Personalizza logo, colori, banner per account/gruppo clienti.</li><li><strong>Widget chiave</strong>: My Cases, Knowledge Articles, Service Catalog, Case Status.</li><li><strong>Self-service</strong>: I clienti possono aprire case, controllare lo stato e sfogliare la knowledge senza contattare un agente.</li></ul>`
+        }
+      },
+      {
+        title: { en: "Service Catalog in CSM", it: "Service Catalog in CSM" },
+        tag: "amber",
+        body: {
+          en: `<p>The Service Catalog in CSM allows customers to request specific services via structured catalog items:</p>
+          <ul><li>Catalog items can trigger automated case creation with pre-filled fields.</li><li>Items are organized into categories visible in the Customer Service Portal.</li><li>Entitlement rules can restrict which catalog items are visible to which customer accounts.</li></ul>
+          <div class='callout warn'><span class='callout-icon'>⚠️</span><div>The CSM Service Catalog is separate from the ITSM Employee Service Center catalog. Do not confuse customer-facing and employee-facing catalog items.</div></div>`,
+          it: `<p>Il Service Catalog in CSM consente ai clienti di richiedere servizi specifici tramite catalog item strutturati:</p>
+          <ul><li>I catalog item possono attivare la creazione automatica di case con campi precompilati.</li><li>Gli item sono organizzati in categorie visibili nel Customer Service Portal.</li><li>Le regole di entitlement possono limitare quali catalog item sono visibili a quali account.</li></ul>`
+        }
+      },
+      {
+        title: { en: "Performance Analytics & Reporting", it: "Performance Analytics e Reportistica" },
+        tag: "amber",
+        body: {
+          en: `<p>Performance Analytics (PA) provides real-time dashboards and KPIs:</p>
+          <table class='info-table'><thead><tr><th>KPI</th><th>Full Name</th><th>Measures</th></tr></thead><tbody>
+          <tr><td>FCR</td><td>First Contact Resolution</td><td>% cases resolved on first contact</td></tr>
+          <tr><td>AHT</td><td>Average Handle Time</td><td>Average time per case</td></tr>
+          <tr><td>CSAT</td><td>Customer Satisfaction Score</td><td>Post-case survey rating</td></tr>
+          <tr><td>SLA%</td><td>SLA Compliance Rate</td><td>% cases meeting SLA targets</td></tr>
+          <tr><td>Backlog</td><td>Open Case Backlog</td><td>Number of unresolved cases</td></tr>
+          </tbody></table>
+          <div class='callout info'><span class='callout-icon'>💡</span><div><strong>Scorecard</strong>: Aggregates indicators for a single Account — gives management visibility into the health of a customer relationship. <strong>Breakdown</strong>: Analyzes metrics by agent, group, category, channel, or period.</div></div>`,
+          it: `<p>Performance Analytics (PA) fornisce dashboard e KPI in tempo reale:</p>
+          <table class='info-table'><thead><tr><th>KPI</th><th>Nome completo</th><th>Misura</th></tr></thead><tbody>
+          <tr><td>FCR</td><td>First Contact Resolution</td><td>% case risolti al primo contatto</td></tr>
+          <tr><td>AHT</td><td>Average Handle Time</td><td>Tempo medio per case</td></tr>
+          <tr><td>CSAT</td><td>Customer Satisfaction Score</td><td>Valutazione survey post-case</td></tr>
+          <tr><td>SLA%</td><td>SLA Compliance Rate</td><td>% case che rispettano gli SLA</td></tr>
+          </tbody></table>`
+        }
+      }
+    ]
+  },
+  {
+    id: 4,
+    pct: "10%",
+    color: "#f85149",
+    title: { en: "Domain 5: Knowledge Management & Best Practices", it: "Dominio 5: Knowledge Management e Best Practice" },
+    subtitle: { en: "KCS, Article Lifecycle, Self-Service, Implementation Best Practices", it: "KCS, Ciclo di vita articoli, Self-service, Best Practice" },
+    topics: [
+      {
+        title: { en: "Knowledge Management & KCS", it: "Knowledge Management e KCS" },
+        tag: "red",
+        body: {
+          en: `<p>Knowledge-Centered Support (KCS) is ServiceNow's recommended methodology:</p>
+          <ul><li><strong>KCS Principle</strong>: Knowledge is created and improved AT THE TIME it is used to resolve a case — not pre-built in isolation.</li><li><strong>Article Lifecycle</strong>: Draft → In Review → Published → Retired. Only Published articles appear on the Customer Service Portal.</li><li><strong>Knowledge Blocks</strong>: Structured sections (Symptom, Cause, Resolution) ensuring consistency.</li><li><strong>Knowledge Feedback</strong>: Agents and customers can rate articles — low-rated articles can be retired automatically.</li><li><strong>Case-Knowledge Link</strong>: Agents can create or update knowledge articles directly from the case timeline.</li></ul>
+          <div class='callout warn'><span class='callout-icon'>⚠️</span><div>Verify Knowledge Base assignment — only KBs configured as "Customer Visible" appear in the CSP. Assigning an article to the wrong KB means customers cannot find it.</div></div>`,
+          it: `<p>Knowledge-Centered Support (KCS) è la metodologia raccomandata da ServiceNow:</p>
+          <ul><li><strong>Principio KCS</strong>: La conoscenza viene creata e migliorata NEL MOMENTO in cui viene usata per risolvere un case.</li><li><strong>Ciclo di vita articolo</strong>: Draft → In Review → Published → Retired. Solo gli articoli Published appaiono sul Customer Service Portal.</li><li><strong>Knowledge Blocks</strong>: Sezioni strutturate (Symptom, Cause, Resolution).</li><li><strong>Knowledge Feedback</strong>: Agenti e clienti possono valutare gli articoli.</li><li><strong>Link Case-Knowledge</strong>: Gli agenti possono creare o aggiornare articoli dalla timeline del case.</li></ul>`
+        }
+      },
+      {
+        title: { en: "CSM Implementation Best Practices", it: "Best Practice di Implementazione CSM" },
+        tag: "red",
+        body: {
+          en: `<p>Key best practices tested on the exam:</p>
+          <ul><li><strong>Now Create (Agile) Methodology</strong>: Required course in the learning path. Understand Agile sprints, user stories, and stakeholder alignment in ServiceNow context.</li><li><strong>Define data model first</strong>: B2B vs B2C decision must be made with the customer BEFORE any configuration starts.</li><li><strong>Staged channel rollout</strong>: Don't activate all channels simultaneously. Start with email + portal, then add chat and phone.</li><li><strong>PDI testing</strong>: Always use a Personal Developer Instance to test configurations before moving to production.</li><li><strong>Entitlement design upfront</strong>: Design entitlement structure before building case types — entitlement rules are complex to retrofit.</li></ul>
+          <div class='callout success'><span class='callout-icon'>✅</span><div>Exam tip: Best practice questions often have "configure before" or "design before" patterns. The answer usually follows the principle: define data model → configure entitlements → build case types → configure channels.</div></div>`,
+          it: `<p>Best practice chiave testate all'esame:</p>
+          <ul><li><strong>Metodologia Now Create (Agile)</strong>: Corso obbligatorio nel learning path. Comprendi sprint Agile, user story e allineamento stakeholder nel contesto ServiceNow.</li><li><strong>Definire prima il data model</strong>: La decisione B2B vs B2C deve essere presa con il cliente PRIMA di iniziare la configurazione.</li><li><strong>Rollout canali per fasi</strong>: Non attivare tutti i canali contemporaneamente. Inizia con email + portale, poi aggiungi chat e telefono.</li><li><strong>Test su PDI</strong>: Usa sempre un Personal Developer Instance per testare le configurazioni prima della produzione.</li></ul>`
+        }
+      },
+      {
+        title: { en: "Now Assist for CSM (AI Features — 2026)", it: "Now Assist per CSM (Funzionalità AI — 2026)" },
+        tag: "purple",
+        body: {
+          en: `<p>Now Assist brings generative AI capabilities to CSM agents and customers (updated for 2026):</p>
+          <ul><li><strong>Case Summarization</strong>: AI generates a summary of the case history for agents picking up existing cases.</li><li><strong>Suggested Resolution</strong>: AI recommends resolution steps based on similar past cases and knowledge articles.</li><li><strong>Chat Assist</strong>: AI-generated response suggestions for chat conversations.</li><li><strong>Now Assist for CSM</strong>: Specific implementation course in the learning path (free, on-demand).</li></ul>
+          <div class='callout info'><span class='callout-icon'>💡</span><div>Now Assist features require the CSM Professional Plus Suite. The base CIS-CSM exam may test awareness of AI capabilities but not deep configuration — focus on the other domains for exam prep.</div></div>`,
+          it: `<p>Now Assist porta funzionalità AI generativa agli agenti e clienti CSM (aggiornato al 2026):</p>
+          <ul><li><strong>Case Summarization</strong>: L'AI genera un riassunto della cronologia del case per gli agenti.</li><li><strong>Suggested Resolution</strong>: L'AI raccomanda passi di risoluzione basati su case simili e articoli di knowledge.</li><li><strong>Chat Assist</strong>: Suggerimenti di risposta generati dall'AI per le conversazioni chat.</li><li><strong>Now Assist per CSM</strong>: Corso specifico nel learning path (gratuito, on-demand).</li></ul>`
+        }
+      }
+    ]
+  }
+];
+
+// ════════════════════════════════════════════════════════════
+// DATA — QUIZ QUESTIONS (120 questions, 3 blocks of 40)
+// ════════════════════════════════════════════════════════════
+const ALL_QUESTIONS = [
+// ── BLOCK 1 (Q1-40) ──
+{id:1,domain:"Data Model",q:"In ServiceNow CSM, which entity represents an individual person at a customer company in the B2B model?",opts:["Consumer","Account","Contact","User"],ans:2,exp:"In the B2B model, Contact represents the individual person at the customer company. Account is the company itself. Consumer is used in B2C model and is standalone — it does NOT belong to an Account."},
+{id:2,domain:"Data Model",q:"Which system property controls whether ServiceNow CSM uses the B2B or B2C business model?",opts:["csm.enable.b2c","glide.cs.enable.b2b","cs.model.selector","csm.business.type"],ans:1,exp:"The property 'glide.cs.enable.b2b' controls the B2B/B2C model selection. When set to true, B2B (Account/Contact) mode is active. This is a CSM system property found under Customer Service > Administration > Properties."},
+{id:3,domain:"Data Model",q:"What type of entitlement limits a customer to a specific NUMBER of cases per period?",opts:["Time-Based Entitlement","Service Entitlement","Product Entitlement","Allocated Entitlement"],ans:3,exp:"Allocated Entitlement defines a maximum number of cases (the allocation) for a contract period. Time-Based Entitlement is restricted by a time window (e.g., 20 hours per month), not a case count."},
+{id:4,domain:"Data Model",q:"A consumer electronics company wants to support millions of individual end-users who have no company association. Which CSM data model should they implement?",opts:["B2B with Account and Contact","B2B with Consumer","B2C with Consumer as the primary entity","B2C with Contact linked to a consumer account"],ans:2,exp:"B2C model uses Consumer as the primary entity for individual end-users without company affiliations. B2B uses Account and Contact for business customers. The Consumer entity is standalone — it has no parent Account."},
+{id:5,domain:"Data Model",q:"Which table in ServiceNow stores Install Base Items in CSM?",opts:["cmdb_ci","alm_asset","install_base_item","customer_install_base"],ans:2,exp:"Install Base Items are stored in the 'install_base_item' table. This is a CSM-specific table that tracks products actively deployed for a customer, linked to both the Product Model and the Account."},
+{id:6,domain:"Data Model",q:"An entitlement is being set up for a customer who purchased 'Premium Support' that provides 24/7 access for 12 months regardless of how many cases they log. What type of entitlement is this?",opts:["Allocated Entitlement","Time-Based Entitlement","Service Entitlement","Product Entitlement"],ans:2,exp:"This is a Service Entitlement — it defines a service level (24/7 access) for a defined period (12 months) without limiting the number of cases. It's tied to a service offering rather than a product purchase or case count."},
+{id:7,domain:"Data Model",q:"What happens during Entitlement Verification when a case is created for a customer without a valid entitlement?",opts:["The case creation is blocked automatically","A warning is displayed but agents can still proceed","The case is automatically escalated to a manager","The system creates a temporary entitlement"],ans:1,exp:"Entitlement Verification shows a warning when no valid entitlement is found, but agents CAN still proceed to create the case. The process does not block case creation — it provides visibility to agents."},
+{id:8,domain:"Data Model",q:"Which entity links a specific product instance to a customer account, tracking that product as actively deployed?",opts:["Product Model","CMDB CI","Install Base Item","Asset Record"],ans:2,exp:"An Install Base Item represents a specific instance of a product (defined by a Product Model) that is actively deployed or activated for a customer Account. It is distinct from CMDB CIs, though integrations between them exist."},
+{id:9,domain:"Configuration",q:"An implementer needs to create guided resolution paths for agents that auto-activate when a case reaches a certain state. Which tool creates these?",opts:["Flow Designer","Workflow Editor","Process Automation Designer (PAD)","Script Includes"],ans:2,exp:"Playbooks in CSM are created using Process Automation Designer (PAD). Not Flow Designer and not the classic Workflow Editor. PAD provides the lane-based, phase-driven playbook structure needed for CSM."},
+{id:10,domain:"Configuration",q:"What is the primary purpose of the CSM-ITSM Bridge?",opts:["To share knowledge articles between CSM and ITSM","To allow creating an Incident from a Case when internal technical resolution is needed","To synchronize SLA definitions between modules","To enable agents to work in both ITSM and CSM simultaneously"],ans:1,exp:"The CSM-ITSM Bridge allows creating an ITSM Incident directly from a CSM Case when the issue requires internal IT resolution. The bridge is bidirectional — when the Incident closes, a Business Rule automatically updates the linked Case."},
+{id:11,domain:"Configuration",q:"In CSM AWA (Advanced Work Assignment), which factors are typically considered when assigning a case to an agent? Select the BEST answer.",opts:["Agent's age and seniority only","Agent availability, skill set, and current workload","Agent's location and language only","Case priority and category only"],ans:1,exp:"AWA considers multiple factors: agent availability (online/offline), skill set (matched to case requirements), current workload (capacity), channel, and case priority. It does not consider age or seniority directly."},
+{id:12,domain:"Configuration",q:"A CSM property is set to control whether cases are automatically assigned or placed in a queue. Which configuration area contains this setting?",opts:["System Properties > CSM","Customer Service > Administration > Properties","ITSM > Assignment Rules","System > Notification"],ans:1,exp:"CSM system properties are managed under Customer Service > Administration > Properties. This is the central configuration hub for all CSM behaviors including assignment mode, channel settings, B2B/B2C model, and workspace settings."},
+{id:13,domain:"Configuration",q:"What is the role of a Service Definition in CSM?",opts:["It defines the look and feel of the Customer Service Portal","It links a service offering to entitlement rules and case types","It configures the email channel for inbound case creation","It manages agent skill assignments for routing"],ans:1,exp:"A Service Definition describes the service being offered to a customer. It links the service to entitlement rules and specific Case Types. When a customer opens a case, the Service Definition auto-populates entitlement information."},
+{id:14,domain:"Configuration",q:"In a CSM Playbook, what does a 'lane' define?",opts:["The SLA timer for each phase","Who is responsible for executing a specific step (agent, supervisor, or system)","The communication channel used in that step","The priority level of the playbook"],ans:1,exp:"In Process Automation Designer, lanes define the actor responsible for each step — it could be an agent, a supervisor, or an automated system. Leaving a lane unassigned is a common implementation mistake that causes playbooks to stall."},
+{id:15,domain:"Configuration",q:"When configuring the CSM-ITSM Bridge, which Business Rule automatically updates the Case state when the linked Incident is closed?",opts:["Close Case on Incident Resolve","Update Case on Incident Closure","Sync Case Status from Incident","Cascade Incident Closure to Case"],ans:1,exp:"The Business Rule 'Update Case on Incident Closure' handles the reverse flow — when an Incident linked to a CSM Case is resolved/closed, this rule automatically updates the Case state. This specific rule name is tested on the exam."},
+{id:16,domain:"Configuration",q:"An administrator wants to display customer-specific handling instructions to agents automatically when opening a case. Which feature should be configured?",opts:["Case Digest","Playbook Notes","Special Handling Notes","Agent Instructions Widget"],ans:2,exp:"Special Handling Notes are customer-specific instructions that appear automatically in the Agent Workspace when an agent works on a case for that specific customer (Account or Contact). Example: 'This is a VIP account — respond within 30 minutes.'"},
+{id:17,domain:"Case Management",q:"Which case state allows the SLA timer to be paused because the delay is attributed to the customer?",opts:["New","Open","Awaiting Info","Resolved"],ans:2,exp:"The 'Awaiting Info' state can be configured with a Pause Condition on the SLA definition. When the case enters this state (waiting for customer input), the SLA timer pauses — the delay is the customer's responsibility, not the support team's."},
+{id:18,domain:"Case Management",q:"What is a Case Digest in ServiceNow CSM?",opts:["A daily report of all open cases sent to managers","An automatic communication sent to all customers with cases linked to a Major Case","A summary of a case's activity timeline","A notification sent when a case SLA is breached"],ans:1,exp:"A Case Digest is an automatic communication mechanism tied to Major Issue Management. When a Major Case is created and individual customer cases are linked as children, a Case Digest can be sent to all affected customers with updates on the resolution progress."},
+{id:19,domain:"Case Management",q:"What is the difference between Case Tasks and Case Activities?",opts:["They are the same thing with different names","Tasks are structured work items with their own state; Activities are timeline entries like notes and emails","Activities can be assigned; Tasks cannot","Tasks are created by customers; Activities are created by agents"],ans:1,exp:"Case Tasks are structured work items (sub-tasks) within a case with their own state, assignment, and due date. Activities are entries in the case timeline — notes, emails sent/received, state changes. They serve different purposes."},
+{id:20,domain:"Case Management",q:"A major outage is affecting 500 customers. An implementer needs to send personalized bulk messages to specific subsets of impacted customers (e.g., only those with 'Gold' support). Which feature handles this?",opts:["Case Digest","Targeted Communications","Email Notification Rules","Bulk Case Update"],ans:1,exp:"Targeted Communications allow creating and sending personalized bulk messages to specific segments of customers, filterable by Account, product, case type, or support tier. Case Digest is for automatic updates on Major Case progress — Targeted Communications are for manual bulk messaging campaigns."},
+{id:21,domain:"Case Management",q:"After a Case is set to 'Resolved', how many days does it typically auto-close if the customer does not respond?",opts:["2 days","5 days","7 days","30 days"],ans:1,exp:"By default, cases in the 'Resolved' state auto-close after 5 days if no customer response is received. This is configurable — the implementer can change the number of days in CSM Properties. The auto-close can also be disabled entirely."},
+{id:22,domain:"Case Management",q:"Which CSM module allows cases to be escalated for on-site visits by field technicians?",opts:["IT Service Management","HR Service Delivery","Field Service Management (FSM)","Facilities Management"],ans:2,exp:"Field Service Management (FSM) handles on-site work orders and dispatching field technicians. CSM Cases can be escalated to FSM when physical presence is required for resolution. This integration is supported out-of-the-box."},
+{id:23,domain:"Workspace & Analytics",q:"The Customer Service Portal in ServiceNow is built on which framework?",opts:["Next Experience (Polaris)","UI Builder","Service Portal (AngularJS)","Classic UI (GlideRecord)"],ans:2,exp:"The Customer Service Portal (CSP) is built on the Service Portal framework, which uses AngularJS. The Configurable Workspace/Agent Workspace uses the Next Experience framework. These are separate — do not confuse them on the exam."},
+{id:24,domain:"Workspace & Analytics",q:"What is the purpose of the Engagement Messenger in CSM?",opts:["It sends automated case update emails to customers","It is an embeddable widget placed on external websites to let customers interact with support without leaving the site","It manages chat queues within the Agent Workspace","It notifies agents of new case assignments"],ans:1,exp:"Engagement Messenger is a lightweight widget that can be embedded on any external website (e.g., the company's product website). Customers can open cases, chat with agents, and get support without navigating to the ServiceNow portal."},
+{id:25,domain:"Workspace & Analytics",q:"Which KPI measures the percentage of cases resolved on the very first customer contact?",opts:["CSAT","AHT","FCR (First Contact Resolution)","SLA Compliance Rate"],ans:2,exp:"FCR (First Contact Resolution) measures the percentage of cases resolved without requiring follow-up contacts. It is a key efficiency indicator. CSAT measures customer satisfaction. AHT is average handle time. SLA% measures adherence to service level targets."},
+{id:26,domain:"Workspace & Analytics",q:"In Performance Analytics, what is a 'Scorecard'?",opts:["A report of all cases for a specific agent","An aggregation of KPI indicators for a single Account, showing the health of that customer relationship","A compliance report for regulatory purposes","A comparison of team performance metrics"],ans:1,exp:"A Scorecard in Performance Analytics aggregates multiple KPIs for a specific Account, giving management a comprehensive view of the health of that customer relationship. It answers questions like 'How are we performing for Acme Corp overall?'"},
+{id:27,domain:"Workspace & Analytics",q:"An implementer needs to customize the columns visible in the Agent Workspace case list for the CSM team. Where is this configured?",opts:["System Properties","CSM Properties","UI Builder — Workspace configuration","List Editor in the classic interface"],ans:2,exp:"Workspace views, including list columns, filters, and sorting, are configured in UI Builder for the Configurable Workspace. This is the 2026 approach — not the classic List Editor. UI Builder provides a WYSIWYG interface for workspace customization."},
+{id:28,domain:"Knowledge & BP",q:"According to KCS (Knowledge-Centered Support), when should knowledge be created?",opts:["Only by dedicated knowledge managers in advance","At the time it is used to solve a case, not pre-built in isolation","Only after a case is fully resolved and reviewed","Only by senior agents with special KCS certification"],ans:1,exp:"KCS principle: knowledge is created and improved AT THE TIME it is used to resolve a case. This means agents create articles as they solve problems, not in a separate pre-defined process. It ensures knowledge reflects real customer issues."},
+{id:29,domain:"Knowledge & BP",q:"Which state must a knowledge article be in before customers can see it on the Customer Service Portal?",opts:["Draft","In Review","Published","Active"],ans:2,exp:"Only articles with status 'Published' are visible to customers on the CSP. The lifecycle is: Draft (created) → In Review (approval process) → Published (visible to customers) → Retired (no longer shown). Articles in Draft or In Review are only accessible internally."},
+{id:30,domain:"Knowledge & BP",q:"What is the recommended sequence for a CSM implementation according to best practices?",opts:["Configure channels first → Define data model → Set up entitlements → Create case types","Define data model → Configure entitlements → Build case types → Configure channels","Build case types first → Configure entitlements → Define data model → Launch channels","Set up entitlements → Build case types → Define data model → Configure channels"],ans:1,exp:"Best practice sequence: 1) Define data model (B2B or B2C) first with the customer. 2) Configure entitlements (complex to retrofit). 3) Build case types linked to service definitions. 4) Configure and roll out channels gradually. This order prevents rework."},
+{id:31,domain:"Configuration",q:"Which course in the Now Learning path for CIS-CSM must be completed as the foundational first step?",opts:["CSM Best Practices","CSM Implementation Workshop","Customer Service Management Essentials","ServiceNow Certified System Administrator"],ans:2,exp:"'Customer Service Management Essentials' (free, on-demand on Now Learning) is the required foundational course in the CIS-CSM learning path. It must be completed before the CSM Essentials Simulator and other advanced courses."},
+{id:32,domain:"Configuration",q:"An agent sees a yellow banner with special instructions every time they open a case for a specific VIP account. What feature creates this banner?",opts:["Account Alert","Special Handling Notes","Agent Workspace Announcement","Priority Banner"],ans:1,exp:"Special Handling Notes are configured per Account (or Contact) and automatically display in the Agent Workspace when an agent opens a case for that customer. They provide context-specific instructions like 'VIP — escalate immediately if unresolved after 2 hours.'"},
+{id:33,domain:"Data Model",q:"A Contact record is being created. Which field is REQUIRED in the B2B model?",opts:["Consumer","Install Base Item","Account","Contract"],ans:2,exp:"In the B2B model, a Contact must be linked to an Account. The Account field is required on the Contact record. This represents the company the person works for. This is a fundamental B2B data model constraint."},
+{id:34,domain:"Case Management",q:"Which of the following is NOT a standard communication channel in ServiceNow CSM?",opts:["Email via Inbound Email Actions","Customer Service Portal","FTP File Transfer","Live Chat / Virtual Agent"],ans:2,exp:"FTP File Transfer is not a CSM communication channel. Standard channels include: Email (via Inbound Email Actions), Portal (Customer Service Portal), Chat/Virtual Agent, Phone/CTI, and Engagement Messenger. FTP is not customer service interaction channel."},
+{id:35,domain:"Workspace & Analytics",q:"Which Performance Analytics feature allows breaking down a KPI metric by agent, group, category, or channel?",opts:["Scorecard","Breakdown","Dashboard","Trend Report"],ans:1,exp:"The Breakdown feature in Performance Analytics allows analyzing KPI metrics along multiple dimensions — by agent, group, category, channel, or time period. It answers 'Which team has the lowest FCR?' or 'Which channel generates the most volume?'"},
+{id:36,domain:"Knowledge & BP",q:"An agent resolves a case and wants to create a new knowledge article documenting the solution. Where is the MOST efficient place to do this in CSM?",opts:["Navigate to Knowledge > Create Article separately","Use the knowledge article creation button directly in the case timeline","Submit a request to the knowledge manager","Export the case to Word and send to the knowledge team"],ans:1,exp:"KCS encourages agents to create knowledge directly from the case timeline. This is the most efficient approach — the case context (symptoms, resolution) is pre-populated into the article template. This is the KCS 'capture' step."},
+{id:37,domain:"Data Model",q:"How does CSM support large enterprise customers with multiple regional subsidiaries?",opts:["Each subsidiary must be a separate ServiceNow instance","Account hierarchy — parent Account can have child Accounts","Only flat Account structures are supported","Create one Account with multiple Contacts for each subsidiary"],ans:1,exp:"ServiceNow CSM supports Account hierarchies — a parent Account (e.g., Acme Corp Global) can have child Accounts (e.g., Acme Corp Europe, Acme Corp Asia). Cases and entitlements can be associated at any level of the hierarchy."},
+{id:38,domain:"Configuration",q:"A new CSM implementation for a telecom company needs to handle cases from email, portal, and phone simultaneously. What is the recommended rollout approach?",opts:["Launch all channels simultaneously on go-live day","Start with email and portal, then add phone/chat in subsequent phases","Start with phone only, then add digital channels","Configure all channels in dev, but only enable email in production initially"],ans:1,exp:"Best practice: Start with email and portal (lower complexity), then add phone/CTI and chat in subsequent phases. This reduces implementation risk, allows the team to learn and adjust, and prevents overwhelming agents with multiple new channels simultaneously."},
+{id:39,domain:"Workspace & Analytics",q:"What does CSAT stand for in CSM analytics, and when is it typically measured?",opts:["Case Service Assessment Time — measured at case creation","Customer Satisfaction Score — measured via survey after case closure","Customer Service Availability Tracker — measured weekly","Case Status Audit Tool — measured during escalation"],ans:1,exp:"CSAT = Customer Satisfaction Score. It is measured via an automated survey sent to the customer after a case is closed (typically asking them to rate their experience on a 1-5 or 1-10 scale). It is a direct measure of customer perception of service quality."},
+{id:40,domain:"Knowledge & BP",q:"The Now Create Methodology is required in the CIS-CSM learning path. What approach does it follow?",opts:["Waterfall project management","Agile (iterative sprint-based) methodology adapted for ServiceNow implementations","PRINCE2 project framework","Six Sigma DMAIC process"],ans:1,exp:"Now Create is ServiceNow's Agile implementation methodology. It uses iterative sprints, user stories, and stakeholder collaboration. The 'Get Started with the Now Create Methodology' course is a required free on-demand course in the CIS-CSM learning path."},
+
+// ── BLOCK 2 (Q41-80) ──
+{id:41,domain:"Data Model",q:"In the CSM data model, which table stores customer Contact records?",opts:["sys_user","customer_account","customer_contact","csm_consumer"],ans:2,exp:"Contact records are stored in the 'customer_contact' table. This is different from sys_user (platform users) and consumer (B2C customers). Understanding CSM table names can appear in technical questions."},
+{id:42,domain:"Configuration",q:"Which of the following BEST describes the difference between Assignment Rules and AWA in CSM?",opts:["They are identical features with different names","Assignment Rules are condition-based and assign to groups; AWA is capacity-aware and assigns to individual agents","AWA is only available with premium licenses","Assignment Rules work only for email channel; AWA works for all channels"],ans:1,exp:"Assignment Rules use conditions (if category=X, assign to Group Y) and typically assign to groups. AWA (Advanced Work Assignment) is more sophisticated — it considers agent availability, capacity, and skills to assign to a specific agent in real time."},
+{id:43,domain:"Configuration",q:"A CSM Playbook has three phases: Diagnose, Escalate, Resolve. The Escalate phase should only trigger if the Diagnose phase determines it's a critical issue. Which PAD feature handles this conditional logic?",opts:["Playbook Stage","Conditional Activity","Lane Assignment","Phase Condition"],ans:3,exp:"In Process Automation Designer, Phase Conditions (or Conditions on stage transitions) control whether a phase is entered. A condition on the Escalate phase ensures it only activates if specific criteria (e.g., case flagged as critical in Diagnose) are met."},
+{id:44,domain:"Data Model",q:"A customer calls support. The agent notices the customer has no active entitlement. The agent should:",opts:["Refuse to create the case","Create the case but document the entitlement violation","Acknowledge the warning and proceed — agents CAN still create the case","Transfer to a billing team only"],ans:2,exp:"Entitlement Verification shows a warning but does NOT block case creation. Agents can proceed at their discretion. The system records the entitlement status, and the business can decide how to handle it (bill separately, offer grace period, etc.)."},
+{id:45,domain:"Case Management",q:"Which of the following actions does NOT automatically occur when a Major Case is resolved?",opts:["Child cases can be updated via Case Digest","Targeted Communications stop automatically","Resolution notes from Major Case can be propagated to child cases","Child cases are automatically closed without any action"],ans:3,exp:"When a Major Case is resolved, child cases are NOT automatically closed. They require separate closure actions. The implementer must configure whether and how the Major Case resolution triggers updates to child cases. This is often done via a Business Rule or Flow Designer."},
+{id:46,domain:"Workspace & Analytics",q:"An implementer needs to display the Customer Service Portal in the customer's brand colors and logo. Where is this configured?",opts:["Service Portal > Portals > Theme","CSM Properties > Branding","System Properties > CSS","ITSM Portal Settings"],ans:0,exp:"Portal branding (logo, colors, header, theme) is configured in Service Portal > Portals > select the portal > Theme. This allows customizing the visual identity of the CSP to match the company's branding. Each portal can have a different theme."},
+{id:47,domain:"Knowledge & BP",q:"What are Knowledge Blocks in ServiceNow CSM?",opts:["Sections of a knowledge article with predefined structure (Symptom, Cause, Resolution)","Blocked knowledge articles that are under review","Groups of related knowledge articles","Knowledge articles restricted to specific user groups"],ans:0,exp:"Knowledge Blocks are structured sections within knowledge articles — typically Symptom, Cause, and Resolution. They enforce consistency across articles and follow KCS best practices. Agents filling in these blocks ensure every article captures the problem, root cause, and fix."},
+{id:48,domain:"Configuration",q:"Which CSM feature allows customers to interact with support directly from an external website without visiting the ServiceNow portal?",opts:["Virtual Agent","Customer Service Portal embedded mode","Engagement Messenger","Service Catalog External Access"],ans:2,exp:"Engagement Messenger is an embeddable JavaScript widget that companies add to their own website. Customers can open cases, chat with agents, and receive support without navigating away from the company's website. It connects to the ServiceNow backend seamlessly."},
+{id:49,domain:"Configuration",q:"When configuring field mapping in the CSM-ITSM Bridge, which Case field typically maps to the Incident 'Urgency' field?",opts:["Category","Short Description","Priority","Severity"],ans:2,exp:"In the CSM-ITSM Bridge field mapping, Case Priority typically maps to Incident Urgency. This ensures the Incident is prioritized appropriately based on the customer case priority. Short Description also maps directly to Incident Short Description."},
+{id:50,domain:"Case Management",q:"What is the purpose of a Case Task in ServiceNow CSM?",opts:["To record customer feedback on the case","To create a sub-activity within a case to track parallel workstreams","To link a case to a knowledge article","To document agent notes in the timeline"],ans:1,exp:"Case Tasks are structured sub-activities within a case. They have their own state (Open/Work in Progress/Closed), assignment, and due date. They are used to track parallel workstreams that need to be completed as part of resolving the case (e.g., 'Order replacement part', 'Get manager approval')."},
+{id:51,domain:"Data Model",q:"An 'Install Base Item' in CSM directly represents which real-world concept?",opts:["A product in the product catalog","A specific instance of a product actively deployed at a customer site","A CMDB configuration item","A customer's purchase order"],ans:1,exp:"An Install Base Item represents a specific deployed instance of a product for a specific customer. Example: 'Customer Acme Corp has Model X Router (serial #12345) installed at their London office.' This is distinct from the Product Model (the generic product definition) and from a CMDB CI (though they can be linked)."},
+{id:52,domain:"Configuration",q:"Which of these is a required course in the official Now Learning CIS-CSM learning path? (Select the MOST accurate answer)",opts:["CSM Implementation Workshop (ILT)","Customer Service Management Essentials (free on-demand)","Virtual Agent Advanced Implementation","CCaaS Integration Deep Dive"],ans:1,exp:"'Customer Service Management Essentials' is the free on-demand course required in the learning path. The CSM Implementation Workshop is recommended (3-day ILT) but not required. Virtual Agent and CCaaS are additional recommended courses."},
+{id:53,domain:"Workspace & Analytics",q:"In the Agent Workspace, which panel shows related Account, Contact, and Asset information for the currently open case?",opts:["Activity Stream","Related Records tab","Contextual Side Panel","Knowledge Panel"],ans:2,exp:"Contextual Side Panels in the Agent Workspace automatically display relevant Account, Contact, Install Base, and Asset information for the case being worked. This gives agents full customer context without navigating away from the case."},
+{id:54,domain:"Case Management",q:"A customer reopens a case that was previously closed. What typically happens to the SLA?",opts:["The original SLA continues from where it left off","SLA calculations reset when a case is reopened","The case gets a new, higher priority SLA automatically","SLA monitoring is suspended for reopened cases"],ans:1,exp:"When a case is reopened (moved from Closed back to Open or Awaiting Info), SLA calculations reset. The customer's renewed issue is treated as starting fresh from an SLA perspective. This ensures reopened cases are tracked accurately."},
+{id:55,domain:"Data Model",q:"Which of the following is TRUE about the Consumer entity in the B2C model?",opts:["Consumer must always be linked to an Account","Consumer is a subtype of Contact","Consumer is a standalone entity with no parent Account","Consumer and Contact are interchangeable in all configurations"],ans:2,exp:"Consumer is completely standalone in the B2C model — it has no parent Account. This is the fundamental distinction from Contact (which MUST have a parent Account in B2B). Consumer has its own fields, form, and relationships suited for B2C scenarios."},
+{id:56,domain:"Knowledge & BP",q:"What happens to a knowledge article's visibility when it is set to 'Retired' status?",opts:["It becomes read-only but still visible on the portal","It is permanently deleted","It is no longer shown on the Customer Service Portal","It requires re-approval to be published again"],ans:2,exp:"Retired knowledge articles are no longer displayed on the Customer Service Portal. They remain in the system for historical reference and audit purposes, but customers and agents using the portal search will not see them. They can be revived and republished if needed."},
+{id:57,domain:"Configuration",q:"Skills-based routing in CSM ensures that:",opts:["Cases are routed based on the agent's seniority","Cases requiring specific technical knowledge are matched to agents with those skills","Cases are distributed equally regardless of skill","All cases go to the team lead first"],ans:1,exp:"Skills-based routing matches case requirements (e.g., 'needs Spanish speaker' or 'requires SAP expertise') to agents who have those skills registered in their profile. This improves First Contact Resolution by ensuring the right expert handles the case."},
+{id:58,domain:"Workspace & Analytics",q:"Which of the following is NOT a standard CSM communication channel?",opts:["Email via Inbound Email Actions","Slack direct integration (native)","Phone/CTI via CCaaS","Engagement Messenger"],ans:1,exp:"Slack is not a native out-of-the-box CSM communication channel. The standard channels are: Email, Portal, Chat/Virtual Agent, Phone/CTI (CCaaS integration), and Engagement Messenger. Slack integration requires custom development or third-party connectors."},
+{id:59,domain:"Case Management",q:"In Major Issue Management, what is the relationship between the Major Case and individual customer cases?",opts:["Major Case is a copy of each individual case","Individual cases are created FROM the Major Case","Individual customer cases are linked to the Major Case as child cases","Major Case and individual cases have no structural relationship"],ans:2,exp:"In Major Issue Management, individual customer cases are linked to the Major Case as CHILD CASES. The Major Case is the parent, and all affected customer cases are children. This hierarchy allows coordinated communication (Case Digest) and resolution tracking."},
+{id:60,domain:"Knowledge & BP",q:"According to CSM best practices, what should be decided BEFORE configuring entitlements?",opts:["The number of agents in the support team","The B2B vs B2C data model selection","The branding colors for the portal","The Performance Analytics KPIs to track"],ans:1,exp:"The B2B vs B2C data model decision must be made FIRST — it fundamentally shapes everything else: entity relationships, entitlement structure, portal design, and case routing. Configuring entitlements before choosing the model leads to major rework."},
+{id:61,domain:"Configuration",q:"What is the difference between a Case Type and a Service Definition in CSM?",opts:["They are synonymous — both define case behavior","Case Type defines case behavior and form; Service Definition links a service to entitlements and case types","Service Definition is for internal cases; Case Type is for customer-facing cases","Case Type is configured in ITSM; Service Definition is configured in CSM"],ans:1,exp:"Case Type defines how a case behaves: the form layout, workflow, SLA, and mandatory fields. Service Definition is the business-level description of a service offering, linked to entitlement rules and associated Case Types. Multiple Case Types can be associated with one Service Definition."},
+{id:62,domain:"Data Model",q:"A company has acquired another company and wants to reflect the corporate hierarchy in ServiceNow CSM. Which feature supports this?",opts:["Contact Groups","Account Hierarchy (parent-child Account relationship)","Consumer Segments","Product Bundles"],ans:1,exp:"Account Hierarchy allows setting up parent-child relationships between Account records. The acquired company can be set as a child Account under the acquiring company's parent Account, reflecting the real-world corporate structure in CSM."},
+{id:63,domain:"Case Management",q:"An agent wants to send a status update to all customers affected by a network outage. Which is the MOST appropriate CSM feature?",opts:["Send individual emails to each customer manually","Use Case Digest on the Major Case to automatically notify all linked customers","Use Performance Analytics dashboard","Create a knowledge article and hope customers find it"],ans:1,exp:"Case Digest on a Major Case is specifically designed for this scenario. It automatically identifies all customers with child cases linked to the Major Case and sends them a standardized update. This is far more efficient and reliable than manual individual emails."},
+{id:64,domain:"Workspace & Analytics",q:"A CSM manager wants to see a single view of all KPIs for their top enterprise customer 'Globex Corp'. Which PA feature provides this?",opts:["Case List Filter","Account Scorecard","SLA Dashboard","KPI Breakdown by Category"],ans:1,exp:"An Account Scorecard aggregates all relevant KPIs for a specific Account, giving the manager a comprehensive view of performance for Globex Corp. It might show CSAT, SLA compliance, FCR, open case volume, and case aging for that specific customer."},
+{id:65,domain:"Knowledge & BP",q:"Which structured article format does KCS recommend for support knowledge articles?",opts:["Problem-Impact-Solution","FAQ format with questions and answers","Symptom-Cause-Resolution (via Knowledge Blocks)","Executive Summary-Detail-Appendix"],ans:2,exp:"KCS recommends the Symptom-Cause-Resolution structure, implemented in ServiceNow via Knowledge Blocks. This format ensures each article captures: what the customer experienced (Symptom), why it happened (Cause), and how to fix it (Resolution). It makes articles actionable and searchable."},
+{id:66,domain:"Configuration",q:"An implementer needs to prevent specific catalog items from being visible to all customers — only Gold tier customers should see them. Which mechanism controls this?",opts:["Portal theme settings","User criteria on catalog items linked to entitlement rules","CMDB access controls","Agent Workspace configuration"],ans:1,exp:"User Criteria on Service Catalog items, combined with entitlement rules, controls which customers can see which catalog items. You define criteria that checks for a valid Gold-tier entitlement — only customers meeting those criteria see the catalog item in the portal."},
+{id:67,domain:"Data Model",q:"Which CSM entity would you use to record that 'Acme Corp has 100 units of Product X deployed across their offices'?",opts:["100 separate Contact records","Product Model with quantity 100","100 Install Base Items linked to Acme Corp","100 Asset records in ITSM"],ans:2,exp:"Each deployed unit would be an Install Base Item linked to the Acme Corp Account and the Product X Product Model. 100 units = 100 Install Base Items. This allows tracking each unit individually (serial number, location, status) for support and case management purposes."},
+{id:68,domain:"Case Management",q:"What is the purpose of Inbound Email Actions in CSM?",opts:["To send SLA breach notifications to customers","To automatically create or update cases from incoming customer emails","To route emails between agent teams","To generate email reports of open cases"],ans:1,exp:"Inbound Email Actions define rules for processing incoming emails. When a customer emails the support address, the Inbound Email Action can automatically create a new Case (with the email body as the description), update an existing case (if a case number is in the subject), or route the email to specific queues."},
+{id:69,domain:"Workspace & Analytics",q:"How are Performance Analytics indicators different from standard ServiceNow reports?",opts:["PA indicators are real-time and trend over time; standard reports are static snapshots","PA indicators can only be used for cases; reports work for all tables","Standard reports are faster; PA indicators are slower to load","They are identical — PA is just a newer name for reporting"],ans:0,exp:"Performance Analytics indicators are calculated over time and support trending, targets, and breakdowns — they are designed for operational management. Standard Reports are static snapshots of current data. PA provides historical trend analysis and KPI management that basic reports cannot."},
+{id:70,domain:"Knowledge & BP",q:"An organization wants to automatically retire knowledge articles that have been rated below 2 stars by 10+ users. What feature enables this?",opts:["Knowledge Feedback with auto-retirement rules","Knowledge Lifecycle Manager","Article Quality Score automation","SLA-based article expiration"],ans:0,exp:"Knowledge Feedback mechanisms in ServiceNow can be configured to automatically trigger article retirement workflows when quality thresholds are breached (low ratings, no views, etc.). This automates knowledge base hygiene without requiring manual review of every article."},
+{id:71,domain:"Configuration",q:"In CSM, 'Communities' (available in the professional suite) serves what purpose?",opts:["Internal agent collaboration only","Customer-facing forums where customers can help each other and find answers","Executive stakeholder reporting","ITSM change management discussions"],ans:1,exp:"Communities in CSM creates customer-facing forums where customers can post questions, share solutions, and collaborate. It reduces case volume by enabling peer-to-peer support. It's part of the CSM Professional Suite and is an additional recommended course in the learning path."},
+{id:72,domain:"Data Model",q:"An entitlement automatically checks whether a customer has the right to support when a case is opened. What is this process called?",opts:["Entitlement Assignment","Entitlement Verification","SLA Calculation","Contract Validation"],ans:1,exp:"Entitlement Verification is the automatic process that runs when a case is created to check if the customer (Account/Contact/Consumer) has a valid active entitlement. It displays a verification indicator on the case and can warn agents if no entitlement is found."},
+{id:73,domain:"Configuration",q:"Which of the following accurately describes how AWA handles agent capacity?",opts:["AWA assigns cases until the agent logs out, regardless of workload","AWA respects capacity thresholds — agents are not assigned new work when at maximum capacity","AWA only considers online/offline status, not workload","AWA assigns based on last-in-first-out queue order"],ans:1,exp:"AWA manages agent capacity — each agent can have a maximum concurrent case limit defined. When an agent reaches capacity, AWA stops assigning new cases to them and routes new work to other available agents. This prevents agent overload and improves service quality."},
+{id:74,domain:"Case Management",q:"A customer emails the support address with subject 'RE: CASE0001234 still not resolved'. The system should update the existing case. Which feature handles this?",opts:["Inbound Email Action with case reference matching","Assignment Rule based on subject","Business Rule on email receipt","Virtual Agent email processor"],ans:0,exp:"Inbound Email Actions can be configured to recognize case numbers in email subjects (RE: CASE0001234) and automatically update the existing case rather than creating a new one. This is a standard Inbound Email Action configuration that recognizes the case reference pattern."},
+{id:75,domain:"Workspace & Analytics",q:"A company wants to offer customers a way to request support directly from their product's mobile app. Which CSM feature is MOST appropriate?",opts:["Service Portal embedded in an iframe","Engagement Messenger SDK/API integration","CSP external user login","Email-only channel"],ans:1,exp:"Engagement Messenger provides an SDK/API that allows integration with external applications including mobile apps. This enables customers to access support, open cases, and chat with agents directly within the company's own app without launching a browser."},
+{id:76,domain:"Knowledge & BP",q:"According to ServiceNow best practices, knowledge article quality is improved primarily by:",opts:["Having a dedicated team rewrite all articles annually","Agents updating articles in real-time as they resolve cases (KCS approach)","Hiring external technical writers","Locking articles so only managers can edit them"],ans:1,exp:"KCS (Knowledge-Centered Support) holds that quality improves when agents update articles as they solve cases — capturing real customer issues and effective resolutions. Annual rewrites by a separate team miss the continuous improvement that comes from agents working with knowledge daily."},
+{id:77,domain:"Configuration",q:"After a CSM implementation go-live, agents report that the Playbook is not activating automatically when cases reach the 'In Progress' state. What is the MOST likely cause?",opts:["Playbooks require manual activation only","The Playbook trigger condition is not configured to match the 'In Progress' state","The CSM license doesn't include Playbooks","Agents need special permission to view Playbooks"],ans:1,exp:"Playbooks have configurable trigger conditions. If the trigger is not set to activate on 'In Progress' state transition, the Playbook won't auto-launch. The implementer needs to verify the Trigger Configuration in Process Automation Designer and ensure the condition matches the case state change."},
+{id:78,domain:"Data Model",q:"Which of the following best describes the relationship between Contracts and Entitlements in CSM?",opts:["They are the same thing","A Contract can have multiple Entitlements; Entitlements derive their validity from the Contract","An Entitlement always creates a Contract automatically","Contracts are for B2B only; Entitlements are for B2C only"],ans:1,exp:"A Contract defines the formal agreement between the company and a customer Account (duration, terms). An Entitlement is derived from the Contract and defines the specific support rights (service level, case limits, hours). One Contract can have multiple Entitlements for different services."},
+{id:79,domain:"Case Management",q:"In CSM, which state indicates that a case has been transferred to Field Service Management for an on-site visit?",opts:["Escalated","Awaiting Field Service","In Progress — Field","Dispatched"],ans:0,exp:"When a Case is escalated to FSM, the case state often reflects 'Escalated' or a custom state configured by the implementer. The exact state name can vary by implementation. The key exam concept is that Cases CAN be escalated to FSM for on-site resolution, and the integration is supported out-of-the-box."},
+{id:80,domain:"Knowledge & BP",q:"The 'CSM Best Practices' course in Now Learning covers which primary topics?",opts:["Only database optimization techniques","Implementation patterns, anti-patterns, governance, and operational best practices for CSM","Advanced scripting for CSM customization","CCaaS integration technical details"],ans:1,exp:"The 'CSM Best Practices' free on-demand course covers implementation patterns (what works), anti-patterns (what to avoid), governance models, and operational best practices for running CSM effectively. It's a recommended course in the CIS-CSM learning path."},
+
+// ── BLOCK 3 (Q81-120) ──
+{id:81,domain:"Configuration",q:"A company wants to use Now Assist for CSM to help agents summarize long case histories. This requires which license tier?",opts:["Base CSM license","CSM Professional Suite","CSM Professional Plus Suite","No additional license — it's included by default"],ans:2,exp:"Now Assist features (including Case Summarization, Suggested Resolutions, Chat Assist) are part of the CSM Professional Plus Suite. They require an additional license beyond the base CIS-CSM application. The learning path includes a 'Now Assist for CSM' free course for awareness."},
+{id:82,domain:"Data Model",q:"Which of the following is a correct statement about Account Hierarchy in CSM?",opts:["Account hierarchies are limited to 2 levels (parent and child)","Account hierarchies can have unlimited levels and cases can be linked at any level","Account hierarchies are only for display purposes — they do not affect case routing","Account hierarchies require custom configuration and are not available OOTB"],ans:1,exp:"ServiceNow CSM supports multi-level Account hierarchies with no fixed depth limit. Cases, entitlements, and contacts can be associated at any level in the hierarchy. This is available out-of-the-box (OOTB) and is essential for multinational enterprise customers."},
+{id:83,domain:"Configuration",q:"A CSM implementer wants to create a playbook where Step 3 should only execute if Step 2 output indicates 'hardware defect'. Where is this conditional flow defined in PAD?",opts:["Assignment Rules on the step","Stage Transition Condition on the connection between steps","Script Include attached to the step","Flow Designer subflow"],ans:1,exp:"In Process Automation Designer (PAD), Stage Transition Conditions are placed on the connections/transitions between phases or activities. They define when the flow proceeds to the next step based on data conditions — perfect for 'only proceed to hardware repair step if defect is confirmed'."},
+{id:84,domain:"Case Management",q:"Which CSM feature automatically sends periodic status updates to all customers affected by an ongoing Major Issue?",opts:["Targeted Communications","Scheduled Reports","Case Digest","SLA Notifications"],ans:2,exp:"Case Digest is specifically designed for ongoing Major Issues. It can be configured to send periodic (e.g., every 2 hours, or on demand) status updates to all customers who have cases linked to the Major Case. This keeps impacted customers informed without agents manually emailing each one."},
+{id:85,domain:"Workspace & Analytics",q:"An agent is working a case and needs to find similar resolved cases to accelerate resolution. Which workspace feature helps most?",opts:["Related Cases tab showing similar incidents","Contextual Search / Knowledge panel in the workspace","SLA timer panel","Entitlement verification banner"],ans:1,exp:"The Contextual Knowledge panel in the Agent Workspace surfaces relevant knowledge articles and similar past cases based on the current case's content (category, short description, keywords). This helps agents find proven resolutions quickly without leaving the workspace."},
+{id:86,domain:"Knowledge & BP",q:"An article has been Published in CSM. A customer leaves a 1-star rating with comment 'This solution did not work for me'. What can the system automatically trigger?",opts:["Immediate deletion of the article","A retirement workflow to review the article's validity","A case creation for the customer's complaint","An escalation to the original article author"],ans:1,exp:"Negative feedback (low ratings) can trigger automated Knowledge Feedback workflows — a review or retirement process for the article. The article goes back to In Review state where knowledge managers can update or retire it. This is a core KCS quality improvement mechanism."},
+{id:87,domain:"Configuration",q:"The CSM Agent Workspace is configured using which ServiceNow tool?",opts:["Classic UI form editor","Workflow Editor","UI Builder","Studio IDE"],ans:2,exp:"The Configurable Workspace for CSM agents is customized using UI Builder. This tool allows configuring workspace views, list columns, form layouts, side panels, and other workspace elements in a no-code/low-code visual environment."},
+{id:88,domain:"Data Model",q:"A company sells software subscriptions. They want to track that Customer A has Version 2.1 running, and Customer B has Version 3.0. Which CSM objects model this?",opts:["Two separate CMDB CIs","Two Install Base Items, each linked to a different Product Model version","Two Contracts with different service levels","Two Service Definitions with version conditions"],ans:1,exp:"Two Install Base Items — one for Customer A linked to Product Model 'Software v2.1', one for Customer B linked to Product Model 'Software v3.0'. Install Base Items track the specific version deployed per customer, enabling version-specific support and case tracking."},
+{id:89,domain:"Case Management",q:"In which order do Inbound Email Actions process rules when multiple rules match an incoming email?",opts:["Alphabetical by name","By created date, oldest first","By Order field (lowest number = highest priority, processed first)","Randomly — all matching rules execute in parallel"],ans:2,exp:"Inbound Email Actions use an Order field to determine processing sequence. The rule with the lowest Order number is evaluated first. The first matching rule wins and executes — subsequent rules are not evaluated unless the first rule is configured to 'continue processing'."},
+{id:90,domain:"Workspace & Analytics",q:"A CSM manager wants a dashboard that shows CSAT trends over the last 6 months broken down by support region. Which combination of PA features is needed?",opts:["Standard Report + List Filter","PA Indicator (CSAT) + Breakdown (by region) + Trend visualization","Simple chart with filter","Exported Excel report with pivot table"],ans:1,exp:"This requires: a PA Indicator (CSAT score), a Breakdown dimension (by region), and a Trend view (6-month history). Performance Analytics is purpose-built for this — standard reports cannot easily provide trending + breakdown + live KPI tracking simultaneously."},
+{id:91,domain:"Knowledge & BP",q:"What is the 'CSM Implementation Workshop' in the Now Learning path?",opts:["A required free on-demand course","An optional 3-day instructor-led training (ILT) recommended before the exam","A practice sandbox environment","The official exam itself"],ans:1,exp:"The CSM Implementation Workshop is a 3-day instructor-led training (ILT) that is RECOMMENDED (not required) as practical hands-on preparation. It costs learning credits and is positioned as pre-exam practice. It is distinct from the required free online courses."},
+{id:92,domain:"Configuration",q:"What is the maximum number of Case Types that can be associated with a single Service Definition?",opts:["Only one","Two (primary and secondary)","As many as needed — no hard limit","Three"],ans:2,exp:"There is no hard limit on the number of Case Types associated with a Service Definition. A single Service Definition can have multiple Case Types, each representing a different category of issue (e.g., Billing Issue, Technical Issue, Delivery Issue) all under the same service."},
+{id:93,domain:"Data Model",q:"Which field on a Case record indicates that Entitlement Verification has confirmed the customer has valid support rights?",opts:["Entitlement Status = Active","Entitlement Verified = true / green indicator","Contract Status = Valid","SLA = Applied"],ans:1,exp:"When Entitlement Verification succeeds, the Case shows an 'Entitlement Verified' indicator (typically a green checkmark or a field set to true). This confirms the customer has valid active entitlement for the service being requested."},
+{id:94,domain:"Case Management",q:"An SLA on a case is configured with a pause condition for 'Awaiting Info' state. The case has been in Awaiting Info for 3 days. What does the SLA timer show?",opts:["The full 3 days counted against the SLA","The SLA timer is paused — those 3 days do NOT count against the SLA target","The case is automatically escalated after 24 hours in Awaiting Info","The SLA is voided after 48 hours in Awaiting Info"],ans:1,exp:"With a Pause Condition active, the SLA timer stops counting while the case is in 'Awaiting Info'. Those 3 days are not charged to the SLA. The timer resumes when the case moves out of Awaiting Info (e.g., when the customer provides the requested information)."},
+{id:95,domain:"Workspace & Analytics",q:"A customer uses the Customer Service Portal to update their case with new information. In the Agent Workspace, where does this update appear?",opts:["Separate inbox for customer updates","Case Activity Stream / Timeline","SLA breach notification","Assignment Rule trigger"],ans:1,exp:"Customer updates via the portal (notes, attachments, replies) appear in the Case Activity Stream (Timeline) in the Agent Workspace. The agent sees a chronological history of all interactions including customer portal updates, emails sent/received, and state changes."},
+{id:96,domain:"Knowledge & BP",q:"How does 'Now Assist for CSM' improve agent productivity? (Select the BEST answer)",opts:["It automatically closes cases without agent review","It generates case summaries, suggests resolutions, and provides chat response suggestions using generative AI","It replaces agents entirely for Tier 1 support","It only helps with knowledge article searching"],ans:1,exp:"Now Assist for CSM uses generative AI to: 1) Summarize long case histories for agents picking up existing cases, 2) Suggest resolution steps based on similar cases and knowledge, 3) Provide response suggestions during chat interactions. It augments agents — it does not replace them."},
+{id:97,domain:"Configuration",q:"A CSM system has multiple Assignment Rules. Rule 1 assigns 'Network Issues' to Group A. Rule 2 assigns 'Priority 1 cases' to Group B. A P1 Network Issue case is created. Which group gets it?",opts:["Group A (Rule 1 matches first alphabetically)","Group B (Rule 2 matches — last rule wins)","The group assigned by the rule with the LOWER order number (higher priority)","Both groups receive notification"],ans:2,exp:"Assignment Rules process in Order number sequence — the rule with the lowest Order number (highest priority) that matches wins. If Rule 1 has Order 100 and Rule 2 has Order 50, Rule 2 (Group B) fires. The implementation must carefully set rule order to handle overlapping conditions correctly."},
+{id:98,domain:"Data Model",q:"In a B2C implementation for a utility company, a customer 'Luigi Bianchi' calls about a billing error. Which CSM entity is the primary record?",opts:["Account: Luigi Bianchi","Contact: Luigi Bianchi linked to a personal Account","Consumer: Luigi Bianchi (standalone)","User: luigi.bianchi@email.com"],ans:2,exp:"In B2C, the primary entity is Consumer — a standalone record for Luigi Bianchi without any parent Account. The Case is linked directly to the Consumer. The sys_user (User) record is for ServiceNow platform login, not for CSM customer identity."},
+{id:99,domain:"Case Management",q:"A CSM implementer is asked to ensure cases from 'Gold' tier customers are never stuck in queue for more than 15 minutes before agent assignment. Which configuration achieves this?",opts:["Set a 15-minute case expiry","Configure an SLA with a 15-minute Response Time for Gold entitlements, with escalation notification at 10 minutes","Create a Business Rule to auto-close cases after 15 minutes","Use Performance Analytics to track it retrospectively only"],ans:1,exp:"Configuring an SLA with a 15-minute Response Time target (tied to Gold entitlement) with a warning escalation notification at 10 minutes (before breach) is the correct approach. The SLA proactively alerts supervisors when a Gold case is at risk, enabling action before the 15-minute target is missed."},
+{id:100,domain:"Workspace & Analytics",q:"What distinguishes the 'Configurable Workspace' from the classic CSM case form?",opts:["Configurable Workspace has less functionality","Configurable Workspace provides contextual panels, real-time data, omnichannel interactions in a single view — customizable via UI Builder","Classic form is better for high-volume environments","They are identical — just different visual themes"],ans:1,exp:"The Configurable Workspace is fundamentally different: it integrates contextual side panels (account info, related cases, knowledge), omnichannel interactions, timeline, and real-time data in a single unified view. It is fully customizable via UI Builder. The classic form is a standard ServiceNow form with limited contextual capabilities."},
+{id:101,domain:"Configuration",q:"An implementation team is building a CSM solution. They're debating whether to set up routing BEFORE or AFTER defining case types. What does best practice recommend?",opts:["Routing (Assignment Rules) should be configured first","Case Types should be defined first — routing rules often reference case type fields","They should be configured simultaneously","Routing doesn't depend on case types at all"],ans:1,exp:"Best practice: Define Case Types first. Assignment Rules frequently reference case type fields (e.g., assign 'Hardware Failure' case type to specific group). Building routing before case types means either using generic rules initially or doing rework later. Case Types define the categories that routing rules act on."},
+{id:102,domain:"Data Model",q:"Which of the following statements about Contracts in CSM is CORRECT?",opts:["Contracts are optional and never affect entitlement processing","Contracts define formal agreements and are the source from which Entitlements derive their validity periods","Contracts automatically create cases when they expire","Contracts are only used in B2C implementations"],ans:1,exp:"Contracts define formal agreements between the company and customer (duration, terms, auto-renewal). Entitlements are derived from Contracts — the entitlement inherits its validity period from the contract. When a contract expires, associated entitlements also expire, affecting support rights."},
+{id:103,domain:"Case Management",q:"An implementer needs to track that an agent called a customer, left a voicemail, and then emailed follow-up details. All within the same case. Where are these interactions recorded?",opts:["Three separate Cases are created","In the Case Activity Stream (Timeline)","In the Assignment Rules log","In a separate Communication Log table"],ans:1,exp:"All interactions within a case are recorded in the Activity Stream / Timeline — the chronological log of everything that happened on the case. Phone calls, emails, notes, state changes, and customer portal updates all appear here, providing a complete interaction history."},
+{id:104,domain:"Workspace & Analytics",q:"A CSM portal shows a customer their open cases, a knowledge article search bar, and a service request catalog. Which three CSM components are being used?",opts:["Case Module, Knowledge Module, and ITSM Service Catalog","CSP with My Cases widget, Knowledge Articles widget, and Service Catalog widget","Three separate portals combined","ITSM Employee Service Center with CSM extension"],ans:1,exp:"This is the Customer Service Portal (CSP) configured with: My Cases widget (open cases list), Knowledge Articles widget (search), and Service Catalog widget (service requests). These are standard CSM portal widgets assembled in the Service Portal framework."},
+{id:105,domain:"Knowledge & BP",q:"A knowledge manager notices that 80% of knowledge articles have never been viewed. According to KCS, what should happen to these articles?",opts:["They should be printed and distributed to agents","They should be reviewed and likely retired — unviewed articles are not helping anyone","They should be promoted on the portal homepage","They should be auto-converted to FAQs"],ans:1,exp:"KCS emphasizes knowledge quality over quantity. Unviewed articles are not delivering value. Per best practices, they should be reviewed: if they address real issues but aren't findable, improve searchability. If they address no real issues, retire them. A massive unused knowledge base is a maintenance burden."},
+{id:106,domain:"Configuration",q:"Which of these items would you configure in 'UI Builder' (as opposed to Classic Service Portal configuration)?",opts:["Service Portal theme colors","CSM Agent Workspace layout and side panels","Knowledge Base categories","Email notification templates"],ans:1,exp:"UI Builder is used to configure the Configurable Workspace (Agent Workspace) — including layout, side panel content, workspace views, and lists. Service Portal themes are in the Service Portal admin. Knowledge Base categories are in Knowledge Management. Email templates are in Notifications."},
+{id:107,domain:"Data Model",q:"A customer has purchased three different products from a vendor. Each product has its own support terms. How many Entitlements would typically be created?",opts:["One consolidated Entitlement for all products","One Entitlement per product purchased (three Entitlements)","One Contract with no Entitlements","Entitlements are only per Account, not per product"],ans:1,exp:"Typically, one Product Entitlement per product purchased — each product may have different support terms, response times, and service levels. Three products = three Entitlements, all potentially linked to one Master Contract. This granularity allows entitlement verification to match the specific product in the case."},
+{id:108,domain:"Case Management",q:"What is the PRIMARY benefit of linking Case Tasks to a Case (rather than handling everything in the case timeline)?",opts:["Tasks are easier to delete","Tasks can be assigned to different teams/individuals and tracked separately from the main case","Tasks are cheaper in licensing","Tasks bypass SLA calculations"],ans:1,exp:"Case Tasks can be assigned to different teams, individuals, or external resources and tracked independently with their own states and due dates. This is critical for complex cases that require parallel workstreams — e.g., one team orders a part while another does remote diagnostics, both linked to the same parent case."},
+{id:109,domain:"Workspace & Analytics",q:"In Performance Analytics for CSM, what is the difference between a 'Target' and a 'Threshold'?",opts:["They are identical — just different terminology","A Target is the goal value; a Threshold triggers a color change or alert when the indicator approaches/exceeds a limit","A Target is set by management; a Threshold is auto-calculated","Targets are for CSAT; Thresholds are for SLA only"],ans:1,exp:"In PA: Target = the goal you want to achieve (e.g., CSAT ≥ 4.5). Threshold = a boundary that changes the indicator's visual status (typically amber warning / red critical). Thresholds create visual alerts when performance deteriorates. Targets define success."},
+{id:110,domain:"Knowledge & BP",q:"A CSM implementation team wants to ensure that all new cases for 'Password Reset' issues are automatically linked to the relevant knowledge article. Which feature enables this?",opts:["Entitlement auto-match","Suggested Knowledge Articles configured via PA","Predictive Intelligence — topic recommendations based on case content","Assignment Rules with knowledge linking"],ans:2,exp:"Predictive Intelligence (available in CSM, and a Micro-Certification in the professional suite path) can automatically suggest and link knowledge articles based on case content analysis. When a 'Password Reset' case is created, PI identifies the relevant article. This is a Now Intelligence feature integrated with CSM."},
+{id:111,domain:"Configuration",q:"An implementer is told that the company's SLA for VIP customers states: 'We will respond within 1 hour, and resolve within 8 business hours.' How many SLA definitions are needed?",opts:["One combined SLA with multiple conditions","Two separate SLA definitions: one for Response Time (1 hour) and one for Resolution Time (8 business hours)","Four SLAs — one per business hour block","Only the resolution SLA matters; response is tracked differently"],ans:1,exp:"Best practice: separate SLA definitions for Response Time (first agent touch) and Resolution Time (case closure). Two SLAs are created and both linked to the VIP entitlement. This allows the system to track and report on both metrics independently."},
+{id:112,domain:"Data Model",q:"What is the 'customer_account' table used for in ServiceNow?",opts:["Storing financial account numbers","Storing the customer company (Account) records in the B2B CSM model","Storing all ServiceNow user accounts","Storing billing information for contracts"],ans:1,exp:"The 'customer_account' table stores Account records — the company-level entities in the CSM B2B model. Each row represents a customer company. This is distinct from sys_user (platform users), sys_account (internal ServiceNow account), and financial/billing tables."},
+{id:113,domain:"Case Management",q:"In CSM, when is it appropriate to use Targeted Communications instead of Case Digest?",opts:["When you want an automated update on Major Case progress","When you want to proactively reach out to specific customer segments with custom messaging about an issue or announcement","When SLAs are breached","When closing cases in bulk"],ans:1,exp:"Targeted Communications is for proactive, custom messaging to defined customer segments. Example: notify all customers who purchased Product X that an upgrade is available. Case Digest is specifically for updating customers on Major Case resolution progress. They serve different communication needs."},
+{id:114,domain:"Workspace & Analytics",q:"A new CSM agent asks: 'Where do I find instructions specific to the customer I'm about to call?' The answer is:",opts:["Check the Knowledge Base","Look at the Account record in Classic UI","Check the Special Handling Notes displayed in the Agent Workspace when the case is open","Review the SLA timer"],ans:2,exp:"Special Handling Notes appear automatically in the Agent Workspace when the agent opens a case for a customer that has handling notes configured. The agent doesn't need to navigate anywhere — the notes appear contextually, ensuring the agent sees critical instructions before interacting with the customer."},
+{id:115,domain:"Knowledge & BP",q:"According to the Now Create Methodology, what is a 'User Story' in a CSM implementation?",opts:["A description of how a customer uses the portal","A short description of a feature from the end-user's perspective (As a [role], I want [capability] so that [benefit])","The narrative in a knowledge article","A case description template"],ans:1,exp:"In Now Create (Agile), User Stories follow the format: 'As a [customer/agent/manager], I want [functionality] so that [business value].' They define requirements from the end-user perspective and are used in sprint planning. Example: 'As a CSM agent, I want to see all open cases for an Account in one view so I can provide context-aware support.'"},
+{id:116,domain:"Configuration",q:"What happens when an Assignment Rule matches a case but the target group has no available agents?",opts:["The case is returned to the unassigned queue","The case is assigned to the group (not a specific agent) and appears in the group's queue for manual pickup","The case is escalated to the next priority group automatically","Assignment fails and the case remains unassigned indefinitely"],ans:1,exp:"Assignment Rules assign to a Group — not necessarily a specific agent. When the group has no immediately available agent, the case appears in the group's queue. Agents in that group see the queued case and pick it up when available. AWA can then further assign to a specific agent if configured."},
+{id:117,domain:"Data Model",q:"A company offers 'Platinum Support' that includes: unlimited cases, 24/7 access, and 1-hour response SLA. Which entitlement type BEST covers the 'unlimited cases' aspect?",opts:["Time-Based Entitlement","Service Entitlement","Allocated Entitlement with limit 9999","No entitlement needed — unlimited cases require no entitlement tracking"],ans:1,exp:"Service Entitlement covers a service level (24/7 access, 1-hour SLA) without case limits. The 'unlimited cases' aspect means there's no Allocated Entitlement constraint. A Service Entitlement tied to the Platinum Support contract captures the service level and validity period without a case cap."},
+{id:118,domain:"Case Management",q:"An agent is resolving a CSM case and notices the customer has 3 other open cases. Where in the Agent Workspace can the agent quickly see these related cases?",opts:["They must open a separate browser tab to search","In the Contextual Side Panel or Related Records section of the workspace","In the SLA timer panel","In the Knowledge Articles panel"],ans:1,exp:"The Agent Workspace's Contextual Side Panel shows related information for the current customer — including other open cases for that Account or Contact. This contextual awareness lets agents understand the customer's full situation without navigating away."},
+{id:119,domain:"Knowledge & BP",q:"What is the recommended maximum age for a 'Current' knowledge article in a CSM knowledge base before it should be reviewed for accuracy?",opts:["6 months","1 year","2 years","ServiceNow does not prescribe a specific age — review triggers are based on feedback and usage metrics"],ans:3,exp:"KCS and ServiceNow best practices recommend review triggers based on signals: low ratings, declining views, high customer feedback volume, and product version changes. There's no hard prescribed maximum age. Usage signals and feedback are better indicators of when review is needed than arbitrary time periods."},
+{id:120,domain:"Configuration",q:"Which of the following is NOT part of the standard CIS-CSM exam scope for 2026?",opts:["Configuring CSM Playbooks using PAD","Setting up the CSM-ITSM Bridge","Advanced REST API scripting for CSM integrations","Configuring Case Routing with Assignment Rules"],ans:2,exp:"Advanced REST API scripting is not in the standard CIS-CSM exam scope. The exam focuses on configuration (not custom scripting), including Playbooks, CSM-ITSM Bridge, case routing, entitlements, workspace, portals, and knowledge management. Deep scripting knowledge is more relevant to the CAD (Certified Application Developer) exam."}
+];
+
+// ════════════════════════════════════════════════════════════
+// DATA — FLASHCARDS
+// ════════════════════════════════════════════════════════════
+const FLASHCARDS = [
+  {domain:"Data Model",q:"What is the B2B data model in CSM?",a:"Account (company) + Contact (person at company). Every Case links to an Account. Used for business customers."},
+  {domain:"Data Model",q:"What is the B2C data model in CSM?",a:"Consumer (standalone individual, no parent Account). Used for end-users in telecoms, utilities, retail."},
+  {domain:"Data Model",q:"What system property toggles B2B mode?",a:"glide.cs.enable.b2b — found in Customer Service > Administration > Properties."},
+  {domain:"Data Model",q:"What is an Allocated Entitlement?",a:"An entitlement that limits the NUMBER of cases a customer can open in a period."},
+  {domain:"Data Model",q:"What is a Time-Based Entitlement?",a:"An entitlement that limits support to a specific TIME WINDOW (e.g., 20 support hours per month)."},
+  {domain:"Data Model",q:"What is an Install Base Item?",a:"A specific instance of a product actively deployed at a customer site — links Account to Product Model."},
+  {domain:"Data Model",q:"What is Entitlement Verification?",a:"Automatic check when a case is created to confirm if the customer has valid support rights. Shows warning if not, but does NOT block case creation."},
+  {domain:"Data Model",q:"What table stores Contact records in CSM?",a:"customer_contact — distinct from sys_user (platform users)."},
+  {domain:"Configuration",q:"Which tool creates CSM Playbooks?",a:"Process Automation Designer (PAD) — NOT Flow Designer or Workflow Editor."},
+  {domain:"Configuration",q:"What does the CSM-ITSM Bridge do?",a:"Allows creating an ITSM Incident from a CSM Case. Bidirectional — case updates automatically when incident closes."},
+  {domain:"Configuration",q:"What Business Rule handles the reverse CSM-ITSM flow?",a:"'Update Case on Incident Closure' — auto-updates Case state when linked Incident is resolved."},
+  {domain:"Configuration",q:"What are Special Handling Notes?",a:"Customer-specific instructions displayed automatically in Agent Workspace when working a case for that customer."},
+  {domain:"Configuration",q:"What is AWA in CSM?",a:"Advanced Work Assignment — capacity and skills-aware automatic assignment to individual agents."},
+  {domain:"Configuration",q:"What does a 'Lane' define in a CSM Playbook?",a:"Who is responsible for executing a specific step (agent, supervisor, or system)."},
+  {domain:"Configuration",q:"Where are CSM system properties configured?",a:"Customer Service > Administration > Properties"},
+  {domain:"Case Management",q:"In which case state can the SLA timer be paused?",a:"'Awaiting Info' — delay attributed to customer waiting for response. Configured via Pause Conditions on SLA."},
+  {domain:"Case Management",q:"How long before a Resolved case auto-closes by default?",a:"5 days — configurable in CSM Properties."},
+  {domain:"Case Management",q:"What is a Case Digest?",a:"Automatic communication sent to all customers with cases linked to a Major Case, updating them on resolution progress."},
+  {domain:"Case Management",q:"What is Targeted Communications?",a:"Manual bulk personalized messages sent to specific customer segments. Different from Case Digest (which is automated Major Issue updates)."},
+  {domain:"Case Management",q:"What is the difference between Case Tasks and Case Activities?",a:"Tasks = structured work items with state/assignment. Activities = timeline entries (notes, emails, state changes)."},
+  {domain:"Workspace & Analytics",q:"What framework is the Customer Service Portal (CSP) built on?",a:"Service Portal (AngularJS) — NOT Next Experience or UI Builder."},
+  {domain:"Workspace & Analytics",q:"What is Engagement Messenger?",a:"Embeddable widget placed on external websites. Customers interact with support without visiting the ServiceNow portal."},
+  {domain:"Workspace & Analytics",q:"What is FCR?",a:"First Contact Resolution — % of cases resolved on the first customer contact without follow-up."},
+  {domain:"Workspace & Analytics",q:"What is a PA Scorecard?",a:"Aggregates all KPIs for a single Account — shows health of customer relationship at a glance."},
+  {domain:"Workspace & Analytics",q:"What tool configures the Agent Workspace layouts?",a:"UI Builder — used for Configurable Workspace layouts, side panels, views, and list customization."},
+  {domain:"Knowledge & BP",q:"What does KCS stand for and mean?",a:"Knowledge-Centered Support — knowledge is created and improved AT THE TIME it is used to resolve a case."},
+  {domain:"Knowledge & BP",q:"What states does a knowledge article go through?",a:"Draft → In Review → Published → Retired. Only Published articles are visible on the CSP."},
+  {domain:"Knowledge & BP",q:"What are Knowledge Blocks?",a:"Structured article sections: Symptom, Cause, Resolution. Enforce KCS consistency."},
+  {domain:"Knowledge & BP",q:"What is the best practice order for CSM implementation?",a:"1. Define data model (B2B/B2C) → 2. Configure entitlements → 3. Build case types → 4. Configure channels."},
+  {domain:"Knowledge & BP",q:"What methodology does Now Create follow?",a:"Agile — sprint-based, user stories, stakeholder collaboration. Required course in CIS-CSM learning path."},
+];
+
+// ════════════════════════════════════════════════════════════
+// STATE & STORAGE
+// ════════════════════════════════════════════════════════════
+let lang = 'en';
+let currentDomain = 0;
+let quizState = { block: 0, answers: {}, started: false, currentQ: 0 };
+let fcState = { deck: [], idx: 0, flipped: false, knew: 0, missed: 0, domainFilter: 'All' };
+let progress = loadProgress();
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem('cis_csm_progress_v2');
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return {
+    topicsDone: [], // array of topic keys "domainId-topicIdx"
+    quizResults: [], // array of {block, score, total, date, domainBreakdown:{}}
+    fcKnew: [], // flashcard indices known
+    fcMissed: [], // flashcard indices missed
+    totalQAnswered: 0,
+    totalQCorrect: 0,
+  };
+}
+
+function saveProgress() {
+  try { localStorage.setItem('cis_csm_progress_v2', JSON.stringify(progress)); } catch(e) {}
+}
+
+function confirmReset() {
+  if (confirm(lang === 'en' ? 'Reset ALL progress? This cannot be undone.' : 'Azzerare TUTTI i progressi? Non è reversibile.')) {
+    progress = { topicsDone: [], quizResults: [], fcKnew: [], fcMissed: [], totalQAnswered: 0, totalQCorrect: 0 };
+    saveProgress();
+    quizState = { block: 0, answers: {}, started: false, currentQ: 0 };
+    showView('home');
+    updateSidebarProgress();
+    showToast(lang === 'en' ? '↺ Progress reset' : '↺ Progressi azzerati', 'info');
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// LANG SWITCH
+// ════════════════════════════════════════════════════════════
+function setLang(l) {
+  lang = l;
+  document.getElementById('btn-en').classList.toggle('active', l === 'en');
+  document.getElementById('btn-it').classList.toggle('active', l === 'it');
+  applyLang();
+  // re-render current theory if visible
+  if (document.getElementById('view-theory').classList.contains('active')) {
+    renderTheory(currentDomain);
+  }
+}
+
+function t(key) {
+  const translations = {
+    'Overall Progress':    { it: 'Progressi totali' },
+    'topics':              { it: 'argomenti' },
+    'Study Domains':       { it: 'Domini di studio' },
+    'Select a domain from the sidebar to begin.': { it: 'Seleziona un dominio dalla barra laterale.' },
+    'Exam Quiz':           { it: 'Quiz d\'esame' },
+    'Blocks of 40 questions · English · Answer and read explanation immediately': { it: 'Blocchi da 40 domande · Inglese · Rispondi e leggi subito la spiegazione' },
+    'Flashcards':          { it: 'Flashcard' },
+    'Click card to reveal answer · Mark what you know': { it: 'Clicca la card per vedere la risposta · Segna cosa conosci' },
+    'My Progress':         { it: 'I miei progressi' },
+    'Your personal study stats — saved locally in your browser': { it: 'Le tue statistiche di studio — salvate localmente nel browser' },
+    'Dashboard':           { it: 'Bacheca' },
+    'CIS-CSM 2026 Study Hub': { it: 'CIS-CSM 2026 — Hub di Studio' },
+    'Select a question block:': { it: 'Seleziona un blocco di domande:' },
+  };
+  if (lang === 'it' && translations[key]) return translations[key].it;
+  return key;
+}
+
+function applyLang() {
+  document.getElementById('sp-label').textContent = t('Overall Progress');
+  document.getElementById('theory-title').textContent = t('Study Domains');
+  document.getElementById('theory-sub').textContent = t('Select a domain from the sidebar to begin.');
+  document.getElementById('quiz-title').textContent = t('Exam Quiz');
+  document.getElementById('quiz-sub').textContent = t('Blocks of 40 questions · English · Answer and read explanation immediately');
+  document.getElementById('fc-title').textContent = t('Flashcards');
+  document.getElementById('fc-sub').textContent = t('Click card to reveal answer · Mark what you know');
+  document.getElementById('prog-title').textContent = t('My Progress');
+  document.getElementById('prog-sub').textContent = t('Your personal study stats — saved locally in your browser');
+  document.getElementById('nav-home-text').textContent = t('Dashboard');
+  document.getElementById('home-title').textContent = t('CIS-CSM 2026 Study Hub');
+  document.getElementById('qs-select-label').textContent = t('Select a question block:');
+  updateSidebarProgress();
+}
+
+// ════════════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════════════
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+
+  if (name === 'theory') { renderTheory(currentDomain); }
+  if (name === 'quiz') { renderQuizSetup(); }
+  if (name === 'flashcards') { renderFlashcards(); }
+  if (name === 'progress') { renderProgress(); }
+  if (name === 'home') { renderHome(); }
+
+  // highlight nav
+  const map = { home: 0, theory: 1, quiz: 4, flashcards: 5, progress: 7 };
+}
+
+function toggleTheoryNav() {
+  const sub = document.getElementById('theory-subnav');
+  sub.style.display = sub.style.display === 'none' ? 'block' : 'none';
+  showView('theory');
+}
+
+function showTheory(domainIdx) {
+  currentDomain = domainIdx;
+  document.getElementById('theory-subnav').style.display = 'block';
+  document.querySelectorAll('.nav-sub-item').forEach((el, i) => el.classList.toggle('active', i === domainIdx));
+  showView('theory');
+}
+
+// ════════════════════════════════════════════════════════════
+// SIDEBAR PROGRESS
+// ════════════════════════════════════════════════════════════
+function updateSidebarProgress() {
+  const totalTopics = THEORY.reduce((s, d) => s + d.topics.length, 0);
+  const done = progress.topicsDone.length;
+  const pct = totalTopics > 0 ? Math.round(done / totalTopics * 100) : 0;
+
+  document.getElementById('overall-bar').style.width = pct + '%';
+  document.getElementById('sp-topics').textContent = done + '/' + totalTopics + ' ' + (lang === 'en' ? 'topics' : 'argomenti');
+  document.getElementById('sp-pct').textContent = pct + '%';
+
+  // update check marks
+  THEORY.forEach((domain, di) => {
+    domain.topics.forEach((topic, ti) => {
+      const key = di + '-' + ti;
+      const check = document.getElementById('check-' + di);
+      if (check) {
+        const allDone = domain.topics.every((_, tii) => progress.topicsDone.includes(di + '-' + tii));
+        check.textContent = allDone ? '✓' : '';
+        document.getElementById('subnav-' + di).classList.toggle('done', allDone);
+      }
+    });
+  });
+
+  // theory done badge
+  const domainsDone = THEORY.filter((d, di) => d.topics.every((_, ti) => progress.topicsDone.includes(di + '-' + ti))).length;
+  document.getElementById('theory-done-badge').textContent = domainsDone + '/5';
+}
+
+// ════════════════════════════════════════════════════════════
+// HOME RENDER
+// ════════════════════════════════════════════════════════════
+function renderHome() {
+  const totalQ = progress.totalQAnswered;
+  const pct = totalQ > 0 ? Math.round(progress.totalQCorrect / totalQ * 100) : 0;
+  // update home cards with progress hints
+}
+
+// ════════════════════════════════════════════════════════════
+// THEORY RENDER
+// ════════════════════════════════════════════════════════════
+function renderTheory(domainIdx) {
+  const domain = THEORY[domainIdx];
+  const container = document.getElementById('theory-content');
+
+  let html = `<div class="theory-section-header">
+    <div class="tsh-pct">${domain.pct}</div>
+    <div class="tsh-info">
+      <h3>${domain.title[lang]}</h3>
+      <p>${domain.subtitle[lang]}</p>
+    </div>
+  </div>`;
+
+  domain.topics.forEach((topic, ti) => {
+    const key = domainIdx + '-' + ti;
+    const isDone = progress.topicsDone.includes(key);
+    const isOpen = !isDone; // auto-open first undone topic
+
+    html += `<div class="concept-block ${isOpen && ti === 0 ? 'open' : ''}" id="block-${domainIdx}-${ti}">
+      <div class="concept-block-header" onclick="toggleBlock(${domainIdx},${ti})">
+        <h4>
+          <span class="tag ${topic.tag}">${topic.tag.toUpperCase()}</span>
+          ${topic.title[lang]}
+          ${isDone ? ' <span style="color:var(--green);font-size:12px">✓</span>' : ''}
+        </h4>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="concept-block-body">
+        ${topic.body[lang]}
+        <br>
+        <button class="mark-done-btn ${isDone ? 'done' : ''}" onclick="markTopicDone(${domainIdx},${ti})" id="done-btn-${domainIdx}-${ti}">
+          ${isDone ? (lang === 'en' ? '✓ Completed' : '✓ Completato') : (lang === 'en' ? 'Mark as read ✓' : 'Segna come letto ✓')}
+        </button>
+      </div>
+    </div>`;
+  });
+
+  container.innerHTML = html;
+
+  // Domain navigation
+  html += '';
+  const nav = `<div style="display:flex;gap:10px;margin-top:20px">
+    ${domainIdx > 0 ? `<button class="btn-secondary" onclick="showTheory(${domainIdx-1})">← ${THEORY[domainIdx-1].title[lang].split(':')[0]}</button>` : ''}
+    ${domainIdx < THEORY.length-1 ? `<button class="btn-primary" onclick="showTheory(${domainIdx+1})" style="margin-left:auto">${THEORY[domainIdx+1].title[lang].split(':')[0]} →</button>` : ''}
+  </div>`;
+  container.innerHTML += nav;
+}
+
+function toggleBlock(di, ti) {
+  const block = document.getElementById(`block-${di}-${ti}`);
+  block.classList.toggle('open');
+}
+
+function markTopicDone(di, ti) {
+  const key = di + '-' + ti;
+  if (!progress.topicsDone.includes(key)) {
+    progress.topicsDone.push(key);
+    saveProgress();
+    showToast(lang === 'en' ? '✓ Topic marked as completed!' : '✓ Argomento completato!', 'success');
+  }
+  document.getElementById(`done-btn-${di}-${ti}`).textContent = lang === 'en' ? '✓ Completed' : '✓ Completato';
+  document.getElementById(`done-btn-${di}-${ti}`).classList.add('done');
+  updateSidebarProgress();
+}
+
+// ════════════════════════════════════════════════════════════
+// QUIZ RENDER
+// ════════════════════════════════════════════════════════════
+const BLOCKS = [
+  { label: 'Block 1', range: [0, 40], emoji: '1️⃣' },
+  { label: 'Block 2', range: [40, 80], emoji: '2️⃣' },
+  { label: 'Block 3', range: [80, 120], emoji: '3️⃣' },
+];
+
+function renderQuizSetup() {
+  const sel = document.getElementById('block-selector');
+  sel.innerHTML = BLOCKS.map((b, i) => {
+    const results = progress.quizResults.filter(r => r.block === i);
+    const best = results.length > 0 ? Math.max(...results.map(r => Math.round(r.score/r.total*100))) : null;
+    return `<button class="block-btn ${quizState.block === i && quizState.started ? 'active' : ''}" onclick="startQuizBlock(${i})">
+      ${b.emoji} ${b.label} <span class="b-check">${best !== null ? best + '%' : '—'}</span>
+    </button>`;
+  }).join('');
+
+  if (!quizState.started) {
+    document.getElementById('quiz-area').innerHTML = `<div class="card" style="text-align:center;padding:32px">
+      <div style="font-size:32px;margin-bottom:12px">🎯</div>
+      <div style="font-size:16px;font-weight:500;margin-bottom:8px">${lang==='en'?'Select a block above to start':'Seleziona un blocco per iniziare'}</div>
+      <div style="font-size:13px;color:var(--text2)">${lang==='en'?'120 questions total · 40 per block · No time limit':'120 domande totali · 40 per blocco · Nessun limite di tempo'}</div>
+    </div>`;
+    return;
+  }
+  renderQuizBlock();
+}
+
+function startQuizBlock(blockIdx) {
+  quizState = { block: blockIdx, answers: {}, started: true, currentQ: 0 };
+  renderQuizSetup();
+}
+
+function getBlockQuestions() {
+  const [start, end] = BLOCKS[quizState.block].range;
+  return ALL_QUESTIONS.slice(start, end);
+}
+
+function renderQuizBlock() {
+  const qs = getBlockQuestions();
+  const answered = Object.keys(quizState.answers).length;
+  const correct = Object.values(quizState.answers).filter(a => a.correct).length;
+
+  // Dots
+  let dotsHtml = '<div class="q-progress-dots">';
+  qs.forEach((q, i) => {
+    const a = quizState.answers[i];
+    let cls = i === quizState.currentQ ? 'current' : '';
+    if (a) cls = a.correct ? 'answered-correct' : 'answered-wrong';
+    dotsHtml += `<div class="q-dot ${cls}" onclick="jumpToQ(${i})">${i+1}</div>`;
+  });
+  dotsHtml += '</div>';
+
+  // Nav bar
+  let navHtml = `<div class="quiz-nav-bar">
+    <div class="qnb-info">${lang==='en'?'Question':'Domanda'} <span>${quizState.currentQ+1}/${qs.length}</span></div>
+    <div class="qnb-info">${lang==='en'?'Domain':'Dominio'}: <span class="tag blue">${qs[quizState.currentQ].domain}</span></div>
+    <div class="quiz-score-badge">${correct}/${answered} ${lang==='en'?'correct':'corrette'}</div>
+  </div>`;
+
+  // Question
+  const q = qs[quizState.currentQ];
+  const answered_this = quizState.answers[quizState.currentQ];
+
+  let optsHtml = '';
+  q.opts.forEach((opt, oi) => {
+    let cls = '';
+    if (answered_this) {
+      if (oi === q.ans) cls = 'correct';
+      else if (oi === answered_this.chosen && !answered_this.correct) cls = 'wrong';
+    }
+    optsHtml += `<button class="option-btn ${cls}" ${answered_this ? 'disabled' : ''} onclick="answerQ(${oi})">
+      <span class="opt-letter">${String.fromCharCode(65+oi)}</span>
+      ${opt}
+    </button>`;
+  });
+
+  let expHtml = '';
+  if (answered_this) {
+    const isCorrect = answered_this.correct;
+    expHtml = `<div class="explanation show">
+      ${isCorrect ? '<strong style="color:var(--green)">✓ Correct!</strong>' : '<strong style="color:var(--red)">✗ Incorrect.</strong>'}
+      ${!isCorrect ? `The correct answer is <strong>${String.fromCharCode(65+q.ans)}. ${q.opts[q.ans]}</strong>.<br><br>` : '<br>'}
+      <strong>${lang==='en'?'Explanation:':'Spiegazione:'}</strong> ${q.exp}
+    </div>`;
+  }
+
+  let ctrlHtml = '<div class="quiz-controls">';
+  if (quizState.currentQ > 0) ctrlHtml += `<button class="btn-secondary" onclick="jumpToQ(${quizState.currentQ-1})">← ${lang==='en'?'Previous':'Precedente'}</button>`;
+  if (quizState.currentQ < qs.length-1) ctrlHtml += `<button class="btn-primary" onclick="jumpToQ(${quizState.currentQ+1})" style="margin-left:auto">${lang==='en'?'Next':'Successiva'} →</button>`;
+  if (answered >= qs.length) ctrlHtml += `<button class="btn-primary" onclick="finishQuiz()" style="margin-left:auto;background:var(--green)">🏁 ${lang==='en'?'See Results':'Vedi Risultati'}</button>`;
+  ctrlHtml += '</div>';
+
+  document.getElementById('quiz-area').innerHTML = dotsHtml + navHtml + `
+    <div class="question-card">
+      <div class="q-meta">
+        <span>Q${quizState.currentQ + 1 + BLOCKS[quizState.block].range[0]}</span>
+        <span class="domain-tag">${q.domain}</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">${optsHtml}</div>
+      ${expHtml}
+    </div>` + ctrlHtml;
+}
+
+function answerQ(chosenIdx) {
+  const qs = getBlockQuestions();
+  const q = qs[quizState.currentQ];
+  const isCorrect = chosenIdx === q.ans;
+  quizState.answers[quizState.currentQ] = { chosen: chosenIdx, correct: isCorrect };
+  progress.totalQAnswered++;
+  if (isCorrect) progress.totalQCorrect++;
+  saveProgress();
+  renderQuizBlock();
+}
+
+function jumpToQ(idx) {
+  quizState.currentQ = idx;
+  renderQuizBlock();
+}
+
+function finishQuiz() {
+  const qs = getBlockQuestions();
+  const correct = Object.values(quizState.answers).filter(a => a.correct).length;
+  const total = qs.length;
+  const pct = Math.round(correct / total * 100);
+  const passed = pct >= 70;
+
+  // Domain breakdown
+  const breakdown = {};
+  qs.forEach((q, i) => {
+    if (!breakdown[q.domain]) breakdown[q.domain] = { correct: 0, total: 0 };
+    breakdown[q.domain].total++;
+    if (quizState.answers[i] && quizState.answers[i].correct) breakdown[q.domain].correct++;
+  });
+
+  progress.quizResults.push({
+    block: quizState.block,
+    score: correct, total,
+    date: new Date().toLocaleDateString(),
+    domainBreakdown: breakdown
+  });
+  saveProgress();
+
+  let breakdownHtml = Object.entries(breakdown).map(([dom, data]) => {
+    const dpct = Math.round(data.correct/data.total*100);
+    return `<div class="rb-item">
+      <div class="rb-domain">${dom}</div>
+      <div class="rb-score" style="color:${dpct>=70?'var(--green)':'var(--red)'}">${dpct}%</div>
+      <div style="font-size:11px;color:var(--text3)">${data.correct}/${data.total}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('quiz-result').style.display = 'block';
+  document.getElementById('quiz-setup').style.display = 'none';
+  document.getElementById('quiz-result').innerHTML = `
+    <div class="result-screen">
+      <div class="rs-score ${passed?'rs-pass':'rs-fail'}">${pct}%</div>
+      <div class="rs-label ${passed?'rs-pass':'rs-fail'}">${passed ? (lang==='en'?'🎉 Passed! Great work.':'🎉 Superato! Ottimo lavoro.') : (lang==='en'?'Not quite — keep studying!':'Non ancora — continua a studiare!')}</div>
+      <div style="font-size:14px;color:var(--text2);margin-bottom:20px">${correct}/${total} ${lang==='en'?'correct':' corrette'} · ${lang==='en'?'Passing threshold: 70%':'Soglia: 70%'}</div>
+      <div class="result-breakdown">${breakdownHtml}</div>
+      <div class="quiz-controls" style="justify-content:center;margin-top:24px">
+        <button class="btn-secondary" onclick="retakeQuiz()">${lang==='en'?'↺ Retake this block':'↺ Rifai questo blocco'}</button>
+        <button class="btn-primary" onclick="document.getElementById('quiz-result').style.display='none';document.getElementById('quiz-setup').style.display='block';quizState.started=false;renderQuizSetup()">${lang==='en'?'← Back to blocks':'← Torna ai blocchi'}</button>
+      </div>
+    </div>`;
+  updateSidebarProgress();
+}
+
+function retakeQuiz() {
+  document.getElementById('quiz-result').style.display = 'none';
+  document.getElementById('quiz-setup').style.display = 'block';
+  startQuizBlock(quizState.block);
+}
+
+// ════════════════════════════════════════════════════════════
+// FLASHCARDS RENDER
+// ════════════════════════════════════════════════════════════
+function renderFlashcards() {
+  const domains = ['All', ...new Set(FLASHCARDS.map(f => f.domain))];
+  const selHtml = '<div class="block-selector">' + domains.map(d =>
+    `<button class="block-btn ${fcState.domainFilter===d?'active':''}" onclick="setFcDomain('${d}')">${d}</button>`
+  ).join('') + '</div>';
+  document.getElementById('fc-domain-select').innerHTML = selHtml;
+  renderFcCard();
+}
+
+function setFcDomain(domain) {
+  fcState.domainFilter = domain;
+  const deck = domain === 'All' ? [...FLASHCARDS.keys()] : FLASHCARDS.map((f,i)=>f.domain===domain?i:-1).filter(i=>i>=0);
+  fcState.deck = shuffleArray(deck);
+  fcState.idx = 0; fcState.flipped = false; fcState.knew = 0; fcState.missed = 0;
+  renderFlashcards();
+}
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function initFcDeck() {
+  if (fcState.deck.length === 0) {
+    fcState.deck = shuffleArray([...FLASHCARDS.keys()]);
+    fcState.idx = 0; fcState.flipped = false; fcState.knew = 0; fcState.missed = 0;
+  }
+}
+
+function renderFcCard() {
+  initFcDeck();
+  const area = document.getElementById('flashcard-area');
+  const deck = fcState.deck;
+
+  if (deck.length === 0) { area.innerHTML = '<div class="card"><p>No flashcards for this filter.</p></div>'; return; }
+  if (fcState.idx >= deck.length) {
+    area.innerHTML = `<div class="card" style="text-align:center;padding:32px">
+      <div style="font-size:32px;margin-bottom:12px">🏁</div>
+      <div style="font-size:18px;font-weight:600;margin-bottom:8px">${lang==='en'?'Deck complete!':'Mazzo completato!'}</div>
+      <div style="font-size:14px;color:var(--text2);margin-bottom:20px">${lang==='en'?'Knew':'Sapevo'}: <span style="color:var(--green)">${fcState.knew}</span> · ${lang==='en'?'Missed':'Mancati'}: <span style="color:var(--red)">${fcState.missed}</span></div>
+      <button class="btn-primary" onclick="restartDeck()">${lang==='en'?'↺ Restart deck':'↺ Ricomincia'}</button>
+    </div>`;
+    return;
+  }
+
+  const card = FLASHCARDS[deck[fcState.idx]];
+  const isFlipped = fcState.flipped;
+
+  area.innerHTML = `
+    <div class="flashcard-container">
+      <div class="flashcard ${isFlipped ? 'flipped' : ''}" onclick="flipCard()">
+        <div class="flashcard-front">
+          <div class="fc-label">${card.domain} · Q ${fcState.idx+1}/${deck.length}</div>
+          <div class="fc-q">${card.q}</div>
+          ${!isFlipped ? `<div style="font-size:11px;color:var(--text3);margin-top:16px">${lang==='en'?'Click to reveal answer':'Clicca per la risposta'}</div>` : ''}
+        </div>
+        <div class="flashcard-back">
+          <div class="fc-a-label">${lang==='en'?'Answer':'Risposta'}</div>
+          <div class="fc-a">${card.a}</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-controls">
+      <button class="fc-result-btn missed" ${!isFlipped?'disabled':''} onclick="fcResult(false)">✗ ${lang==='en'?'Missed':'Non sapevo'}</button>
+      <button class="fc-result-btn knew" ${!isFlipped?'disabled':''} onclick="fcResult(true)">✓ ${lang==='en'?'Knew it':'Sapevo'}</button>
+    </div>
+    <div class="fc-progress">${fcState.idx+1} / ${deck.length} · ${lang==='en'?'Knew':'Sapevo'}: ${fcState.knew} · ${lang==='en'?'Missed':'Mancati'}: ${fcState.missed}</div>
+  `;
+}
+
+function flipCard() { fcState.flipped = !fcState.flipped; renderFcCard(); }
+
+function fcResult(knew) {
+  if (knew) fcState.knew++;
+  else fcState.missed++;
+  fcState.idx++;
+  fcState.flipped = false;
+
+  // save to progress
+  const cardIdx = fcState.deck[fcState.idx-1];
+  if (knew) {
+    if (!progress.fcKnew.includes(cardIdx)) progress.fcKnew.push(cardIdx);
+    progress.fcMissed = progress.fcMissed.filter(i => i !== cardIdx);
+  } else {
+    if (!progress.fcMissed.includes(cardIdx)) progress.fcMissed.push(cardIdx);
+  }
+  saveProgress();
+  renderFcCard();
+}
+
+function restartDeck() {
+  fcState.deck = shuffleArray(fcState.deck);
+  fcState.idx = 0; fcState.flipped = false; fcState.knew = 0; fcState.missed = 0;
+  renderFcCard();
+}
+
+// ════════════════════════════════════════════════════════════
+// PROGRESS RENDER
+// ════════════════════════════════════════════════════════════
+function renderProgress() {
+  const totalTopics = THEORY.reduce((s,d) => s + d.topics.length, 0);
+  const topicsDone = progress.topicsDone.length;
+  const topicPct = totalTopics > 0 ? Math.round(topicsDone/totalTopics*100) : 0;
+
+  const totalQ = progress.totalQAnswered;
+  const totalCorrect = progress.totalQCorrect;
+  const accuracy = totalQ > 0 ? Math.round(totalCorrect/totalQ*100) : 0;
+  const quizCount = progress.quizResults.length;
+  const bestScore = quizCount > 0 ? Math.max(...progress.quizResults.map(r => Math.round(r.score/r.total*100))) : 0;
+  const fcKnown = progress.fcKnew.length;
+
+  const l = lang === 'en';
+
+  let html = `<div class="stats-grid">
+    <div class="stat-card"><div class="sc-label">${l?'Theory Topics':'Argomenti'}</div><div class="sc-value">${topicsDone}/${totalTopics}</div><div class="sc-sub">${topicPct}% complete</div></div>
+    <div class="stat-card"><div class="sc-label">${l?'Questions Answered':'Domande risp.'}</div><div class="sc-value">${totalQ}</div><div class="sc-sub">${l?'across all blocks':'su tutti i blocchi'}</div></div>
+    <div class="stat-card"><div class="sc-label">${l?'Accuracy':'Precisione'}</div><div class="sc-value" style="color:${accuracy>=70?'var(--green)':'var(--amber)'}">${accuracy}%</div><div class="sc-sub">${l?'70% to pass exam':'70% per passare'}</div></div>
+    <div class="stat-card"><div class="sc-label">${l?'Best Quiz Score':'Miglior punteggio'}</div><div class="sc-value" style="color:${bestScore>=70?'var(--green)':'var(--amber)'}">${bestScore > 0 ? bestScore+'%' : '—'}</div><div class="sc-sub">${quizCount} ${l?'quiz attempts':'tentativi'}</div></div>
+    <div class="stat-card"><div class="sc-label">${l?'Flashcards Known':'Flashcard note'}</div><div class="sc-value">${fcKnown}/${FLASHCARDS.length}</div><div class="sc-sub">${Math.round(fcKnown/FLASHCARDS.length*100)}%</div></div>
+  </div>`;
+
+  // Domain progress
+  html += `<h3 style="font-size:15px;font-weight:600;margin-bottom:12px;color:var(--text)">${l?'Theory Progress by Domain':'Progressi per dominio'}</h3>`;
+  THEORY.forEach((domain, di) => {
+    const total = domain.topics.length;
+    const done = domain.topics.filter((_, ti) => progress.topicsDone.includes(di + '-' + ti)).length;
+    const pct = Math.round(done/total*100);
+    html += `<div class="domain-progress-card">
+      <div class="dpc-header"><h4>${domain.title[lang]}</h4><div class="dpc-pct">${pct}%</div></div>
+      <div class="dpc-bar-bg"><div class="dpc-bar-fill" style="width:${pct}%;background:${domain.color}"></div></div>
+      <div class="dpc-sub">${done}/${total} ${l?'topics completed':'argomenti completati'} · ${domain.pct} ${l?'of exam':'dell\'esame'}</div>
+    </div>`;
+  });
+
+  // Recent quiz results
+  if (progress.quizResults.length > 0) {
+    html += `<h3 style="font-size:15px;font-weight:600;margin:20px 0 12px;color:var(--text)">${l?'Recent Quiz Results':'Risultati quiz recenti'}</h3>`;
+    const recent = [...progress.quizResults].reverse().slice(0, 6);
+    html += '<div style="display:flex;flex-direction:column;gap:8px">';
+    recent.forEach(r => {
+      const pct = Math.round(r.score/r.total*100);
+      html += `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius)">
+        <span style="font-size:12px;color:var(--text3)">${BLOCKS[r.block].label}</span>
+        <span style="font-size:12px;color:var(--text2)">${r.date}</span>
+        <span style="margin-left:auto;font-family:var(--font-mono);font-size:14px;font-weight:600;color:${pct>=70?'var(--green)':'var(--red)'}">${pct}%</span>
+        <span style="font-size:12px;color:var(--text3)">${r.score}/${r.total}</span>
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  // Readiness indicator
+  const readiness = Math.round((topicPct * 0.4) + (accuracy * 0.4) + (fcKnown/FLASHCARDS.length * 100 * 0.2));
+  html += `<div style="margin-top:24px;padding:20px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);text-align:center">
+    <div style="font-size:12px;color:var(--text3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">${l?'Exam Readiness Estimate':'Stima prontezza esame'}</div>
+    <div style="font-size:48px;font-weight:600;font-family:var(--font-mono);color:${readiness>=70?'var(--green)':readiness>=50?'var(--amber)':'var(--red)'}">${readiness}%</div>
+    <div style="font-size:13px;color:var(--text2);margin-top:4px">${readiness>=80?'🟢 '+(l?'Ready to book the exam!':'Pronto per prenotare l\'esame!'):readiness>=60?'🟡 '+(l?'Getting closer — keep going!':'Quasi pronto — continua!'):readiness>=40?'🟠 '+(l?'Keep studying all domains':'Studia tutti i domini'):' 🔴 '+(l?'Focus on theory first':'Inizia dalla teoria')}</div>
+  </div>`;
+
+  document.getElementById('progress-content').innerHTML = html;
+}
+
+// ════════════════════════════════════════════════════════════
+// TOAST
+// ════════════════════════════════════════════════════════════
+let toastTimer;
+function showToast(msg, type='info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Init FC deck
+  fcState.deck = shuffleArray([...FLASHCARDS.keys()]);
+  updateSidebarProgress();
+  renderQuizSetup();
+});
+</script>
+</body>
+</html>
