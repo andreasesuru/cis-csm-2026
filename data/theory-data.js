@@ -54,11 +54,41 @@ const THEORY = [
   <li>Forgetting to set the system property before configuring entities</li>
 </ul></div>`,
           it:`<p class="theory-p">ServiceNow CSM supporta due modelli di business fondamentalmente diversi. Questo è il <strong>concetto più testato nel Dominio 1</strong>.</p>
-<div class="callout info"><span class="ci">ℹ️</span><div><strong>B2B:</strong> I clienti sono aziende. Entità principali: <strong>Account</strong> (azienda) + <strong>Contact</strong> (persona nell'azienda). Ogni Case si collega a un Account.</div></div>
-<div class="callout success"><span class="ci">✅</span><div><strong>B2C:</strong> I clienti sono utenti finali privati. Entità principale: <strong>Consumer</strong> — standalone, senza Account padre. Tipico per telecomunicazioni, utilities, retail.</div></div>
+<div class="callout info"><span class="ci">ℹ️</span><div><strong>B2B (Business-to-Business):</strong> I clienti sono aziende. Entità principali: <strong>Account</strong> (azienda) + <strong>Contact</strong> (persona nell'azienda). Ogni Case si collega a un Account. Tipico per software enterprise, manifattura, servizi finanziari.</div></div>
+<div class="callout success"><span class="ci">✅</span><div><strong>B2C (Business-to-Consumer):</strong> I clienti sono utenti finali privati. Entità principale: <strong>Consumer</strong> — standalone, senza Account padre. Tipico per telecomunicazioni, utilities, retail, assicurazioni.</div></div>
+<div class="diagram-wrap2">
+<svg viewBox="0 0 580 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:580px">
+  <rect x="10" y="10" width="260" height="170" rx="10" fill="#1f3b5c" stroke="#58a6ff" stroke-width="1.5"/>
+  <text x="140" y="34" text-anchor="middle" fill="#58a6ff" font-family="monospace" font-size="12" font-weight="700">MODELLO B2B</text>
+  <rect x="30" y="50" width="90" height="36" rx="6" fill="#21262d" stroke="#58a6ff" stroke-width="1"/><text x="75" y="72" text-anchor="middle" fill="#e6edf3" font-size="12">🏢 Account</text>
+  <rect x="145" y="50" width="105" height="36" rx="6" fill="#21262d" stroke="#58a6ff" stroke-width="1"/><text x="197" y="72" text-anchor="middle" fill="#e6edf3" font-size="12">👤 Contact</text>
+  <line x1="120" y1="68" x2="145" y2="68" stroke="#58a6ff" stroke-width="1" stroke-dasharray="4,2"/>
+  <text x="133" y="62" text-anchor="middle" fill="#8b949e" font-size="9">ha molti</text>
+  <rect x="85" y="118" width="100" height="36" rx="6" fill="#0f6e56" stroke="#3fb950" stroke-width="1"/><text x="135" y="140" text-anchor="middle" fill="#e6edf3" font-size="12">📋 Case</text>
+  <line x1="75" y1="86" x2="110" y2="118" stroke="#8b949e" stroke-width="1"/>
+  <line x1="197" y1="86" x2="160" y2="118" stroke="#8b949e" stroke-width="1"/>
+  <text x="140" y="172" text-anchor="middle" fill="#8b949e" font-size="10">Case → Account + Contact</text>
+  <rect x="320" y="10" width="250" height="170" rx="10" fill="#1a3a22" stroke="#3fb950" stroke-width="1.5"/>
+  <text x="445" y="34" text-anchor="middle" fill="#3fb950" font-family="monospace" font-size="12" font-weight="700">MODELLO B2C</text>
+  <rect x="360" y="50" width="170" height="36" rx="6" fill="#21262d" stroke="#3fb950" stroke-width="1"/><text x="445" y="72" text-anchor="middle" fill="#e6edf3" font-size="12">👤 Consumer (standalone)</text>
+  <text x="445" y="100" text-anchor="middle" fill="#8b949e" font-size="10">Nessun Account padre</text>
+  <rect x="385" y="118" width="120" height="36" rx="6" fill="#0f6e56" stroke="#3fb950" stroke-width="1"/><text x="445" y="140" text-anchor="middle" fill="#e6edf3" font-size="12">📋 Case</text>
+  <line x1="445" y1="86" x2="445" y2="118" stroke="#3fb950" stroke-width="1.5"/>
+  <text x="445" y="172" text-anchor="middle" fill="#8b949e" font-size="10">Case → Consumer direttamente</text>
+</svg>
+<div class="diagram-caption">B2B: gerarchia Account + Contact · B2C: entità Consumer standalone</div>
+</div>
 <div class="callout warn"><span class="ci">⚠️</span><div><strong>Trappola esame:</strong> <code>glide.cs.enable.b2b</code> controlla il modello. Contact DEVE avere un Account padre. Consumer NON ha Account. Non sono mai intercambiabili.</div></div>
+<div class="scenario-box" id="sc-b2b-1-it">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-b2b-1-it')"><span>🏭</span><span class="sc-badge">Scenario</span><span class="sc-title">Telco con 3 milioni di abbonati individuali</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>Un'importante azienda telecom vuole implementare CSM. I clienti sono persone fisiche con piani mobili — nessun account aziendale coinvolto.</p>
+    <div class="scenario-q">❓ Quale data model e perché?</div>
+    <div class="scenario-a">✅ <strong>B2C con entità Consumer.</strong> Ogni abbonato = un record Consumer standalone (senza Account). I Case si collegano direttamente al Consumer. Imposta <code>glide.cs.enable.b2b = false</code>. Usare B2B richiederebbe Account fittizi per ogni individuo — privo di senso commerciale.</div>
+  </div>
+</div>
 <div class="mistake-box"><div class="mb-title">⚠️ Errori Comuni</div><ul>
-  <li>Usare Contact per clienti B2C — Contact richiede un Account padre</li>
+  <li>Usare Contact per clienti B2C — Contact richiede un Account padre, è sempre B2B</li>
   <li>Pensare che Consumer e Contact siano intercambiabili — sono tabelle completamente diverse</li>
   <li>Dimenticare di impostare la proprietà di sistema prima di configurare le entità</li>
 </ul></div>`
@@ -115,7 +145,37 @@ const THEORY = [
 <tr><td><strong>Contact</strong></td><td>customer_contact</td><td>Account (obbligatorio)</td><td>Persona fisica nell'azienda</td></tr>
 <tr><td><strong>Consumer</strong></td><td>customer_service_consumer</td><td>Nessuno (standalone)</td><td>Utente finale nel modello B2C</td></tr>
 </tbody></table>
-<div class="callout info"><span class="ci">💡</span><div><strong>Gerarchia Account:</strong> Supporta livelli illimitati. Un Account padre può avere Account figli. Case ed entitlement si associano a qualsiasi livello.</div></div>`
+<p class="theory-p"><strong>Gerarchia Account</strong> supporta livelli illimitati — un Account padre può avere Account figli. Case ed entitlement si associano a qualsiasi livello della gerarchia.</p>
+<div class="diagram-wrap2">
+<svg viewBox="0 0 500 155" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px">
+  <rect x="180" y="8" width="140" height="34" rx="6" fill="#1f3b5c" stroke="#58a6ff" stroke-width="1.5"/>
+  <text x="250" y="29" text-anchor="middle" fill="#e6edf3" font-size="12">🏢 GlobalCorp (padre)</text>
+  <line x1="210" y1="42" x2="120" y2="72" stroke="#58a6ff" stroke-width="1" stroke-dasharray="4,2"/>
+  <line x1="290" y1="42" x2="380" y2="72" stroke="#58a6ff" stroke-width="1" stroke-dasharray="4,2"/>
+  <rect x="50" y="72" width="140" height="34" rx="6" fill="#21262d" stroke="#58a6ff" stroke-width="1"/>
+  <text x="120" y="93" text-anchor="middle" fill="#e6edf3" font-size="11">GlobalCorp Europa</text>
+  <rect x="310" y="72" width="140" height="34" rx="6" fill="#21262d" stroke="#58a6ff" stroke-width="1"/>
+  <text x="380" y="93" text-anchor="middle" fill="#e6edf3" font-size="11">GlobalCorp Asia</text>
+  <line x1="120" y1="106" x2="120" y2="124" stroke="#3fb950" stroke-width="1"/>
+  <rect x="55" y="124" width="130" height="24" rx="5" fill="#1a3a22" stroke="#3fb950" stroke-width="1"/>
+  <text x="120" y="140" text-anchor="middle" fill="#7ee89a" font-size="10">👤 Contact + Case</text>
+  <line x1="380" y1="106" x2="380" y2="124" stroke="#3fb950" stroke-width="1"/>
+  <rect x="315" y="124" width="130" height="24" rx="5" fill="#1a3a22" stroke="#3fb950" stroke-width="1"/>
+  <text x="380" y="140" text-anchor="middle" fill="#7ee89a" font-size="10">👤 Contact + Case</text>
+</svg>
+<div class="diagram-caption">Gerarchia Account — livelli illimitati · I Case si associano a qualsiasi livello</div>
+</div>
+<div class="callout info"><span class="ci">💡</span><div><strong>Ruoli del Contact:</strong> I Contact possono avere ruoli nell'Account (Technical Lead, Billing Contact, Primary Contact). I ruoli controllano l'accesso al portale e il routing delle notifiche.</div></div>
+<div class="pdi-box" id="pdi-acct-it">
+  <div class="pdi-hdr" onclick="togglePDI('pdi-acct-it')"><span>🖥️</span><span class="pdi-badge">Esercizio PDI</span><span class="pdi-title">Crea gerarchia Account B2B</span><span class="pdi-arr">▶</span></div>
+  <div class="pdi-body">
+    <div class="pdi-step"><div class="pdi-num">1</div><div class="pdi-text">Vai su <strong>Customer Service › Accounts › New</strong>. Crea Account padre: Nome=<strong>"Acme Corp Global"</strong>, Settore=<strong>"Technology"</strong>.</div></div>
+    <div class="pdi-step"><div class="pdi-num">2</div><div class="pdi-text">Crea Account figlio: Nome=<strong>"Acme Corp Italia"</strong>, imposta il campo <strong>Parent</strong> su "Acme Corp Global".</div></div>
+    <div class="pdi-step"><div class="pdi-num">3</div><div class="pdi-text">Crea un Contact: Nome=<strong>"Mario Rossi"</strong>, Account=<strong>"Acme Corp Italia"</strong>, Titolo=<strong>"Technical Lead"</strong>.</div></div>
+    <div class="pdi-step"><div class="pdi-num">4</div><div class="pdi-text">Apri un nuovo Case e verifica che il campo Account mostri la gerarchia.</div></div>
+    <div class="pdi-tip">💡 Verifica: l'Account padre deve mostrare gli Account figli nella sezione Related Lists sotto "Child Accounts".</div>
+  </div>
+</div>`
         }
       },
       {
@@ -167,12 +227,45 @@ const THEORY = [
   </div>
 </div>`,
           it:`<p class="theory-p">L'<strong>Install Base</strong> traccia i prodotti attivamente distribuiti presso i clienti — il ponte tra ciò che è stato acquistato e ciò che è operativo.</p>
+<div class="diagram-wrap2">
+<svg viewBox="0 0 560 125" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px">
+  <rect x="10" y="35" width="115" height="55" rx="8" fill="#21262d" stroke="#39c5cf" stroke-width="1.5"/>
+  <text x="67" y="58" text-anchor="middle" fill="#39c5cf" font-size="11" font-weight="600">Product Model</text>
+  <text x="67" y="73" text-anchor="middle" fill="#8b949e" font-size="10">Definizione generica</text>
+  <text x="67" y="85" text-anchor="middle" fill="#8b949e" font-size="10">es. Router v3.0</text>
+  <polygon points="129,62 139,56 139,68" fill="#8b949e"/>
+  <rect x="143" y="22" width="145" height="81" rx="8" fill="#0d3035" stroke="#39c5cf" stroke-width="2"/>
+  <text x="215" y="46" text-anchor="middle" fill="#39c5cf" font-size="11" font-weight="600">Install Base Item</text>
+  <text x="215" y="61" text-anchor="middle" fill="#e6edf3" font-size="10">Seriale: SN-98765</text>
+  <text x="215" y="74" text-anchor="middle" fill="#8b949e" font-size="10">Account: Acme Corp</text>
+  <text x="215" y="87" text-anchor="middle" fill="#8b949e" font-size="10">Stato: Attivo · Sede: Milano</text>
+  <polygon points="292,62 302,56 302,68" fill="#8b949e"/>
+  <rect x="306" y="35" width="110" height="55" rx="8" fill="#1a3a22" stroke="#3fb950" stroke-width="1.5"/>
+  <text x="361" y="58" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="600">📋 Case</text>
+  <text x="361" y="73" text-anchor="middle" fill="#8b949e" font-size="10">Collegato all'IBI</text>
+  <text x="361" y="85" text-anchor="middle" fill="#8b949e" font-size="10">per contesto</text>
+  <rect x="430" y="35" width="120" height="55" rx="8" fill="#21262d" stroke="#d29922" stroke-width="1.5"/>
+  <text x="490" y="58" text-anchor="middle" fill="#d29922" font-size="11" font-weight="600">CMDB CI</text>
+  <text x="490" y="73" text-anchor="middle" fill="#8b949e" font-size="10">Link opzionale</text>
+  <text x="490" y="85" text-anchor="middle" fill="#8b949e" font-size="10">(entità separata)</text>
+  <line x1="416" y1="62" x2="430" y2="62" stroke="#d29922" stroke-width="1" stroke-dasharray="4,2"/>
+</svg>
+<div class="diagram-caption">Product Model = template · Install Base Item = istanza specifica per cliente</div>
+</div>
 <ul class="theory-ul">
-  <li><strong>Product Model:</strong> Definizione generica del prodotto — versione, categoria, SKU.</li>
+  <li><strong>Product Model:</strong> Definizione generica del prodotto — versione, categoria, SKU. È il template.</li>
   <li><strong>Install Base Item (IBI):</strong> Istanza specifica distribuita per un Account specifico. Ha numero seriale, posizione, stato.</li>
-  <li><strong>CMDB CI:</strong> Link opzionale — un IBI può essere collegato a un CI CMDB, ma sono entità separate.</li>
+  <li><strong>CMDB CI:</strong> Link opzionale — un IBI può essere collegato a un CI CMDB per allineamento ITSM, ma sono entità separate con tabelle separate.</li>
 </ul>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Esame:</strong> "Quale tabella traccia i prodotti distribuiti del cliente in CSM?" → <code>install_base_item</code>. I CMDB CI appartengono a ITSM e sono separati.</div></div>`
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Esame:</strong> "Quale tabella traccia i prodotti distribuiti del cliente in CSM?" → <code>install_base_item</code>. I CMDB CI (<code>cmdb_ci</code>) appartengono a ITSM — possono essere collegati ma NON sono la stessa cosa.</div></div>
+<div class="scenario-box" id="sc-ib-1-it">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-ib-1-it')"><span>💼</span><span class="sc-badge">Scenario</span><span class="sc-title">Vendor SaaS: traccia versioni software per cliente</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>Un'azienda SaaS ha 3 clienti enterprise. Il Cliente A usa la v2.1, i Clienti B e C usano la v3.0. Gli agenti devono vedere la versione immediatamente quando si apre un case.</p>
+    <div class="scenario-q">❓ Come si modella in CSM?</div>
+    <div class="scenario-a">✅ Crea due <strong>Product Model</strong> (Software v2.1, Software v3.0). Poi crea un <strong>Install Base Item</strong> per cliente, ciascuno collegato al Product Model corrispondente. Quando un cliente apre un case e seleziona il suo IBI, gli agenti vedono subito la versione nel workspace.</div>
+  </div>
+</div>`
         }
       },
       {
@@ -228,14 +321,50 @@ const THEORY = [
     <em>No Allocated Entitlement needed</em> — "unlimited cases" means no cap.</div>
   </div>
 </div>`,
-          it:`<p class="theory-p">Gli Entitlement definiscono il <em>diritto</em> di un cliente a ricevere supporto. Argomento <strong>molto testato</strong> — conosci tutti e 4 i tipi.</p>
+          it:`<p class="theory-p">Gli Entitlement definiscono il <em>diritto</em> di un cliente a ricevere supporto. Argomento <strong>molto testato</strong> — conosci tutti e 4 i tipi e le loro parole chiave d'esame.</p>
 <table class="info-table2"><thead><tr><th>Tipo</th><th>Limita per</th><th>Esempio</th><th>Parola chiave esame</th></tr></thead><tbody>
 <tr><td><strong>Allocated</strong></td><td>Numero di case</td><td>50 case a trimestre</td><td>"numero di case", "limite case"</td></tr>
 <tr><td><strong>Time-Based</strong></td><td>Ore di supporto</td><td>20 ore al mese</td><td>"ore di supporto", "finestra temporale"</td></tr>
 <tr><td><strong>Product</strong></td><td>Prodotto acquistato</td><td>Acquisto Prod X → supporto 24/7</td><td>"acquisto prodotto", "licenza"</td></tr>
 <tr><td><strong>Service</strong></td><td>Livello di servizio</td><td>Gold SLA = risposta 4 ore</td><td>"livello di servizio", "tier SLA"</td></tr>
 </tbody></table>
-<div class="callout info"><span class="ci">💡</span><div><strong>Entitlement Verification:</strong> Si attiva automaticamente alla creazione del case. Mostra ✅ se valido, ⚠️ se non trovato. NON blocca la creazione del case.</div></div>`
+<div class="diagram-wrap2">
+<svg viewBox="0 0 560 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px">
+  <rect x="200" y="8" width="160" height="38" rx="8" fill="#3b2e0e" stroke="#d29922" stroke-width="1.5"/>
+  <text x="280" y="32" text-anchor="middle" fill="#f5d87a" font-size="13" font-weight="600">📄 Contratto</text>
+  <line x1="230" y1="46" x2="95" y2="80" stroke="#d29922" stroke-width="1" stroke-dasharray="4,2"/>
+  <line x1="255" y1="46" x2="205" y2="80" stroke="#d29922" stroke-width="1" stroke-dasharray="4,2"/>
+  <line x1="305" y1="46" x2="355" y2="80" stroke="#d29922" stroke-width="1" stroke-dasharray="4,2"/>
+  <line x1="330" y1="46" x2="465" y2="80" stroke="#d29922" stroke-width="1" stroke-dasharray="4,2"/>
+  <rect x="20" y="80" width="150" height="48" rx="6" fill="#21262d" stroke="#58a6ff" stroke-width="1"/>
+  <text x="95" y="101" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="600">Allocated</text>
+  <text x="95" y="116" text-anchor="middle" fill="#8b949e" font-size="10">Max # case</text>
+  <rect x="175" y="80" width="130" height="48" rx="6" fill="#21262d" stroke="#39c5cf" stroke-width="1"/>
+  <text x="240" y="101" text-anchor="middle" fill="#39c5cf" font-size="11" font-weight="600">Time-Based</text>
+  <text x="240" y="116" text-anchor="middle" fill="#8b949e" font-size="10">Max ore/periodo</text>
+  <rect x="310" y="80" width="130" height="48" rx="6" fill="#21262d" stroke="#3fb950" stroke-width="1"/>
+  <text x="375" y="101" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="600">Product</text>
+  <text x="375" y="116" text-anchor="middle" fill="#8b949e" font-size="10">Legato all'acquisto</text>
+  <rect x="445" y="80" width="105" height="48" rx="6" fill="#21262d" stroke="#a5a0f0" stroke-width="1"/>
+  <text x="497" y="101" text-anchor="middle" fill="#a5a0f0" font-size="11" font-weight="600">Service</text>
+  <text x="497" y="116" text-anchor="middle" fill="#8b949e" font-size="10">Tier SLA</text>
+  <text x="280" y="135" text-anchor="middle" fill="#8b949e" font-size="10">Un Contratto → più Entitlement · Tutti scadono con il Contratto</text>
+</svg>
+<div class="diagram-caption">Il Contratto è il padre · Gli Entitlement derivano la validità dal Contratto</div>
+</div>
+<div class="callout info"><span class="ci">💡</span><div><strong>Entitlement Verification:</strong> Si attiva automaticamente alla creazione del case. Mostra ✅ se valido, ⚠️ se non trovato. NON blocca la creazione del case — gli agenti procedono a loro discrezione.</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Scadenza a cascata del Contratto:</strong> Quando un Contratto scade, TUTTI gli Entitlement collegati scadono con lui. L'entitlement eredita il periodo di validità dal Contratto.</div></div>
+<div class="scenario-box" id="sc-ent-1-it">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-ent-1-it')"><span>💎</span><span class="sc-badge">Scenario</span><span class="sc-title">Platinum Support: case illimitati, 24/7, SLA 1 ora</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>Un'azienda vende "Platinum Support": case illimitati, accesso 24/7, SLA risposta 1 ora, validità 12 mesi.</p>
+    <div class="scenario-q">❓ Quanti entitlement e di quale tipo?</div>
+    <div class="scenario-a">✅ <strong>Un Contratto + 1-2 Entitlement:</strong><br>
+    1. <strong>Service Entitlement</strong> — copre accesso 24/7 + tier SLA 1 ora (nessun limite case = NON Allocated)<br>
+    2. Opzionalmente un <strong>Product Entitlement</strong> se legato all'acquisto di un prodotto specifico<br>
+    <em>Nessun Allocated Entitlement</em> — "case illimitati" significa nessun tetto.</div>
+  </div>
+</div>`
         }
       },
       {
@@ -414,7 +543,45 @@ const THEORY = [
 <tr><td><strong>Skills-based</strong></td><td>Agente con skill corrispondenti</td><td>Skill nel profilo agente</td><td>Team tecnici specializzati</td></tr>
 <tr><td><strong>Queue Management</strong></td><td>Coda (raccolta manuale)</td><td>Canale, categoria</td><td>Overflow e bilanciamento</td></tr>
 </tbody></table>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Ordine regole:</strong> Numero più basso = priorità più alta. Quando più regole si abbinano, solo quella con l'ordine più basso viene eseguita.</div></div>`
+<div class="diagram-wrap2">
+<svg viewBox="0 0 560 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px">
+  <rect x="8" y="30" width="85" height="40" rx="6" fill="#21262d" stroke="#39c5cf" stroke-width="1.5"/>
+  <text x="50" y="54" text-anchor="middle" fill="#e6edf3" font-size="11">Nuovo Case</text>
+  <polygon points="97,50 107,44 107,56" fill="#8b949e"/>
+  <rect x="110" y="20" width="110" height="60" rx="6" fill="#21262d" stroke="#d29922" stroke-width="1.5"/>
+  <text x="165" y="46" text-anchor="middle" fill="#f5d87a" font-size="11" font-weight="600">Assignment</text>
+  <text x="165" y="60" text-anchor="middle" fill="#f5d87a" font-size="11">Rules</text>
+  <text x="165" y="74" text-anchor="middle" fill="#8b949e" font-size="9">per ordine</text>
+  <polygon points="224,50 234,44 234,56" fill="#8b949e"/>
+  <rect x="237" y="20" width="100" height="60" rx="6" fill="#21262d" stroke="#39c5cf" stroke-width="1.5"/>
+  <text x="287" y="46" text-anchor="middle" fill="#39c5cf" font-size="11" font-weight="600">AWA</text>
+  <text x="287" y="60" text-anchor="middle" fill="#39c5cf" font-size="11">Engine</text>
+  <text x="287" y="74" text-anchor="middle" fill="#8b949e" font-size="9">capacità+skill</text>
+  <polygon points="341,50 351,44 351,56" fill="#8b949e"/>
+  <rect x="354" y="20" width="100" height="60" rx="6" fill="#21262d" stroke="#a5a0f0" stroke-width="1.5"/>
+  <text x="404" y="46" text-anchor="middle" fill="#a5a0f0" font-size="11" font-weight="600">Skills</text>
+  <text x="404" y="60" text-anchor="middle" fill="#a5a0f0" font-size="11">Match</text>
+  <text x="404" y="74" text-anchor="middle" fill="#8b949e" font-size="9">skill agente</text>
+  <polygon points="458,50 468,44 468,56" fill="#8b949e"/>
+  <rect x="471" y="28" width="82" height="44" rx="6" fill="#1a3a22" stroke="#3fb950" stroke-width="1.5"/>
+  <text x="512" y="48" text-anchor="middle" fill="#7ee89a" font-size="11" font-weight="600">Agente</text>
+  <text x="512" y="62" text-anchor="middle" fill="#7ee89a" font-size="11">Assegnato ✓</text>
+</svg>
+<div class="diagram-caption">Pipeline di routing: Rules → AWA → Skills → Agente assegnato</div>
+</div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Ordine regole:</strong> Numero più basso = priorità più alta. Quando più regole si abbinano, solo quella con l'ordine più basso viene eseguita. Testa scambiando i numeri d'ordine nel PDI.</div></div>
+<div class="callout info"><span class="ci">💡</span><div><strong>Capacità AWA:</strong> Ogni agente ha un limite massimo di case contemporanei. Quando è al limite, AWA salta quell'agente e assegna al successivo disponibile — bilanciamento del carico automatico.</div></div>
+<div class="pdi-box" id="pdi-routing-it">
+  <div class="pdi-hdr" onclick="togglePDI('pdi-routing-it')"><span>🖥️</span><span class="pdi-badge">Esercizio PDI</span><span class="pdi-title">Crea Assignment Rules e testa la priorità ordine</span><span class="pdi-arr">▶</span></div>
+  <div class="pdi-body">
+    <div class="pdi-step"><div class="pdi-num">1</div><div class="pdi-text">Vai su <strong>Customer Service › Configuration › Assignment Rules › New</strong>.</div></div>
+    <div class="pdi-step"><div class="pdi-num">2</div><div class="pdi-text">Regola 1: Nome="Casi Critici", Ordine=<strong>10</strong>, Condizione: Priorità=1-Critico → Gruppo="Level 2 Support".</div></div>
+    <div class="pdi-step"><div class="pdi-num">3</div><div class="pdi-text">Regola 2: Nome="Problemi Rete", Ordine=<strong>50</strong>, Condizione: Categoria="Network" → Gruppo="Network Team".</div></div>
+    <div class="pdi-step"><div class="pdi-num">4</div><div class="pdi-text">Crea un Case di test: Priorità=Critico, Categoria=Network. Osserva quale regola si attiva (deve essere Regola 1 — ordine 10).</div></div>
+    <div class="pdi-step"><div class="pdi-num">5</div><div class="pdi-text">Scambia i numeri d'ordine (Regola 1 → 50, Regola 2 → 10) e ritesta per vedere l'assegnazione cambiare al Network Team.</div></div>
+    <div class="pdi-tip">💡 Insight chiave: la Regola 2 (ordine 10) ora scatta prima nonostante sia la regola "Network". Così l'esame testa la priorità ordine.</div>
+  </div>
+</div>`
         }
       },
       {
@@ -475,12 +642,54 @@ const THEORY = [
   <li>Leaving lanes unassigned — playbook stalls with no owner</li>
   <li>Not setting trigger conditions — Playbook won't auto-activate</li>
 </ul></div>`,
-          it:`<p class="theory-p">I Playbook guidano gli agenti attraverso percorsi di risoluzione standardizzati. Creati nel <strong>Process Automation Designer (PAD)</strong>.</p>
+          it:`<p class="theory-p">I Playbook guidano gli agenti attraverso percorsi di risoluzione standardizzati. Creati nel <strong>Process Automation Designer (PAD)</strong> — il nome dello strumento è testato direttamente.</p>
 <div class="callout warn"><span class="ci">⚠️</span><div><strong>Trappola nome strumento:</strong> Playbook = <strong>Process Automation Designer (PAD)</strong>. NON Flow Designer. NON Workflow Editor. PAD è l'unica risposta corretta all'esame.</div></div>
+<div class="diagram-wrap2">
+<svg viewBox="0 0 560 145" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px">
+  <text x="280" y="18" text-anchor="middle" fill="#a5a0f0" font-family="monospace" font-size="11" font-weight="700">STRUTTURA PLAYBOOK (PAD)</text>
+  <rect x="10" y="28" width="105" height="108" rx="6" fill="#2d2a5e" stroke="#a5a0f0" stroke-width="1.5"/>
+  <text x="62" y="48" text-anchor="middle" fill="#a5a0f0" font-size="10" font-weight="700">FASE 1</text>
+  <text x="62" y="62" text-anchor="middle" fill="#c9c6ff" font-size="12">Diagnosi</text>
+  <rect x="20" y="70" width="85" height="22" rx="4" fill="#21262d" stroke="#8b949e" stroke-width="1"/>
+  <text x="62" y="85" text-anchor="middle" fill="#8b949e" font-size="10">Lane Agente</text>
+  <rect x="20" y="96" width="85" height="22" rx="4" fill="#21262d" stroke="#39c5cf" stroke-width="1"/>
+  <text x="62" y="111" text-anchor="middle" fill="#39c5cf" font-size="10">Verifica IBI ✓</text>
+  <text x="62" y="128" text-anchor="middle" fill="#6e7681" font-size="9">auto-attivato</text>
+  <polygon points="119,82 129,76 129,88" fill="#a5a0f0"/>
+  <rect x="175" y="28" width="120" height="108" rx="6" fill="#2d2a5e" stroke="#a5a0f0" stroke-width="1.5"/>
+  <text x="235" y="48" text-anchor="middle" fill="#a5a0f0" font-size="10" font-weight="700">FASE 2</text>
+  <text x="235" y="62" text-anchor="middle" fill="#c9c6ff" font-size="12">Escalation</text>
+  <rect x="185" y="70" width="100" height="22" rx="4" fill="#21262d" stroke="#d29922" stroke-width="1"/>
+  <text x="235" y="85" text-anchor="middle" fill="#d29922" font-size="10">Lane Supervisor</text>
+  <rect x="185" y="96" width="100" height="22" rx="4" fill="#21262d" stroke="#d29922" stroke-width="1"/>
+  <text x="235" y="111" text-anchor="middle" fill="#d29922" font-size="10">Approva ✓</text>
+  <text x="235" y="128" text-anchor="middle" fill="#6e7681" font-size="9">fase condizionale</text>
+  <polygon points="299,82 309,76 309,88" fill="#a5a0f0"/>
+  <rect x="312" y="28" width="120" height="108" rx="6" fill="#2d2a5e" stroke="#a5a0f0" stroke-width="1.5"/>
+  <text x="372" y="48" text-anchor="middle" fill="#a5a0f0" font-size="10" font-weight="700">FASE 3</text>
+  <text x="372" y="62" text-anchor="middle" fill="#c9c6ff" font-size="12">Risoluzione</text>
+  <rect x="322" y="70" width="100" height="22" rx="4" fill="#21262d" stroke="#3fb950" stroke-width="1"/>
+  <text x="372" y="85" text-anchor="middle" fill="#3fb950" font-size="10">Lane Agente</text>
+  <rect x="322" y="96" width="100" height="22" rx="4" fill="#1a3a22" stroke="#3fb950" stroke-width="1"/>
+  <text x="372" y="111" text-anchor="middle" fill="#7ee89a" font-size="10">Risolvi + Chiudi ✓</text>
+  <text x="372" y="128" text-anchor="middle" fill="#6e7681" font-size="9">fase finale</text>
+  <rect x="445" y="40" width="110" height="60" rx="6" fill="#3b1c1c" stroke="#f85149" stroke-width="1"/>
+  <text x="500" y="62" text-anchor="middle" fill="#f85149" font-size="11" font-weight="700">⚠️ NON</text>
+  <text x="500" y="76" text-anchor="middle" fill="#ffaaaa" font-size="10">Flow Designer</text>
+  <text x="500" y="90" text-anchor="middle" fill="#ffaaaa" font-size="10">Workflow Editor</text>
+</svg>
+<div class="diagram-caption">PAD: 3 fasi · Le Lane definiscono chi agisce · Le condizioni controllano le transizioni</div>
+</div>
 <ul class="theory-ul">
-  <li><strong>Lane:</strong> Definisce CHI esegue un passo — Agente, Supervisor, Sistema. Lane non assegnate bloccano il playbook.</li>
-  <li><strong>Stage Transition Conditions:</strong> Controllano se la fase successiva viene attivata in base a condizioni sui dati.</li>
-</ul>`
+  <li><strong>Lane:</strong> Definisce CHI esegue un passo — Agente, Supervisor, Sistema. <strong>Lane non assegnate bloccano il playbook.</strong></li>
+  <li><strong>Stage Transition Conditions:</strong> Controllano se la fase successiva viene attivata in base a condizioni sui dati (es. "vai all'Escalation solo se la diagnosi conferma difetto hardware").</li>
+  <li><strong>Trigger:</strong> Auto-attivazione al cambio stato del case, oppure attivazione manuale da parte dell'agente.</li>
+</ul>
+<div class="mistake-box"><div class="mb-title">⚠️ Errori Comuni</div><ul>
+  <li>Dire che i Playbook usano Flow Designer — <strong>è sempre PAD</strong></li>
+  <li>Lasciare Lane non assegnate — il playbook si blocca senza proprietario</li>
+  <li>Non impostare le condizioni di trigger — il Playbook non si auto-attiva</li>
+</ul></div>`
         }
       },
       {
@@ -522,11 +731,35 @@ const THEORY = [
 </ul>
 <div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam question:</strong> "Which Business Rule handles the Case update when the linked Incident closes?" → <strong>"Update Case on Incident Closure"</strong></div></div>`,
           it:`<p class="theory-p">Il Bridge CSM-ITSM collega la gestione case verso i clienti con la gestione incident IT interna — uno degli argomenti di configurazione <strong>più testati</strong>.</p>
+<div class="diagram-wrap2">
+<svg viewBox="0 0 560 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px">
+  <rect x="20" y="25" width="160" height="70" rx="8" fill="#0f6e56" stroke="#3fb950" stroke-width="2"/>
+  <text x="100" y="52" text-anchor="middle" fill="#7ee89a" font-size="13" font-weight="600">CSM Case</text>
+  <text x="100" y="68" text-anchor="middle" fill="#e6edf3" font-size="11">Stato: Aperto</text>
+  <text x="100" y="82" text-anchor="middle" fill="#8b949e" font-size="10">Lato cliente</text>
+  <path d="M188 60 Q240 20 292 60" fill="none" stroke="#d29922" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr1it)"/>
+  <text x="240" y="24" text-anchor="middle" fill="#d29922" font-size="11" font-weight="600">Crea Incident →</text>
+  <text x="240" y="38" text-anchor="middle" fill="#8b949e" font-size="9">mapping: Priority→Urgency</text>
+  <rect x="296" y="25" width="244" height="70" rx="8" fill="#3b2e0e" stroke="#d29922" stroke-width="2"/>
+  <text x="418" y="52" text-anchor="middle" fill="#f5d87a" font-size="13" font-weight="600">ITSM Incident</text>
+  <text x="418" y="68" text-anchor="middle" fill="#e6edf3" font-size="11">Stato: In Progress</text>
+  <text x="418" y="82" text-anchor="middle" fill="#8b949e" font-size="10">Risoluzione IT interna</text>
+  <path d="M292 80 Q240 110 188 80" fill="none" stroke="#58a6ff" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr2it)"/>
+  <text x="240" y="113" text-anchor="middle" fill="#58a6ff" font-size="10">BR: "Update Case on Incident Closure"</text>
+  <defs>
+    <marker id="arr1it" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#d29922"/></marker>
+    <marker id="arr2it" markerWidth="7" markerHeight="7" refX="1" refY="3.5" orient="auto"><path d="M7,0 L0,3.5 L7,7 Z" fill="#58a6ff"/></marker>
+  </defs>
+</svg>
+<div class="diagram-caption">Bridge bidirezionale · Case→Incident (manuale) · Chiusura Incident→aggiornamento Case (BR automatica)</div>
+</div>
 <ul class="theory-ul">
   <li><strong>Abilitare:</strong> CSM Properties → toggle "Create Incident from Case".</li>
   <li><strong>Field Mapping:</strong> Case Priority → Incident Urgency · Short Description → Short Description.</li>
-  <li><strong>Flusso inverso:</strong> Business Rule <code>"Update Case on Incident Closure"</code> aggiorna lo stato del Case. Conosci questo nome esatto.</li>
-</ul>`
+  <li><strong>Incident collegato:</strong> Visibile nella tab "Related Records" del Case.</li>
+  <li><strong>Flusso inverso:</strong> Business Rule <code>"Update Case on Incident Closure"</code> aggiorna automaticamente lo stato del Case. <em>Conosci questo nome esatto.</em></li>
+</ul>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Domanda esame:</strong> "Quale Business Rule aggiorna il Case quando l'Incident collegato viene chiuso?" → <strong>"Update Case on Incident Closure"</strong></div></div>`
         }
       },
       {
@@ -555,8 +788,24 @@ const THEORY = [
     <div class="scenario-a">✅ <strong>Special Handling Notes on the Account record.</strong> Configure the notes with the VIP procedures. They will automatically appear in the Agent Workspace every time an agent opens a case for that customer — impossible to miss, no document needed.</div>
   </div>
 </div>`,
-          it:`<p class="theory-p">L'Agent Workspace è l'interfaccia principale per gli agenti CSM. L'esame testa la <strong>conoscenza della configurazione</strong>.</p>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Due framework — non confonderli:</strong><br>🔵 <strong>Agent Workspace</strong> (Next Experience) → configurato via <strong>UI Builder</strong><br>🟢 <strong>Customer Service Portal</strong> (Service Portal / AngularJS) → configurato via <strong>admin Service Portal</strong></div></div>`
+          it:`<p class="theory-p">L'Agent Workspace è l'interfaccia principale per gli agenti CSM. L'esame testa la <strong>conoscenza della configurazione</strong>, non solo l'utilizzo.</p>
+<table class="info-table2"><thead><tr><th>Componente</th><th>Scopo</th><th>Configurato in</th></tr></thead><tbody>
+<tr><td><strong>Configurable Workspace</strong></td><td>Interfaccia principale con pannelli, liste, form</td><td>UI Builder</td></tr>
+<tr><td><strong>Pannelli laterali contestuali</strong></td><td>Mostra Account, Contact, IBI per il case aperto</td><td>UI Builder</td></tr>
+<tr><td><strong>Workspace Views</strong></td><td>Set di colonne, filtri, ordinamento nella lista case</td><td>UI Builder</td></tr>
+<tr><td><strong>Special Handling Notes</strong></td><td>Istruzioni auto-visualizzate specifiche per cliente</td><td>Record Account/Contact</td></tr>
+<tr><td><strong>Knowledge Panel</strong></td><td>Articoli KB e case simili del passato</td><td>Config workspace</td></tr>
+<tr><td><strong>Activity Stream</strong></td><td>Cronologia completa del case</td><td>Auto (tutte le interazioni)</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Due framework — non confonderli:</strong><br>🔵 <strong>Agent Workspace</strong> (Next Experience) → configurato via <strong>UI Builder</strong><br>🟢 <strong>Customer Service Portal</strong> (Service Portal / AngularJS) → configurato via <strong>admin Service Portal</strong></div></div>
+<div class="scenario-box" id="sc-ws-1-it">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-ws-1-it')"><span>⭐</span><span class="sc-badge">Scenario</span><span class="sc-title">Istruzioni per cliente VIP non visibili agli agenti</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>Un manager si lamenta che gli agenti non seguono le procedure speciali per un cliente enterprise chiave. Le procedure esistono in un documento, ma gli agenti raramente lo leggono.</p>
+    <div class="scenario-q">❓ Quale funzionalità CSM risolve questo definitivamente?</div>
+    <div class="scenario-a">✅ <strong>Special Handling Notes nel record Account.</strong> Configura le note con le procedure VIP. Appariranno automaticamente nell'Agent Workspace ogni volta che un agente apre un case di quel cliente — impossibile ignorarle, nessun documento necessario.</div>
+  </div>
+</div>`
         }
       },
       {
@@ -768,13 +1017,40 @@ P4 Basso: Risposta 8h / Risoluzione 5 giorni</div></div>
 </tbody></table>
 <div class="callout info"><span class="ci">💡</span><div><strong>Two SLA types per case (best practice):</strong> Create separate SLA definitions for Response Time (first agent touch = 1 hour) and Resolution Time (case closure = 8 business hours). Both linked to the entitlement.</div></div>`,
           it:`<p class="theory-p">Ogni Case progredisce attraverso stati definiti. I timer SLA, notifiche e automazioni sono legati a queste transizioni.</p>
+<div class="diagram-wrap2">
+<svg viewBox="0 0 620 95" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:620px">
+  <rect x="5" y="28" width="70" height="38" rx="5" fill="#21262d" stroke="#8b949e" stroke-width="1"/>
+  <text x="40" y="50" text-anchor="middle" fill="#8b949e" font-size="11">New</text>
+  <polygon points="79,47 89,41 89,53" fill="#8b949e"/>
+  <rect x="92" y="22" width="78" height="50" rx="5" fill="#1f3b5c" stroke="#58a6ff" stroke-width="1.5"/>
+  <text x="131" y="44" text-anchor="middle" fill="#58a6ff" font-size="11">Open</text>
+  <text x="131" y="58" text-anchor="middle" fill="#8b949e" font-size="9">SLA ▶ attivo</text>
+  <polygon points="173,47 183,41 183,53" fill="#8b949e"/>
+  <rect x="186" y="18" width="100" height="58" rx="5" fill="#3b2e0e" stroke="#d29922" stroke-width="2"/>
+  <text x="236" y="40" text-anchor="middle" fill="#d29922" font-size="10">Awaiting</text>
+  <text x="236" y="53" text-anchor="middle" fill="#f5d87a" font-size="12" font-weight="600">Info ⏸</text>
+  <text x="236" y="67" text-anchor="middle" fill="#8b949e" font-size="9">SLA in pausa</text>
+  <polygon points="289,47 299,41 299,53" fill="#8b949e"/>
+  <rect x="302" y="22" width="90" height="50" rx="5" fill="#0d3035" stroke="#39c5cf" stroke-width="1.5"/>
+  <text x="347" y="44" text-anchor="middle" fill="#39c5cf" font-size="11">Resolved</text>
+  <text x="347" y="58" text-anchor="middle" fill="#8b949e" font-size="9">auto-chiusura 5gg</text>
+  <polygon points="395,47 405,41 405,53" fill="#8b949e"/>
+  <rect x="408" y="28" width="72" height="38" rx="5" fill="#1a3a22" stroke="#3fb950" stroke-width="1.5"/>
+  <text x="444" y="50" text-anchor="middle" fill="#3fb950" font-size="11">Closed ✓</text>
+  <rect x="498" y="28" width="116" height="38" rx="5" fill="#3b1c1c" stroke="#f85149" stroke-width="1"/>
+  <text x="556" y="50" text-anchor="middle" fill="#f85149" font-size="11">Cancelled ✗</text>
+</svg>
+<div class="diagram-caption">Flusso stati · ⏸ SLA in pausa in Awaiting Info · Auto-chiusura dopo 5 giorni in Resolved</div>
+</div>
 <table class="info-table2"><thead><tr><th>Stato</th><th>SLA</th><th>Comportamento chiave</th></tr></thead><tbody>
 <tr><td><strong>New</strong></td><td>In corso</td><td>Creato, non ancora assegnato</td></tr>
-<tr><td><strong>Open</strong></td><td>In corso</td><td>Assegnato, agente in lavorazione</td></tr>
+<tr><td><strong>Open</strong></td><td>In corso</td><td>Assegnato, agente in lavorazione attiva</td></tr>
 <tr><td><strong>Awaiting Info</strong></td><td><strong>In pausa ⏸</strong></td><td>In attesa di info dal cliente. SLA pausa configurata via Pause Conditions.</td></tr>
-<tr><td><strong>Resolved</strong></td><td>Fermo</td><td>Soluzione fornita. Auto-chiusura dopo 5 giorni (configurabile).</td></tr>
+<tr><td><strong>Resolved</strong></td><td>Fermo</td><td>Soluzione fornita. Auto-chiusura dopo 5 giorni (configurabile) senza risposta.</td></tr>
 <tr><td><strong>Closed</strong></td><td>—</td><td>Stato finale. La riapertura azzera il calcolo SLA.</td></tr>
-</tbody></table>`
+<tr><td><strong>Cancelled</strong></td><td>Fermo</td><td>Abbandonato prima della risoluzione.</td></tr>
+</tbody></table>
+<div class="callout info"><span class="ci">💡</span><div><strong>Due tipi di SLA per case (best practice):</strong> Crea SLA Definition separate per Tempo di Risposta (primo contatto agente = 1 ora) e Tempo di Risoluzione (chiusura case = 8 ore lavorative). Entrambi collegati all'entitlement.</div></div>`
         }
       },
       {
@@ -817,11 +1093,36 @@ P4 Basso: Risposta 8h / Risoluzione 5 giorni</div></div>
 <div class="callout warn"><span class="ci">⚠️</span><div><strong>Key distinction:</strong> Case Digest = automatic update on Major Case progress for ALL linked customers. Targeted Communications = proactive manual custom messaging to SEGMENTED customers. Know the difference.</div></div>
 <div class="callout info"><span class="ci">💡</span><div><strong>Child case closure:</strong> When a Major Case is resolved, child cases are NOT automatically closed. Separate closure actions are required (or configure optional Business Rules to cascade).</div></div>`,
           it:`<p class="theory-p">Quando un problema colpisce molti clienti contemporaneamente, il Major Issue Management fornisce coordinamento e comunicazione strutturati.</p>
+<div class="diagram-wrap2">
+<svg viewBox="0 0 560 158" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px">
+  <rect x="190" y="8" width="180" height="42" rx="8" fill="#3b1c1c" stroke="#f85149" stroke-width="2"/>
+  <text x="280" y="26" text-anchor="middle" fill="#f85149" font-size="12" font-weight="700">🔴 Major Case</text>
+  <text x="280" y="42" text-anchor="middle" fill="#e6edf3" font-size="11">"Interruzione rete EMEA"</text>
+  <line x1="220" y1="50" x2="95" y2="88" stroke="#f85149" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <line x1="255" y1="50" x2="210" y2="88" stroke="#f85149" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <line x1="305" y1="50" x2="350" y2="88" stroke="#f85149" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <line x1="340" y1="50" x2="460" y2="88" stroke="#f85149" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <rect x="28" y="88" width="130" height="36" rx="6" fill="#21262d" stroke="#8b949e" stroke-width="1"/>
+  <text x="93" y="105" text-anchor="middle" fill="#e6edf3" font-size="11">Case: Acme Corp</text>
+  <text x="93" y="118" text-anchor="middle" fill="#8b949e" font-size="10">case figlio</text>
+  <rect x="170" y="88" width="130" height="36" rx="6" fill="#21262d" stroke="#8b949e" stroke-width="1"/>
+  <text x="235" y="105" text-anchor="middle" fill="#e6edf3" font-size="11">Case: GlobalTech</text>
+  <text x="235" y="118" text-anchor="middle" fill="#8b949e" font-size="10">case figlio</text>
+  <rect x="312" y="88" width="130" height="36" rx="6" fill="#21262d" stroke="#8b949e" stroke-width="1"/>
+  <text x="377" y="105" text-anchor="middle" fill="#e6edf3" font-size="11">Case: Nexus Ltd</text>
+  <text x="377" y="118" text-anchor="middle" fill="#8b949e" font-size="10">case figlio</text>
+  <rect x="454" y="88" width="80" height="36" rx="6" fill="#21262d" stroke="#8b949e" stroke-width="1"/>
+  <text x="494" y="110" text-anchor="middle" fill="#8b949e" font-size="10">+ N altri</text>
+  <text x="280" y="152" text-anchor="middle" fill="#39c5cf" font-size="10">Case Digest → notifica automatica TUTTI i clienti con case figlio</text>
+</svg>
+<div class="diagram-caption">Major Case (padre) → Case Figli → Case Digest notifica tutti i clienti</div>
+</div>
 <table class="info-table2"><thead><tr><th>Funzionalità</th><th>Cosa fa</th><th>Attivato da</th></tr></thead><tbody>
 <tr><td><strong>Case Digest</strong></td><td>Aggiorna automaticamente tutti i clienti con case figlio collegati al Major Case</td><td>Manuale o pianificato dal Major Case</td></tr>
 <tr><td><strong>Targeted Communications</strong></td><td>Messaggi bulk personalizzati manuali a segmenti specifici (filtrabile)</td><td>Azione agente/manager</td></tr>
 </tbody></table>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Distinzione chiave:</strong> Case Digest = aggiornamento automatico a TUTTI i clienti collegati. Targeted Communications = messaggi personalizzati manuali a clienti SEGMENTATI.</div></div>`
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Distinzione chiave:</strong> Case Digest = aggiornamento automatico a TUTTI i clienti collegati. Targeted Communications = messaggi personalizzati manuali a clienti SEGMENTATI. Conosci la differenza.</div></div>
+<div class="callout info"><span class="ci">💡</span><div><strong>Chiusura case figlio:</strong> Quando un Major Case viene risolto, i case figlio NON vengono chiusi automaticamente. Sono necessarie azioni di chiusura separate (o configurare Business Rule opzionali per la propagazione).</div></div>`
         }
       },
       {
@@ -1024,6 +1325,85 @@ P4 Basso: Risposta 8h / Risoluzione 5 giorni</div></div>
 <div class="callout success"><span class="ci">✅</span><div><strong>Widget OOTB CSM principali:</strong> Case Create · My Cases · Knowledge Base · Live Chat · Community · Engagement Messenger</div></div>
 <div class="callout warn"><span class="ci">⚠️</span><div><strong>Page Designer vs Widget Editor:</strong> Page Designer dispone widget esistenti (drag-and-drop, senza codice). Widget Editor modifica il codice del widget. Sapere quale usare per ogni task.</div></div>`
         }
+      },
+      {
+        title:{en:"Service Catalog for CSM",it:"Service Catalog per CSM"},
+        tag:"amber",
+        quiz:[
+          {q:"Which catalog item type automatically creates a Case when a customer submits a request on the CSP?",opts:["Order Guide","Standard Catalog Item","Record Producer","Content Item"],ans:2,exp:"A Record Producer creates a record in a specified table — in CSM context, it creates a Case (sn_customerservice_case) record directly. Standard Catalog Items create request/requested items in the sc_req/sc_req_item tables, not Cases. Record Producers are the correct choice when you want catalog submissions to become Cases."},
+          {q:"In the CSM Service Catalog, what is an Order Guide used for?",opts:["Defining SLA thresholds for catalog requests","Grouping multiple catalog items that are frequently ordered together","Creating Communities for catalog discussions","Automatically assigning cases based on category"],ans:1,exp:"An Order Guide bundles multiple catalog items that are logically related into a single guided ordering experience. For example, an 'Onboarding Kit' Order Guide might include a laptop, software license, and portal access — all ordered in one flow."}
+        ],
+        body:{
+          en:`<p class="theory-p">The <strong>Service Catalog</strong> in CSM allows customers to request predefined services through the Customer Service Portal — turning structured requests directly into Cases or fulfillment workflows.</p>
+<table class="info-table2"><thead><tr><th>Catalog Item Type</th><th>Creates</th><th>Best for</th></tr></thead><tbody>
+<tr><td><strong>Record Producer</strong></td><td>A record in any table (e.g. Case)</td><td>Customer submits a request → becomes a Case automatically</td></tr>
+<tr><td><strong>Standard Item</strong></td><td>sc_req / sc_req_item</td><td>Product orders, physical items, access requests</td></tr>
+<tr><td><strong>Order Guide</strong></td><td>Multiple items together</td><td>Bundled requests (onboarding kit, service package)</td></tr>
+<tr><td><strong>Content Item</strong></td><td>No record — links to a URL or KB article</td><td>Informational items, FAQ links</td></tr>
+</tbody></table>
+<div class="callout info"><span class="ci">💡</span><div><strong>Record Producer for CSM:</strong> Set the target table to <code>sn_customerservice_case</code>. Map catalog variables (e.g. "Describe your issue") to Case fields (e.g. Short Description). When the customer submits, a Case is created and routed automatically.</div></div>
+<div class="callout success"><span class="ci">✅</span><div><strong>Service Categories:</strong> Catalog items are organised into Categories (e.g. "IT Support", "Account Management", "Returns"). The CSP homepage can display category tiles, making it easy for customers to find the right request type.</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam focus:</strong> Know the difference between Record Producer (creates a Case) and Standard Item (creates sc_req_item). Scenario questions often test which to use when a catalog request should create a Case vs a standard fulfillment record.</div></div>
+<div class="scenario-box" id="sc-svccat1">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-svccat1')"><span>🛒</span><span class="sc-badge">Scenario</span><span class="sc-title">Customer submits a product return request via the portal</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>A company wants portal users to submit product return requests. Each submission should automatically create a "Returns" Case assigned to the Returns team.</p>
+    <div class="scenario-q">❓ Which catalog item type and configuration?</div>
+    <div class="scenario-a">✅ <strong>Record Producer</strong> targeting <code>sn_customerservice_case</code>. Set Case Type = "Returns". Map the variable "Product serial number" to the Install Base Item field. Add a Default Assignment Rule for Case Type = Returns → Returns Team. Result: one portal form submission → one tracked Case, no manual intervention.</div>
+  </div>
+</div>`,
+          it:`<p class="theory-p">Il <strong>Service Catalog</strong> in CSM permette ai clienti di richiedere servizi predefiniti attraverso il CSP, trasformando le richieste strutturate direttamente in Case o workflow di fulfillment.</p>
+<table class="info-table2"><thead><tr><th>Tipo di Item</th><th>Crea</th><th>Ideale per</th></tr></thead><tbody>
+<tr><td><strong>Record Producer</strong></td><td>Un record in qualsiasi tabella (es. Case)</td><td>Richiesta cliente → diventa un Case automaticamente</td></tr>
+<tr><td><strong>Standard Item</strong></td><td>sc_req / sc_req_item</td><td>Ordini prodotti, accessi, richieste fisiche</td></tr>
+<tr><td><strong>Order Guide</strong></td><td>Più item insieme</td><td>Richieste raggruppate (kit onboarding)</td></tr>
+<tr><td><strong>Content Item</strong></td><td>Nessun record — link a URL o KB</td><td>Item informativi, FAQ</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Focus esame:</strong> Sai distinguere Record Producer (crea un Case) da Standard Item (crea sc_req_item). Le domande a scenario testano spesso quale usare.</div></div>`
+        }
+      },
+      {
+        title:{en:"Targeted Communications",it:"Comunicazioni Mirate"},
+        tag:"amber",
+        quiz:[
+          {q:"What distinguishes Targeted Communications from a Case Digest in CSM?",opts:["Targeted Communications are automated; Case Digest is manual","Case Digest automatically updates all customers linked to a Major Case; Targeted Communications sends custom messages to a filtered segment of customers","They are the same feature with different names","Case Digest is for B2B; Targeted Communications is for B2C only"],ans:1,exp:"Case Digest is an automated broadcast to ALL customers whose cases are linked to a Major Case — no filtering. Targeted Communications lets a manager manually compose a message and filter the recipient list by criteria such as Account, product, entitlement type, or case state — giving precise control over who receives what message."},
+          {q:"Where in ServiceNow CSM are Targeted Communications initiated?",opts:["Customer Service > Cases > Mass Update","Major Issue Management record > Targeted Communications related list","Service Portal > Communication Templates","Performance Analytics > Audience Segments"],ans:1,exp:"Targeted Communications are launched from the Major Issue Management record's Targeted Communications related list — or from Customer Service > Major Issue Management > select a record > Targeted Communications. This is the OOTB path."}
+        ],
+        body:{
+          en:`<p class="theory-p"><strong>Targeted Communications</strong> is the CSM feature for sending personalised, filtered messages to specific customer segments — distinct from the automated Case Digest broadcast.</p>
+<table class="info-table2"><thead><tr><th>Feature</th><th>Case Digest</th><th>Targeted Communications</th></tr></thead><tbody>
+<tr><td>Trigger</td><td>Automatic (scheduled or manual from Major Case)</td><td>Manual — initiated by agent/manager</td></tr>
+<tr><td>Recipients</td><td>ALL customers linked to the Major Case</td><td>Filtered segment (Account, product, tier, state…)</td></tr>
+<tr><td>Message content</td><td>Standard digest template</td><td>Custom message with personalisation tokens</td></tr>
+<tr><td>Use case</td><td>Mass outage update to all affected customers</td><td>Proactive notice to VIP customers only</td></tr>
+<tr><td>Channel</td><td>Email (default)</td><td>Email, portal notification, or both</td></tr>
+</tbody></table>
+<div class="callout info"><span class="ci">💡</span><div><strong>Personalisation tokens:</strong> Use <code>${'$'}{first_name}</code>, <code>${'$'}{account_name}</code>, <code>${'$'}{case_number}</code> in the message body to personalise at scale. Each recipient gets a message with their own data filled in.</div></div>
+<div class="callout success"><span class="ci">✅</span><div><strong>Common use cases:</strong><br>
+• Planned maintenance notice → filter by affected product/region<br>
+• Proactive outreach to customers with open P1 cases<br>
+• Renewal reminders to customers with expiring entitlements<br>
+• Post-incident survey to impacted VIP Accounts</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam trap:</strong> If a question asks how to notify ALL customers affected by a Major Issue automatically → <strong>Case Digest</strong>. If it asks how to send a custom message to a specific subset of customers → <strong>Targeted Communications</strong>.</div></div>
+<div class="pdi-box" id="pdi-tc1">
+  <div class="pdi-hdr" onclick="togglePDI('pdi-tc1')"><span>🖥️</span><span class="pdi-badge">PDI Exercise</span><span class="pdi-title">Send a Targeted Communication from a Major Case</span><span class="pdi-arr">▶</span></div>
+  <div class="pdi-body">
+    <div class="pdi-step"><div class="pdi-num">1</div><div class="pdi-text">Open an existing <strong>Major Case</strong> record (Customer Service › Major Issue Management).</div></div>
+    <div class="pdi-step"><div class="pdi-num">2</div><div class="pdi-text">Scroll to the <strong>Targeted Communications</strong> related list. Click <strong>New</strong>.</div></div>
+    <div class="pdi-step"><div class="pdi-num">3</div><div class="pdi-text">Set filter criteria: Account tier = <strong>VIP</strong>. Write a message body using <code>${'$'}{first_name}</code> and <code>${'$'}{case_number}</code> tokens.</div></div>
+    <div class="pdi-step"><div class="pdi-num">4</div><div class="pdi-text">Click <strong>Preview recipients</strong> to verify the filtered list, then click <strong>Send</strong>.</div></div>
+    <div class="pdi-tip">💡 Compare the recipient count with the total customers on the Major Case to verify the filter worked.</div>
+  </div>
+</div>`,
+          it:`<p class="theory-p">Le <strong>Comunicazioni Mirate</strong> sono la funzionalità CSM per inviare messaggi personalizzati e filtrati a segmenti specifici di clienti — distinte dal broadcast automatico del Case Digest.</p>
+<table class="info-table2"><thead><tr><th>Caratteristica</th><th>Case Digest</th><th>Targeted Communications</th></tr></thead><tbody>
+<tr><td>Trigger</td><td>Automatico (da Major Case)</td><td>Manuale — avviato da agente/manager</td></tr>
+<tr><td>Destinatari</td><td>TUTTI i clienti collegati al Major Case</td><td>Segmento filtrato (Account, prodotto, tier…)</td></tr>
+<tr><td>Contenuto</td><td>Template digest standard</td><td>Messaggio personalizzato con token</td></tr>
+<tr><td>Caso d'uso</td><td>Aggiornamento outage a tutti i clienti impattati</td><td>Avviso proattivo solo ai clienti VIP</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Trappola esame:</strong> Notificare TUTTI i clienti di un Major Issue automaticamente → <strong>Case Digest</strong>. Inviare un messaggio personalizzato a un sottoinsieme specifico → <strong>Targeted Communications</strong>.</div></div>`
+        }
       }
     ]
   },
@@ -1166,14 +1546,110 @@ P4 Basso: Risposta 8h / Risoluzione 5 giorni</div></div>
     <div class="pdi-tip">💡 Passing threshold is ~70% (42/60). Target 80%+ in practice to have a solid margin.</div>
   </div>
 </div>`,
-          it:`<p class="theory-p">Le domande sulle best practice seguono schemi prevedibili all'esame. Impara questi principi.</p>
-<div class="callout tip"><span class="ci">💜</span><div><strong>La Sequenza d'Oro:</strong><br>
-1️⃣ Definire data model → 2️⃣ Progettare entitlement → 3️⃣ Creare Case Type + Service Definition → 4️⃣ Configurare routing → 5️⃣ Rollout canali → 6️⃣ Workspace + analytics → 7️⃣ Funzionalità AI</div></div>
+          it:`<p class="theory-p">Le domande sulle best practice seguono schemi prevedibili all'esame. Impara questi principi e rispondili con sicurezza.</p>
+<div class="callout tip"><span class="ci">💜</span><div><strong>La Sequenza d'Oro (memorizzala per l'esame):</strong><br>
+1️⃣ Definire data model (B2B vs B2C)<br>
+2️⃣ Progettare struttura entitlement<br>
+3️⃣ Creare Case Type + Service Definition<br>
+4️⃣ Configurare routing (referenzia i campi del Case Type)<br>
+5️⃣ Rollout canali — email + portale prima, poi chat/telefono<br>
+6️⃣ Configurare workspace + analytics<br>
+7️⃣ Aggiungere funzionalità AI (Now Assist, Virtual Agent)</div></div>
 <ul class="theory-ul">
-  <li><strong>Now Create (Agile):</strong> Sprint-based. User story: <em>"Come [ruolo], voglio [funzionalità] per [beneficio]"</em>. Corso obbligatorio nel learning path.</li>
-  <li><strong>Test su PDI:</strong> Sempre testare sul Personal Developer Instance prima della produzione.</li>
+  <li><strong>Now Create (Agile):</strong> Sprint-based. User story: <em>"Come [ruolo], voglio [funzionalità] affinché [beneficio]"</em>. Corso obbligatorio nel learning path.</li>
+  <li><strong>Test su PDI:</strong> Sempre testare sul Personal Developer Instance prima della produzione. Mai configurare direttamente in produzione.</li>
+  <li><strong>Entitlement prima:</strong> Gli entitlement sono complessi da aggiungere a posteriori. Progettali prima di costruire i Case Type.</li>
+  <li><strong>Rollout canali per fasi:</strong> Email + Portale → Chat → Telefono/CTI. Mai tutti insieme.</li>
   <li><strong>Delta exam:</strong> Dopo ogni major release ServiceNow per mantenere la certificazione.</li>
-</ul>`
+</ul>
+<div class="scenario-box" id="sc-bp-1-it">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-bp-1-it')"><span>📋</span><span class="sc-badge">Scenario Esame</span><span class="sc-title">Cosa viene prima — routing o Case Type?</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>Un team di implementazione dibatte l'ordine: un consulente vuole prima le routing rule, un altro i Case Type, un terzo vuole configurare subito i canali.</p>
+    <div class="scenario-q">❓ Chi ha ragione secondo le best practice?</div>
+    <div class="scenario-a">✅ <strong>Nessuno dei tre sta iniziando correttamente.</strong><br>
+    → Prima: Definire data model (B2B vs B2C) — l'hanno saltato<br>
+    → Poi: Progettare entitlement<br>
+    → Poi: Creare Case Type (referenziati dalle routing rule)<br>
+    → Poi: Configurare routing rule (dopo che esistono i Case Type)<br>
+    → Ultimo: Configurare i canali<br>
+    <em>Routing prima dei Case Type = regole senza niente da referenziare. Canali prima = case che non vanno da nessuna parte.</em></div>
+  </div>
+</div>
+<div class="pdi-box" id="pdi-bp-it">
+  <div class="pdi-hdr" onclick="togglePDI('pdi-bp-it')"><span>🖥️</span><span class="pdi-badge">Checklist Studio</span><span class="pdi-title">Checklist prontezza pre-esame</span><span class="pdi-arr">▶</span></div>
+  <div class="pdi-body">
+    <div class="pdi-step"><div class="pdi-num">1</div><div class="pdi-text">Completa <strong>CSM Essentials</strong> + <strong>CSM Essentials Simulator</strong> su Now Learning (gratuiti).</div></div>
+    <div class="pdi-step"><div class="pdi-num">2</div><div class="pdi-text">Completa <strong>Get Started with Now Create Methodology</strong> (corso obbligatorio).</div></div>
+    <div class="pdi-step"><div class="pdi-num">3</div><div class="pdi-text">Pratica tutti e 5 i domini nel tuo PDI — crea Account, Contact, Consumer, Entitlement, Case, Playbook.</div></div>
+    <div class="pdi-step"><div class="pdi-num">4</div><div class="pdi-text">Completa tutti e 3 i blocchi quiz in questa app. Obiettivo: 80%+ stabile prima di prenotare l'esame reale.</div></div>
+    <div class="pdi-step"><div class="pdi-num">5</div><div class="pdi-text">Rivedi tutte le flashcard. Segna quelle "mancate" e ripassale il giorno prima dell'esame.</div></div>
+    <div class="pdi-tip">💡 Soglia di superamento ~70% (42/60). Punta all'80%+ nella pratica per avere un margine solido.</div>
+  </div>
+</div>`
+        }
+      },
+      {
+        title:{en:"Engagement Methodology & Now Create",it:"Metodologia di Engagement e Now Create"},
+        tag:"red",
+        quiz:[
+          {q:"What is the correct format for a User Story in the Now Create methodology?",opts:["As a [system], it should [behaviour] when [event]","As a [role], I want [feature] so that [benefit]","Given [context], when [action], then [outcome]","The [stakeholder] requires [feature] by [date]"],ans:1,exp:"The Now Create User Story format is: 'As a [role], I want [feature] so that [benefit].' This Agile format keeps the story focused on the user's perspective and the business value delivered. Example: 'As a support agent, I want to see the customer's open cases on the case form so that I can identify recurring issues quickly.'"},
+          {q:"Which Now Create phase involves validating the solution against acceptance criteria before go-live?",opts:["Discover","Design","Build","Test"],ans:3,exp:"The Test phase validates that all user stories and requirements meet their acceptance criteria. This includes unit testing, integration testing, UAT (User Acceptance Testing), and performance testing before the Deploy phase. On the exam, if a scenario asks 'when should you verify requirements are met', the answer is the Test phase."},
+          {q:"In a ServiceNow CSM implementation using Now Create, who is typically the PRIMARY stakeholder responsible for defining business requirements?",opts:["The ServiceNow platform architect","The Business Process Owner (BPO)","The system administrator","The end-user"],ans:1,exp:"The Business Process Owner (BPO) is the primary stakeholder who owns the CSM business processes and defines requirements. The BPO participates in workshops during the Discover and Design phases, reviews User Stories, and signs off on acceptance criteria. The architect translates requirements into technical design — but requirements originate with the BPO."}
+        ],
+        body:{
+          en:`<p class="theory-p">The <strong>Now Create methodology</strong> is ServiceNow's Agile-based implementation framework. It is tested in the CIS-CSM exam as part of Engagement Methodology — approximately 10% of questions touch on project approach, phases, and stakeholder roles.</p>
+<div class="callout info"><span class="ci">💡</span><div><strong>Now Create is mandatory.</strong> "Get Started with the Now Create Methodology" is a required course in the official CIS-CSM learning path. Expect 4–6 exam questions on this topic.</div></div>
+<table class="info-table2"><thead><tr><th>Phase</th><th>Key Activities</th><th>Output</th></tr></thead><tbody>
+<tr><td><strong>1. Discover</strong></td><td>Stakeholder workshops, as-is process mapping, requirement gathering</td><td>User Stories, Business Requirements Document</td></tr>
+<tr><td><strong>2. Design</strong></td><td>Solution design, data model design, integration design, prototype</td><td>Solution Design Document (SDD), data migration plan</td></tr>
+<tr><td><strong>3. Build</strong></td><td>Sprint-based configuration, unit testing per story</td><td>Configured instance, sprint demos</td></tr>
+<tr><td><strong>4. Test</strong></td><td>UAT, integration testing, performance testing, fix defects</td><td>Test results, signed-off acceptance criteria</td></tr>
+<tr><td><strong>5. Deploy</strong></td><td>Go-live preparation, data migration, cutover, hypercare</td><td>Production instance, post-go-live support</td></tr>
+</tbody></table>
+<div class="callout success"><span class="ci">✅</span><div><strong>User Story format:</strong> <em>"As a [role], I want [feature] so that [benefit]."</em><br>
+Example: <em>"As a CSM agent, I want to see all open cases for an Account on the case form so that I can identify repeat issues and provide consistent service."</em><br>
+Each story has <strong>Acceptance Criteria</strong> — measurable conditions that must be true for the story to be "Done".</div></div>
+<table class="info-table2"><thead><tr><th>Role</th><th>Responsibility</th></tr></thead><tbody>
+<tr><td><strong>Business Process Owner (BPO)</strong></td><td>Defines requirements, owns processes, signs off on UAT</td></tr>
+<tr><td><strong>Project Sponsor</strong></td><td>Executive champion, approves budget and scope changes</td></tr>
+<tr><td><strong>ServiceNow Architect</strong></td><td>Translates requirements into technical design decisions</td></tr>
+<tr><td><strong>Configuration Consultant</strong></td><td>Builds the solution in ServiceNow (sprints)</td></tr>
+<tr><td><strong>Change Manager</strong></td><td>Manages user adoption, training, and communication plan</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Agile in Now Create:</strong> Work is delivered in <strong>sprints</strong> (typically 2 weeks). Each sprint delivers working, demo-able functionality. The backlog is groomed before each sprint. Scope changes go through a formal change request — not ad-hoc additions mid-sprint.</div></div>
+<div class="scenario-box" id="sc-nowcreate1">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-nowcreate1')"><span>📋</span><span class="sc-badge">Scenario</span><span class="sc-title">Stakeholder requests a major new feature mid-sprint</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>During Sprint 3 of a CSM implementation, the Project Sponsor requests adding a new AI-powered chat feature that was not in the original scope.</p>
+    <div class="scenario-q">❓ What is the correct Now Create response?</div>
+    <div class="scenario-a">✅ <strong>Do not add it to the current sprint.</strong> Log the request as a new User Story in the backlog. Bring it to the next backlog grooming session. Estimate the effort, assess the impact on timeline and budget, and get formal change request approval from the Project Sponsor before scheduling it into a future sprint.</div>
+  </div>
+</div>
+<div class="callout info"><span class="ci">💡</span><div><strong>PDI (Personal Developer Instance):</strong> Always configure and test on a PDI before applying to production. The PDI is a free ServiceNow developer instance available at developer.servicenow.com.</div></div>
+<div class="mistake-box"><div class="mb-title">⚠️ Common Mistakes</div><ul>
+  <li>Confusing Now Create phases — Test comes BEFORE Deploy, not after</li>
+  <li>Thinking the architect defines requirements — the BPO defines requirements, the architect designs the solution</li>
+  <li>Adding scope mid-sprint without a change request — this violates the Now Create Agile discipline</li>
+  <li>Skipping UAT — Test phase sign-off by the BPO is required before Deploy</li>
+</ul></div>`,
+          it:`<p class="theory-p">La metodologia <strong>Now Create</strong> è il framework Agile di ServiceNow per le implementazioni. È testata nell'esame CIS-CSM come parte dell'Engagement Methodology — circa il 10% delle domande riguarda fasi, ruoli e approccio al progetto.</p>
+<table class="info-table2"><thead><tr><th>Fase</th><th>Attività chiave</th><th>Output</th></tr></thead><tbody>
+<tr><td><strong>1. Discover</strong></td><td>Workshop stakeholder, mappatura processi as-is, raccolta requisiti</td><td>User Story, BRD</td></tr>
+<tr><td><strong>2. Design</strong></td><td>Solution design, data model, prototipo</td><td>Solution Design Document (SDD)</td></tr>
+<tr><td><strong>3. Build</strong></td><td>Configurazione sprint per sprint, unit test</td><td>Istanza configurata, demo sprint</td></tr>
+<tr><td><strong>4. Test</strong></td><td>UAT, test integrazione, test performance, fix difetti</td><td>Acceptance criteria firmati</td></tr>
+<tr><td><strong>5. Deploy</strong></td><td>Go-live, migrazione dati, cutover, hypercare</td><td>Istanza di produzione</td></tr>
+</tbody></table>
+<div class="callout success"><span class="ci">✅</span><div><strong>Formato User Story:</strong> <em>"Come [ruolo], voglio [funzionalità] affinché [beneficio]."</em><br>
+Ogni story ha <strong>Acceptance Criteria</strong> — condizioni misurabili che devono essere vere per considerare la story "Done".</div></div>
+<table class="info-table2"><thead><tr><th>Ruolo</th><th>Responsabilità</th></tr></thead><tbody>
+<tr><td><strong>Business Process Owner (BPO)</strong></td><td>Definisce i requisiti, approva l'UAT</td></tr>
+<tr><td><strong>Project Sponsor</strong></td><td>Champion esecutivo, approva budget e modifiche di scope</td></tr>
+<tr><td><strong>Architetto ServiceNow</strong></td><td>Traduce i requisiti in design tecnico</td></tr>
+<tr><td><strong>Configuration Consultant</strong></td><td>Costruisce la soluzione negli sprint</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Errori comuni:</strong> Test viene PRIMA di Deploy. Il BPO definisce i requisiti (non l'architetto). Le modifiche di scope richiedono una change request formale — non si aggiungono mid-sprint.</div></div>`
         }
       }
     ]
