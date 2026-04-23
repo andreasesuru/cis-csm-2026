@@ -237,6 +237,78 @@ const THEORY = [
 </tbody></table>
 <div class="callout info"><span class="ci">💡</span><div><strong>Entitlement Verification:</strong> Si attiva automaticamente alla creazione del case. Mostra ✅ se valido, ⚠️ se non trovato. NON blocca la creazione del case.</div></div>`
         }
+      },
+      {
+        title:{en:"Model Categories",it:"Categorie di Modello"},
+        tag:"blue",
+        quiz:[
+          {q:"What is the primary purpose of a Model Category in ServiceNow CSM/ITAM?",opts:["Define SLA response times per product","Link a Product Model to a CI class and an Asset class","Group contacts by product type","Control which agents handle product-related cases"],ans:1,exp:"A Model Category maps a Product Model to both a CI class (CMDB) and an Asset class (ITAM). When a catalog order is fulfilled, the Model Category tells ServiceNow what type of Asset record and CI record to create automatically."},
+          {q:"A Model Category is configured with CI Class = 'cmdb_ci_computer' and Asset Class = 'alm_hardware'. What happens when a laptop order is fulfilled?",opts:["Only a CI record is created","Only an Asset record is created","Both a Hardware Asset and a Computer CI are created","A Consumer record is created"],ans:2,exp:"When fulfillment completes, ServiceNow uses the Model Category to auto-create both an alm_hardware Asset record AND a cmdb_ci_computer CI record, keeping CMDB and Asset Management in sync."}
+        ],
+        body:{
+          en:`<p class="theory-p"><strong>Model Categories</strong> are the bridge between the Product Catalog and the CMDB/Asset Management. They tell ServiceNow what kind of Asset and CI to create when a product model is ordered or deployed.</p>
+<table class="info-table2"><thead><tr><th>Model Category</th><th>CI Class</th><th>Asset Class</th><th>Example</th></tr></thead><tbody>
+<tr><td>Computer</td><td>cmdb_ci_computer</td><td>alm_hardware</td><td>Laptop, Desktop</td></tr>
+<tr><td>Software</td><td>cmdb_ci_spkg</td><td>alm_license</td><td>Office 365, Antivirus</td></tr>
+<tr><td>Consumable</td><td>—</td><td>alm_consumable</td><td>Toner, USB cable</td></tr>
+<tr><td>Network Gear</td><td>cmdb_ci_netgear</td><td>alm_hardware</td><td>Switch, Router</td></tr>
+</tbody></table>
+<div class="callout info"><span class="ci">💡</span><div><strong>Navigation:</strong> Product Catalog › Model Categories (table: cmdb_model_category). Each Product Model references exactly one Model Category.</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam focus:</strong> Consumables have NO CI class — they create only an Asset, never a CMDB record. This is a common trick question.</div></div>
+<div class="callout success"><span class="ci">✅</span><div><strong>Auto-provisioning flow:</strong> Catalog Item ordered → Order fulfilled → Model Category evaluated → Asset record created (+ CI if class defined) → Asset linked to Install Base if applicable.</div></div>
+<div class="mistake-box"><div class="mb-title">⚠️ Common Mistakes</div><ul>
+  <li>Confusing Model Category (maps classes) with Product Category (groups catalog items for browsing)</li>
+  <li>Assuming all categories create both an Asset AND a CI — Consumables create only an Asset</li>
+  <li>Thinking Model Category controls entitlements — it does not</li>
+</ul></div>`,
+          it:`<p class="theory-p">Le <strong>Model Category</strong> collegano il Product Catalog con il CMDB e l'Asset Management. Indicano a ServiceNow quale tipo di Asset e CI creare quando un modello di prodotto viene ordinato o distribuito.</p>
+<table class="info-table2"><thead><tr><th>Model Category</th><th>CI Class</th><th>Asset Class</th><th>Esempio</th></tr></thead><tbody>
+<tr><td>Computer</td><td>cmdb_ci_computer</td><td>alm_hardware</td><td>Laptop, Desktop</td></tr>
+<tr><td>Software</td><td>cmdb_ci_spkg</td><td>alm_license</td><td>Office 365, Antivirus</td></tr>
+<tr><td>Consumable</td><td>—</td><td>alm_consumable</td><td>Toner, cavo USB</td></tr>
+<tr><td>Network Gear</td><td>cmdb_ci_netgear</td><td>alm_hardware</td><td>Switch, Router</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Focus esame:</strong> I Consumable NON hanno una CI Class — creano solo un Asset, mai un record CMDB. Domanda trabocchetto frequente.</div></div>
+<div class="callout success"><span class="ci">✅</span><div><strong>Flusso auto-provisioning:</strong> Ordine Catalog → Ordine completato → Model Category valutata → Asset record creato (+ CI se classe definita) → Asset collegato all'Install Base se applicabile.</div></div>`
+        }
+      },
+      {
+        title:{en:"Consumer vs Contact Records",it:"Consumer vs Contact: Differenze Chiave"},
+        tag:"blue",
+        quiz:[
+          {q:"A CSM agent notices a case has no Account field. The customer is linked as a 'Consumer'. What does this confirm?",opts:["The system is misconfigured","The case was created in B2B mode","The instance is running in B2C mode","The Contact account was accidentally deleted"],ans:2,exp:"In B2C mode, cases link to Consumer records (no Account required). The absence of an Account field confirms B2C configuration. Consumer is the standalone customer entity for individual end-users."},
+          {q:"Which table stores Consumer records in ServiceNow CSM?",opts:["sys_user","customer_contact","customer_account","customer_service_consumer"],ans:3,exp:"Consumer records are stored in the 'customer_service_consumer' table. Contact records are in 'customer_contact'. These are completely separate tables with different fields and relationships."}
+        ],
+        body:{
+          en:`<p class="theory-p">Contact and Consumer are two distinct customer entity types. Mixing them up is the most common Domain 1 exam mistake.</p>
+<table class="info-table2"><thead><tr><th>Attribute</th><th>Contact (B2B)</th><th>Consumer (B2C)</th></tr></thead><tbody>
+<tr><td>Table</td><td>customer_contact</td><td>customer_service_consumer</td></tr>
+<tr><td>Extends</td><td>sys_user</td><td>standalone</td></tr>
+<tr><td>Account required?</td><td>✅ Yes — mandatory</td><td>❌ No — none</td></tr>
+<tr><td>Portal visibility</td><td>Account-level (sees company cases)</td><td>Individual only</td></tr>
+<tr><td>Roles within org</td><td>✅ (Technical Lead, Billing…)</td><td>❌</td></tr>
+<tr><td>Model</td><td>B2B only</td><td>B2C only</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Critical distinction:</strong> A Contact ALWAYS needs a parent Account. If you try to create a Contact without an Account in B2B mode, the form will require it. A Consumer has no Account field at all.</div></div>
+<div class="callout info"><span class="ci">💡</span><div><strong>Portal access:</strong> In B2B, a Contact can see ALL cases for their Account (if granted). In B2C, a Consumer sees only their own cases. This distinction often appears in scenario questions.</div></div>
+<div class="scenario-box" id="sc-consvscon">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-consvscon')"><span>🏭</span><span class="sc-badge">Scenario</span><span class="sc-title">Insurance company migrating from B2B to B2C</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>An insurance company currently uses B2B CSM (Contacts under Accounts). They're expanding to direct-to-consumer policies and need individual customers without corporate ties.</p>
+    <div class="scenario-q">❓ Can they reuse Contact records as Consumers?</div>
+    <div class="scenario-a">❌ <strong>No.</strong> Contact and Consumer are separate tables with different schemas. Migration requires creating new Consumer records. They can run both B2B (for corporate clients) and B2C (for individual policyholders) simultaneously in one instance, but must manage both entity types separately.</div>
+  </div>
+</div>`,
+          it:`<p class="theory-p">Contact e Consumer sono due entità clienti distinte. Confonderle è l'errore più comune nel Dominio 1.</p>
+<table class="info-table2"><thead><tr><th>Attributo</th><th>Contact (B2B)</th><th>Consumer (B2C)</th></tr></thead><tbody>
+<tr><td>Tabella</td><td>customer_contact</td><td>customer_service_consumer</td></tr>
+<tr><td>Account richiesto?</td><td>✅ Sì — obbligatorio</td><td>❌ No</td></tr>
+<tr><td>Visibilità portale</td><td>A livello Account (vede case aziendali)</td><td>Solo propri case</td></tr>
+<tr><td>Ruoli nell'org</td><td>✅ (Technical Lead, Billing…)</td><td>❌</td></tr>
+<tr><td>Modello</td><td>Solo B2B</td><td>Solo B2C</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Distinzione critica:</strong> Un Contact richiede SEMPRE un Account padre. Un Consumer non ha il campo Account. Non sono mai intercambiabili e usano tabelle diverse.</div></div>`
+        }
       }
     ]
   },
@@ -524,6 +596,125 @@ const THEORY = [
 <tr><td>🔗 <strong>Engagement Messenger</strong></td><td>Widget embedded su sito esterno</td><td>Snippet JS sul sito aziendale. Il cliente non lascia mai il sito.</td></tr>
 </tbody></table>`
         }
+      },
+      {
+        title:{en:"Case Types Configuration",it:"Configurazione dei Tipi di Case"},
+        tag:"teal",
+        quiz:[
+          {q:"What is the primary benefit of defining multiple Case Types in CSM?",opts:["Reducing the number of agents needed","Applying different fields, routing rules, and SLAs per category of request","Creating separate databases per department","Allowing consumers to bypass entitlement checks"],ans:1,exp:"Case Types enable differentiated handling per category: each type can have its own visible fields, assignment/routing rules, SLA definitions, and templates. For example, a 'Complaint' Case Type may route to a specialist team and trigger a stricter SLA than an 'Inquiry'."},
+          {q:"Where are Case Types configured in ServiceNow CSM?",opts:["System Properties > CSM","Customer Service > Configuration > Case Types","Assignment Rules > Case Type Filter","Service Definitions > Type Manager"],ans:1,exp:"Navigate to Customer Service > Configuration > Case Types. Each Case Type record defines the name, description, and can be linked to specific routing rules and SLA definitions."}
+        ],
+        body:{
+          en:`<p class="theory-p"><strong>Case Types</strong> categorise cases so that each category can be handled differently — with different fields, routing, SLAs, and templates. This is a high-frequency Domain 2 exam topic.</p>
+<table class="info-table2"><thead><tr><th>Case Type</th><th>Typical Use</th><th>Special Config</th></tr></thead><tbody>
+<tr><td>Standard</td><td>General support requests</td><td>Default fields, standard SLA</td></tr>
+<tr><td>Complaint</td><td>Customer dissatisfaction</td><td>Specialist queue, escalation rules</td></tr>
+<tr><td>Inquiry</td><td>Information requests</td><td>Self-service deflection, lighter SLA</td></tr>
+<tr><td>Returns / RMA</td><td>Product returns</td><td>Install Base field required, return flow</td></tr>
+</tbody></table>
+<div class="callout info"><span class="ci">💡</span><div><strong>Navigation:</strong> Customer Service › Configuration › Case Types. The <code>cs_case_type</code> field on the Case form drives routing and SLA selection.</div></div>
+<div class="callout success"><span class="ci">✅</span><div><strong>Case Type + Assignment Rules:</strong> Assignment Rules can filter by Case Type, so "Complaint" cases go to the complaints team while "Inquiry" cases go to the general queue. This is the standard pattern.</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam trap:</strong> Case Types are NOT the same as Case Categories. Categories are a free-form classification. Case Types are structured configuration objects that drive routing logic.</div></div>
+<div class="mistake-box"><div class="mb-title">⚠️ Common Mistakes</div><ul>
+  <li>Confusing Case Type with Case Category — they are different fields with different purposes</li>
+  <li>Thinking Case Types require separate tables — all cases are in the same sn_customerservice_case table</li>
+  <li>Forgetting to link SLA Definitions to Case Types — without this, Case Type has no SLA impact</li>
+</ul></div>`,
+          it:`<p class="theory-p">I <strong>Tipi di Case</strong> categorizzano i case affinché ogni categoria sia gestita diversamente: campi, routing, SLA e template possono variare per tipo.</p>
+<table class="info-table2"><thead><tr><th>Tipo Case</th><th>Uso tipico</th><th>Config speciale</th></tr></thead><tbody>
+<tr><td>Standard</td><td>Richieste di supporto generali</td><td>Campi default, SLA standard</td></tr>
+<tr><td>Complaint</td><td>Insoddisfazione cliente</td><td>Coda specialistica, regole escalation</td></tr>
+<tr><td>Inquiry</td><td>Richieste di informazioni</td><td>Deflection self-service, SLA leggero</td></tr>
+<tr><td>Returns / RMA</td><td>Resi prodotto</td><td>Campo Install Base obbligatorio</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Trappola esame:</strong> Case Type ≠ Case Category. Le Category sono classificazioni libere; i Case Type sono oggetti di configurazione strutturati che guidano routing e SLA.</div></div>`
+        }
+      },
+      {
+        title:{en:"Matching Rules Framework",it:"Framework delle Matching Rules"},
+        tag:"teal",
+        quiz:[
+          {q:"How do Matching Rules differ from standard Assignment Rules in CSM AWA?",opts:["Matching Rules only apply to B2C cases","Matching Rules evaluate multiple case attributes simultaneously to find the best-skilled available agent","Matching Rules replace SLA definitions","Matching Rules only work with email channel"],ans:1,exp:"Standard Assignment Rules set a group/user based on simple conditions. AWA Matching Rules go further: they evaluate a combination of case attributes (type, product, priority, channel, customer tier) against agent skills and availability to route to the BEST available agent, not just any agent in a group."},
+          {q:"In AWA Matching Rules, what happens when no rule matches a case?",opts:["The case is automatically closed","An error is thrown and the case is blocked","The case falls back to the default queue or group configured in AWA settings","The case is assigned to the system administrator"],ans:2,exp:"When no Matching Rule matches, AWA falls back to the default queue. This ensures cases are never unrouted. Always configure a catch-all default queue to handle edge cases."}
+        ],
+        body:{
+          en:`<p class="theory-p">The <strong>Matching Rules Framework</strong> is how AWA (Advanced Work Assignment) finds the optimal agent for a case — going beyond group assignment to skill-based routing.</p>
+<div class="callout info"><span class="ci">💡</span><div><strong>Matching Rule attributes evaluated:</strong> Case Type · Product · Priority · Channel · Customer Tier · Account · Skills required. Rules are evaluated in priority order — the first match wins.</div></div>
+<table class="info-table2"><thead><tr><th>Mechanism</th><th>Assignment Rules</th><th>AWA Matching Rules</th></tr></thead><tbody>
+<tr><td>Routing logic</td><td>Condition → Group/User</td><td>Multi-attribute → Best available agent</td></tr>
+<tr><td>Skill awareness</td><td>❌ No</td><td>✅ Yes (agent skills matched)</td></tr>
+<tr><td>Workload balancing</td><td>❌ No</td><td>✅ Yes (capacity considered)</td></tr>
+<tr><td>Real-time routing</td><td>❌ Batch/trigger</td><td>✅ Real-time queue push</td></tr>
+<tr><td>Fallback</td><td>No match = unassigned</td><td>No match = default queue</td></tr>
+</tbody></table>
+<div class="callout success"><span class="ci">✅</span><div><strong>Matching Rule anatomy:</strong> Name → Priority (order of evaluation) → Conditions (case attributes) → Work Item Filter → Queue. Multiple conditions use AND logic by default.</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>AWA requires a licence.</strong> Advanced Work Assignment is a separate product. On the exam, if a scenario mentions skill-based routing or real-time agent selection, the answer is AWA Matching Rules, not standard Assignment Rules.</div></div>
+<div class="pdi-box" id="pdi-matchrule">
+  <div class="pdi-hdr" onclick="togglePDI('pdi-matchrule')"><span>🖥️</span><span class="pdi-badge">PDI Exercise</span><span class="pdi-title">Create a Matching Rule for high-priority complaints</span><span class="pdi-arr">▶</span></div>
+  <div class="pdi-body">
+    <div class="pdi-step"><div class="pdi-num">1</div><div class="pdi-text">Go to <strong>Advanced Work Assignment › Matching Rules › New</strong>.</div></div>
+    <div class="pdi-step"><div class="pdi-num">2</div><div class="pdi-text">Set Name = "High-Priority Complaints", Priority = <strong>10</strong> (lower = higher priority).</div></div>
+    <div class="pdi-step"><div class="pdi-num">3</div><div class="pdi-text">Add conditions: Case Type = <strong>Complaint</strong> AND Priority = <strong>1 - Critical</strong>.</div></div>
+    <div class="pdi-step"><div class="pdi-num">4</div><div class="pdi-text">Set Queue to <strong>Senior Complaints Queue</strong>. Save and activate.</div></div>
+    <div class="pdi-tip">💡 Test by creating a P1 Complaint case and verifying it lands in the Senior Complaints Queue.</div>
+  </div>
+</div>`,
+          it:`<p class="theory-p">Il <strong>Framework delle Matching Rules</strong> è il meccanismo con cui AWA trova l'agente ottimale per un case, andando oltre l'assegnazione per gruppo verso il routing basato su competenze.</p>
+<table class="info-table2"><thead><tr><th>Meccanismo</th><th>Assignment Rules</th><th>AWA Matching Rules</th></tr></thead><tbody>
+<tr><td>Logica routing</td><td>Condizione → Gruppo/Utente</td><td>Multi-attributo → Miglior agente disponibile</td></tr>
+<tr><td>Consapevolezza skill</td><td>❌ No</td><td>✅ Sì</td></tr>
+<tr><td>Bilanciamento carico</td><td>❌ No</td><td>✅ Sì (capacità considerata)</td></tr>
+<tr><td>Routing real-time</td><td>❌ Batch/trigger</td><td>✅ Real-time</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>AWA richiede licenza separata.</strong> Se uno scenario menziona routing basato su skill o selezione real-time dell'agente, la risposta è AWA Matching Rules, non le Assignment Rules standard.</div></div>`
+        }
+      },
+      {
+        title:{en:"SLA Configuration & Management",it:"Configurazione e Gestione degli SLA"},
+        tag:"teal",
+        quiz:[
+          {q:"What is the difference between an SLA Definition and a Task SLA in ServiceNow?",opts:["They are the same thing","SLA Definition is the template/rule; Task SLA is the instance attached to a specific case","Task SLA is for tasks only, SLA Definition is for cases only","SLA Definition requires AWA; Task SLA does not"],ans:1,exp:"SLA Definition (sla_definition) is the reusable configuration: conditions, duration, schedule, warning %. Task SLA (task_sla) is the runtime instance created when an SLA Definition matches a case. One SLA Definition can create millions of Task SLA instances."},
+          {q:"An SLA is configured with Warning = 75% and Breach = 100%. A P1 case has a 4-hour resolution SLA. At what elapsed time does the warning trigger?",opts:["30 minutes","1 hour","3 hours","4 hours"],ans:2,exp:"75% of 4 hours = 3 hours. At 3 hours elapsed the SLA enters 'Warning' state and triggers notifications. At 4 hours it breaches. Warning percentage is configurable per SLA Definition."},
+          {q:"Which condition pauses an SLA timer in a standard CSM configuration?",opts:["Case is assigned to an agent","Case state changes to 'Awaiting Info' (on-hold state)","A note is added to the case","The case priority is changed"],ans:1,exp:"SLA timers pause when a case enters a configured 'pause' state — typically 'Awaiting Info' or 'On Hold'. This prevents the SLA from counting time the agent is waiting for the customer to respond. Start/Pause/Stop conditions are fully configurable per SLA Definition."}
+        ],
+        body:{
+          en:`<p class="theory-p"><strong>SLAs (Service Level Agreements)</strong> are one of the most heavily tested topics in Domain 2. Understand the two-layer model: Definition (template) vs Task SLA (runtime instance).</p>
+<table class="info-table2"><thead><tr><th>Concept</th><th>Table</th><th>Description</th></tr></thead><tbody>
+<tr><td>SLA Definition</td><td>sla_definition</td><td>Template: conditions, duration, schedule, warning/breach %</td></tr>
+<tr><td>Task SLA</td><td>task_sla</td><td>Runtime instance: one per matched case, tracks elapsed time</td></tr>
+</tbody></table>
+<div class="callout info"><span class="ci">💡</span><div><strong>SLA Definition key fields:</strong> Name · Type (Response/Resolution) · Duration (e.g. 4 hours) · Schedule (business hours) · Conditions (filter when SLA applies) · Start/Pause/Stop conditions · Warning % · Breach %.</div></div>
+<div class="callout success"><span class="ci">✅</span><div><strong>Typical Priority-Based SLA Matrix:</strong><br>
+P1 Critical: Response 1h / Resolution 4h<br>
+P2 High: Response 2h / Resolution 8h<br>
+P3 Medium: Response 4h / Resolution 24h<br>
+P4 Low: Response 8h / Resolution 5 days</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Start / Pause / Stop conditions:</strong> Start = case created or assigned. Pause = case moves to 'Awaiting Info'. Stop = case resolved or closed. Multiple SLAs can apply to ONE case (e.g., both a Response and a Resolution SLA).</div></div>
+<div class="scenario-box" id="sc-sla1">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-sla1')"><span>📋</span><span class="sc-badge">Scenario</span><span class="sc-title">SLA breaches occurring despite agents working on cases</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>Agents report that SLA timers keep running while they wait for customers to respond to requests for more information, causing false SLA breaches.</p>
+    <div class="scenario-q">❓ How do you fix this?</div>
+    <div class="scenario-a">✅ <strong>Configure a Pause condition on the SLA Definition.</strong> Add a Pause condition: Case State = "Awaiting Info". When agents set the case to this state, the SLA timer pauses. When the customer responds and the state changes back to "In Progress", the timer resumes.</div>
+  </div>
+</div>
+<div class="mistake-box"><div class="mb-title">⚠️ Common Mistakes</div><ul>
+  <li>Confusing SLA Definition with Task SLA — the Definition is the rule, Task SLA is the tracked instance</li>
+  <li>Forgetting that business schedules affect SLA duration — a "4 hour" SLA on a 9-5 schedule doesn't count overnight hours</li>
+  <li>Thinking only one SLA can apply per case — multiple SLA Definitions can match and create multiple Task SLAs on the same case</li>
+</ul></div>`,
+          it:`<p class="theory-p">Gli <strong>SLA (Service Level Agreement)</strong> sono tra gli argomenti più testati nel Dominio 2. Comprendi il modello a due livelli: Definition (template) vs Task SLA (istanza runtime).</p>
+<table class="info-table2"><thead><tr><th>Concetto</th><th>Tabella</th><th>Descrizione</th></tr></thead><tbody>
+<tr><td>SLA Definition</td><td>sla_definition</td><td>Template: condizioni, durata, schedule, % warning/breach</td></tr>
+<tr><td>Task SLA</td><td>task_sla</td><td>Istanza runtime: una per case corrispondente, traccia il tempo trascorso</td></tr>
+</tbody></table>
+<div class="callout success"><span class="ci">✅</span><div><strong>Matrice SLA tipica per priorità:</strong><br>
+P1 Critico: Risposta 1h / Risoluzione 4h<br>
+P2 Alto: Risposta 2h / Risoluzione 8h<br>
+P3 Medio: Risposta 4h / Risoluzione 24h<br>
+P4 Basso: Risposta 8h / Risoluzione 5 giorni</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Condizioni Start/Pause/Stop:</strong> Pause = il case va in "Awaiting Info". Stop = case risolto o chiuso. Più SLA possono applicarsi a UN singolo case.</div></div>`
+        }
       }
     ]
   },
@@ -632,6 +823,77 @@ const THEORY = [
 </tbody></table>
 <div class="callout warn"><span class="ci">⚠️</span><div><strong>Distinzione chiave:</strong> Case Digest = aggiornamento automatico a TUTTI i clienti collegati. Targeted Communications = messaggi personalizzati manuali a clienti SEGMENTATI.</div></div>`
         }
+      },
+      {
+        title:{en:"Case Actions & Tasks",it:"Case Actions e Task"},
+        tag:"purple",
+        quiz:[
+          {q:"What is the key difference between a Case Action and a Case Task in ServiceNow CSM?",opts:["Case Actions are automated; Case Tasks are manual","Case Actions execute immediately as UI operations; Case Tasks create tracked child work items","Case Actions are only available in B2B; Tasks are only in B2C","They are identical — just different names for the same feature"],ans:1,exp:"Case Actions (e.g., Assign, Quick Close, Escalate) are immediate UI operations triggered by buttons on the case form. Case Tasks are persistent child records (sn_customerservice_task) that track separate pieces of work with their own lifecycle, assignment, and closure."},
+          {q:"Which table stores CSM Case Tasks?",opts:["sc_task","csm_task","sn_customerservice_task","task_case"],ans:2,exp:"CSM Case Tasks are stored in 'sn_customerservice_task', which extends the base 'task' table. This is distinct from sc_task (Service Catalog tasks) and other task subtypes."}
+        ],
+        body:{
+          en:`<p class="theory-p">Understanding the difference between <strong>Case Actions</strong> and <strong>Case Tasks</strong> is essential for Domain 3. They solve different problems.</p>
+<table class="info-table2"><thead><tr><th>Feature</th><th>Case Action</th><th>Case Task</th></tr></thead><tbody>
+<tr><td>What it does</td><td>Immediate operation on the case</td><td>Creates a child work item</td></tr>
+<tr><td>Has its own record?</td><td>❌ No persistent record</td><td>✅ Yes — sn_customerservice_task</td></tr>
+<tr><td>Has lifecycle?</td><td>❌ Executes and disappears</td><td>✅ Open → In Progress → Closed</td></tr>
+<tr><td>Examples</td><td>Assign, Escalate, Quick Close, Send Email</td><td>Verify identity, Ship replacement, Follow up call</td></tr>
+<tr><td>Assigned to</td><td>N/A (fires immediately)</td><td>Agent, Group, or Team</td></tr>
+<tr><td>Tracked separately?</td><td>❌</td><td>✅ Appears in agent work queue</td></tr>
+</tbody></table>
+<div class="callout info"><span class="ci">💡</span><div><strong>Case Task lifecycle:</strong> Open → Work in Progress → Closed Complete / Closed Incomplete. A Case can have multiple Tasks. The Case itself stays open until all Tasks are resolved and the agent manually closes it (unless automation closes it).</div></div>
+<div class="callout success"><span class="ci">✅</span><div><strong>When to use Tasks:</strong> Any time work needs to be delegated, tracked, or completed by a different person/team before the case can close. Example: an IT case that needs a hardware engineer to physically replace a component.</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Case does not auto-close when Tasks close.</strong> Closing all Tasks does NOT automatically close the parent Case unless a Business Rule or Flow is configured to do so.</div></div>
+<div class="mistake-box"><div class="mb-title">⚠️ Common Mistakes</div><ul>
+  <li>Thinking Quick Close (a Case Action) closes all child Tasks — it does not by default</li>
+  <li>Confusing sn_customerservice_task with sc_task — they are different tables for different purposes</li>
+  <li>Assuming one case can only have one Task — multiple concurrent Tasks are fully supported</li>
+</ul></div>`,
+          it:`<p class="theory-p">La differenza tra <strong>Case Action</strong> e <strong>Case Task</strong> è fondamentale per il Dominio 3.</p>
+<table class="info-table2"><thead><tr><th>Caratteristica</th><th>Case Action</th><th>Case Task</th></tr></thead><tbody>
+<tr><td>Cosa fa</td><td>Operazione immediata sul case</td><td>Crea un work item figlio</td></tr>
+<tr><td>Ha un record?</td><td>❌ No record persistente</td><td>✅ Sì — sn_customerservice_task</td></tr>
+<tr><td>Ha un ciclo di vita?</td><td>❌ Esegue e scompare</td><td>✅ Aperto → In Corso → Chiuso</td></tr>
+<tr><td>Esempi</td><td>Assign, Escalate, Quick Close</td><td>Verifica identità, Spedisci sostituto</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Il case non si chiude automaticamente</strong> quando i Task vengono chiusi, a meno che non sia configurata una Business Rule o un Flow apposito.</div></div>`
+        }
+      },
+      {
+        title:{en:"Escalation Procedures & Workflow",it:"Procedure di Escalation e Workflow"},
+        tag:"purple",
+        quiz:[
+          {q:"A case has been open for 3 hours with no response and the SLA is about to breach. Which feature automatically escalates it to a senior agent?",opts:["Case Action manually triggered by manager","Escalation Rule based on SLA warning threshold","Assignment Rule re-evaluating priority","Case Digest sent to the customer"],ans:1,exp:"Escalation Rules trigger automatically based on conditions such as SLA warning %, elapsed time, or priority. When the configured threshold is met, the system reassigns the case to a defined escalation target (senior agent, escalation group, or manager) without manual intervention."},
+          {q:"What distinguishes a time-based escalation from an attribute-based escalation?",opts:["Time-based uses AWA; attribute-based uses Assignment Rules","Time-based triggers when a time threshold is met (e.g., SLA breach); attribute-based triggers when a case field changes (e.g., priority upgraded to Critical)","They are the same — time and attributes are both conditions","Attribute-based is only available for B2B cases"],ans:1,exp:"Time-based escalation fires when a duration expires (SLA warning %, elapsed time). Attribute-based escalation fires when a specific case field changes value — for example, when a customer escalates a complaint and the priority is changed to Critical, an attribute-based rule can immediately re-route the case."}
+        ],
+        body:{
+          en:`<p class="theory-p"><strong>Escalation</strong> ensures critical cases are handled by the right people at the right time. It is a key mechanism in Domain 3 that connects SLA management, Case routing, and Major Issue handling.</p>
+<table class="info-table2"><thead><tr><th>Escalation Type</th><th>Trigger</th><th>Example</th></tr></thead><tbody>
+<tr><td>Time-based</td><td>SLA warning % reached or elapsed time</td><td>Case open 2h with no update → escalate to senior agent</td></tr>
+<tr><td>Attribute-based</td><td>Case field changes (priority, type, product)</td><td>Priority set to Critical → route to on-call manager</td></tr>
+<tr><td>Manual</td><td>Agent or manager clicks Escalate action</td><td>Agent unable to resolve → escalate via Case Action</td></tr>
+<tr><td>Major Issue link</td><td>Case linked to an active Major Case</td><td>Cascades communication to all affected customers</td></tr>
+</tbody></table>
+<div class="callout info"><span class="ci">💡</span><div><strong>Escalation Rule configuration:</strong> Customer Service › Configuration › Escalation Rules. Each rule defines: Condition (when to fire) + Escalation Target (who to assign to) + Notification (who to alert).</div></div>
+<div class="callout success"><span class="ci">✅</span><div><strong>Escalation vs Assignment Rules:</strong> Assignment Rules route cases on creation. Escalation Rules re-route cases AFTER creation when conditions change. Both can coexist on the same case.</div></div>
+<div class="scenario-box" id="sc-esc1">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-esc1')"><span>🔥</span><span class="sc-badge">Scenario</span><span class="sc-title">VIP customer case not resolved within SLA</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>A VIP Account's case has reached 75% of its resolution SLA with no progress. The current agent is not responding.</p>
+    <div class="scenario-q">❓ What is the correct escalation design?</div>
+    <div class="scenario-a">✅ <strong>Configure a time-based Escalation Rule:</strong> Condition = Task SLA warning % ≥ 75 AND Account tier = VIP → Reassign to Senior Support Group AND notify the Support Manager. This fires automatically without any agent action needed.</div>
+  </div>
+</div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam focus:</strong> Escalation Rules fire AFTER case creation (reactive). Assignment Rules fire AT case creation (proactive). Know which to use in each scenario question.</div></div>`,
+          it:`<p class="theory-p">L'<strong>Escalation</strong> garantisce che i case critici siano gestiti dalle persone giuste al momento giusto. È un meccanismo chiave nel Dominio 3.</p>
+<table class="info-table2"><thead><tr><th>Tipo di Escalation</th><th>Trigger</th><th>Esempio</th></tr></thead><tbody>
+<tr><td>Basata sul tempo</td><td>% SLA warning o tempo trascorso</td><td>Case aperto 2h senza aggiornamenti → escalation ad agente senior</td></tr>
+<tr><td>Basata su attributi</td><td>Campo case cambia (priorità, tipo, prodotto)</td><td>Priorità → Critico → routing al manager on-call</td></tr>
+<tr><td>Manuale</td><td>Agente/manager clicca azione Escalate</td><td>Agente non riesce a risolvere</td></tr>
+<tr><td>Collegamento Major Issue</td><td>Case collegato a un Major Case attivo</td><td>Comunicazione a cascata a tutti i clienti impattati</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Focus esame:</strong> Le Escalation Rule scattano DOPO la creazione del case (reattive). Le Assignment Rule scattano ALLA creazione del case (proattive). Fondamentale saperle distinguere nelle domande a scenario.</div></div>`
+        }
       }
     ]
   },
@@ -710,6 +972,57 @@ const THEORY = [
 <tr><td><strong>SLA%</strong></td><td>SLA Compliance Rate</td><td>% case che rispettano gli SLA</td></tr>
 </tbody></table>
 <div class="callout info"><span class="ci">💡</span><div><strong>Account Scorecard:</strong> Aggrega tutti i KPI per UN Account specifico. <strong>Breakdown:</strong> Analizza un KPI su più dimensioni (agente, team, categoria, canale, regione).</div></div>`
+        }
+      },
+      {
+        title:{en:"Service Portal Configuration",it:"Configurazione del Service Portal"},
+        tag:"amber",
+        quiz:[
+          {q:"In the ServiceNow Service Portal framework, what is a 'Widget'?",opts:["A full portal page","A reusable UI component combining HTML, CSS, and a server/client script","A theme that controls portal branding","An SLA definition displayed to customers"],ans:1,exp:"A Widget is a self-contained, reusable UI component built with HTML (template), CSS, a Server Script (AngularJS controller), and a Client Script. Widgets are placed inside Page layouts and can be configured per-instance. This is the fundamental building block of any Service Portal."},
+          {q:"Which OOTB portal is the primary self-service channel for CSM customers?",opts:["Employee Service Center (ESC)","IT Self-Service Portal","Customer Service Portal (CSP)","Now Mobile"],ans:2,exp:"The Customer Service Portal (CSP) — URL suffix typically /csm — is the OOTB self-service portal for CSM customers. It provides case submission, case tracking, knowledge search, community access, and chat. Different from the Employee Service Center which is for internal staff."}
+        ],
+        body:{
+          en:`<p class="theory-p">The <strong>Customer Service Portal (CSP)</strong> is the primary customer-facing self-service channel in CSM. It is built on the ServiceNow Service Portal framework and is fully configurable.</p>
+<div class="callout info"><span class="ci">💡</span><div><strong>Portal URL:</strong> Default suffix is <code>/csm</code>. Navigate to: Service Portal › Portals › Customer Service Portal to configure branding, pages, and theme.</div></div>
+<table class="info-table2"><thead><tr><th>Component</th><th>Purpose</th><th>Config Location</th></tr></thead><tbody>
+<tr><td><strong>Portal</strong></td><td>Container with URL, theme, and homepage</td><td>Service Portal › Portals</td></tr>
+<tr><td><strong>Theme</strong></td><td>Branding: colours, fonts, logo, CSS</td><td>Service Portal › Themes</td></tr>
+<tr><td><strong>Page</strong></td><td>Individual URL route (e.g. /csm?id=my_cases)</td><td>Service Portal › Pages</td></tr>
+<tr><td><strong>Widget</strong></td><td>Reusable UI component placed on a page</td><td>Service Portal › Widgets</td></tr>
+<tr><td><strong>Widget Instance</strong></td><td>One widget placed on one page with specific options</td><td>Page Designer (drag &amp; drop)</td></tr>
+</tbody></table>
+<div class="callout success"><span class="ci">✅</span><div><strong>Key OOTB CSM Widgets:</strong><br>
+• <strong>Case Create</strong> — form for submitting a new case<br>
+• <strong>My Cases</strong> — list of the customer's open/closed cases<br>
+• <strong>Knowledge Base</strong> — KB search and article view<br>
+• <strong>Live Chat</strong> — real-time chat with an agent<br>
+• <strong>Community</strong> — Q&amp;A forum for peer support<br>
+• <strong>Engagement Messenger</strong> — embedded chat widget for external sites</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Page Designer vs Widget Editor:</strong> Page Designer arranges existing widgets on a page (drag-and-drop, no code). Widget Editor modifies the actual widget code (HTML/CSS/scripts). Know which one to use for each task on the exam.</div></div>
+<div class="pdi-box" id="pdi-portal1">
+  <div class="pdi-hdr" onclick="togglePDI('pdi-portal1')"><span>🖥️</span><span class="pdi-badge">PDI Exercise</span><span class="pdi-title">Customise the Customer Service Portal theme</span><span class="pdi-arr">▶</span></div>
+  <div class="pdi-body">
+    <div class="pdi-step"><div class="pdi-num">1</div><div class="pdi-text">Navigate to <strong>Service Portal › Portals</strong>, open <strong>Customer Service Portal</strong>.</div></div>
+    <div class="pdi-step"><div class="pdi-num">2</div><div class="pdi-text">Click the <strong>Theme</strong> reference link. Note the CSS variables for primary colour, font, and logo URL.</div></div>
+    <div class="pdi-step"><div class="pdi-num">3</div><div class="pdi-text">Change <strong>navbar_color</strong> to a hex value and save. Open <code>/csm</code> to verify the change.</div></div>
+    <div class="pdi-step"><div class="pdi-num">4</div><div class="pdi-text">Navigate to <strong>Service Portal › Pages</strong>, open <strong>Home (index)</strong>, click <strong>Open in Designer</strong> to see the widget layout.</div></div>
+    <div class="pdi-tip">💡 Page Designer shows rows and columns. Click any widget to configure its instance options without modifying the widget code.</div>
+  </div>
+</div>
+<div class="mistake-box"><div class="mb-title">⚠️ Common Mistakes</div><ul>
+  <li>Editing widget code when only an instance configuration change is needed — use the widget instance options first</li>
+  <li>Confusing the CSP (/csm) with the Employee Service Center (/esc) — different portals for different audiences</li>
+  <li>Thinking portal changes require a deployment — all changes are live immediately in the same instance</li>
+</ul></div>`,
+          it:`<p class="theory-p">Il <strong>Customer Service Portal (CSP)</strong> è il principale canale self-service per i clienti in CSM, costruito sul framework Service Portal ed è completamente configurabile.</p>
+<table class="info-table2"><thead><tr><th>Componente</th><th>Scopo</th><th>Configurazione</th></tr></thead><tbody>
+<tr><td><strong>Portal</strong></td><td>Contenitore con URL, tema e homepage</td><td>Service Portal › Portals</td></tr>
+<tr><td><strong>Theme</strong></td><td>Branding: colori, font, logo, CSS</td><td>Service Portal › Themes</td></tr>
+<tr><td><strong>Page</strong></td><td>Singolo percorso URL (es. /csm?id=my_cases)</td><td>Service Portal › Pages</td></tr>
+<tr><td><strong>Widget</strong></td><td>Componente UI riutilizzabile su una pagina</td><td>Service Portal › Widgets</td></tr>
+</tbody></table>
+<div class="callout success"><span class="ci">✅</span><div><strong>Widget OOTB CSM principali:</strong> Case Create · My Cases · Knowledge Base · Live Chat · Community · Engagement Messenger</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Page Designer vs Widget Editor:</strong> Page Designer dispone widget esistenti (drag-and-drop, senza codice). Widget Editor modifica il codice del widget. Sapere quale usare per ogni task.</div></div>`
         }
       }
     ]
