@@ -414,9 +414,9 @@ const MOCK_TESTS_4_6 = [
           'System administrator (admin)',
           'Partner administrator (sn_customerservice.partner_admin)',
         ],
-        answer: [0, 1, 2, 3],
+        answer: [0, 1, 3],
         multi: true,
-        explanation: 'Self-registration requests can be approved by Service Organization Administrator, Customer Administrator, Customer Service Manager, and System Administrator. These four roles have the authority to validate and approve new contact registrations on the portal.',
+        explanation: 'Self-registration requests can be approved by three roles: Service Organization Administrator (manages the overall service org), Customer Administrator (manages their own account contacts), and System Administrator (full platform access). The Customer Service Manager does not have self-registration approval rights in the OOTB configuration; that authority is reserved for the administrator-level roles listed above.',
       },
       {
         q: 'Guided decisions consist of decision trees. What is a decision tree?',
@@ -471,13 +471,13 @@ const MOCK_TESTS_4_6 = [
         q: 'Limit reading and creation of knowledge articles within a specific Knowledge Base to Customer Support group only. Which features should be used? (Choose two.)',
         opts: [
           'Can Read user criteria',
-          'Cannot Contribute user criteria',
+          'Can Contribute user criteria',
           'Whitelist all other groups from the Knowledge Base',
           'Hide the Knowledge Base from the Knowledge Base Portal',
         ],
         answer: [0, 1],
         multi: true,
-        explanation: 'To restrict a Knowledge Base to the Customer Support group only, you use "Can Read" user criteria (to allow only that group to read) and "Cannot Contribute" user criteria (to prevent other groups from contributing articles). User Criteria is the standard KB access control mechanism.',
+        explanation: 'To restrict a Knowledge Base so that only the Customer Support group can read AND contribute, use "Can Read" user criteria (set to allow only Customer Support — blocks all others from reading) and "Can Contribute" user criteria (set to allow only Customer Support — blocks all others from writing articles). "Can Contribute" grants contribution rights to a specific group; "Cannot Contribute" is used to explicitly exclude groups, which is a different mechanism.',
       },
       {
         q: 'Which table must be extended when creating a new case type?',
@@ -548,9 +548,9 @@ const MOCK_TESTS_4_6 = [
           'Products',
           'Experience',
         ],
-        answer: [1, 2, 4],
+        answer: [0, 1, 2],
         multi: true,
-        explanation: 'AWA routes work items based on Schedule (agent working hours), Skills (agent competencies), and Experience (agent proficiency level). Workload capacity is a separate capacity concept and Products is not a standard AWA routing rule.',
+        explanation: 'AWA automatically routes and assigns work items based on Workload (agent capacity — how many work items the agent is currently handling), Schedule (agent working hours/shifts), and Skills (agent competencies matched to work item requirements). Products and Experience are not standard OOTB AWA routing rules; the official AWA criteria are Skills, Availability/Schedule, Shifts, and Capacity (Workload).',
       },
       {
         q: 'Customer service agent role holders are responsible for which tasks? (Choose four.)',
@@ -1924,7 +1924,7 @@ const MOCK_TESTS_4_6 = [
         ],
         answer: 1,
         multi: false,
-        explanation: 'The blue "Needs Attention" indicator is triggered when a Blocking Task that was previously holding up case progress has been resolved or updated, signaling to the agent that they can now proceed with the case. It indicates positive progress rather than a problem.',
+        explanation: 'The blue indicator in the Action Status column signals that the case has been updated and requires the agent\'s attention — for example, when a previously blocking condition (such as waiting for a customer to provide info) has been resolved or a related task has been updated. This tells the agent that something has changed and they need to take the next action on the case.',
       },
       {
         q: 'Your organization operates physical service centers where customers can visit for in-person support. You want to allow customers to check in via the Consumer Service Portal or a physical kiosk. Which application capability facilitates this face-to-face service channel?',

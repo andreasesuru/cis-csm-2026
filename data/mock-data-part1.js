@@ -793,9 +793,9 @@ const MOCK_TESTS_1_3 = [
       {
         q: "Which Flow Designer flow can automatically close resolved cases if customers do not respond within a specified time?",
         opts: ["Auto Close Resolved Cases", "Resolved to Close State", "Close Cases in Resolved state", "Move Resolved Cases to Closed"],
-        answer: 2,
+        answer: 0,
         multi: false,
-        explanation: "The 'Close Cases in Resolved state' is the OOTB Flow Designer flow in CSM that automatically closes cases that have been in the Resolved state for a specified period without customer response. This flow handles the reminder notification and the eventual state transition to Closed, preventing resolved cases from remaining open indefinitely."
+        explanation: "The OOTB Flow Designer flow is named 'Auto Close Resolved Cases'. It monitors cases that have been in the Resolved state for a specified period and, if the customer has not responded, sends a reminder and then automatically closes the case. The other options are not the correct OOTB flow name in ServiceNow CSM."
       },
       {
         q: "In Agent Workspace Chat, what action does the slash r quick action perform?",
@@ -1255,9 +1255,9 @@ const MOCK_TESTS_1_3 = [
       {
         q: "The case digests feature includes which types of case communication (Choose two.)",
         opts: ["Post Case Reviews", "Case Post Mortem", "Case Action Summaries", "Case Lifecycle Reports"],
-        answer: [1, 2],
+        answer: [0, 2],
         multi: true,
-        explanation: "Case Digests in CSM include two types of communication summaries: Case Post Mortem (also called Post Case Review — a structured review of what happened during the case lifecycle) and Case Action Summaries (a summary of all actions taken during case resolution). These digests provide stakeholders with comprehensive case outcome reports."
+        explanation: "Case Digests in CSM include two types of communication summaries: Post Case Reviews (a structured review of the case lifecycle sent to stakeholders after closure) and Case Action Summaries (a concise summary of all actions taken during resolution). 'Case Post Mortem' is not an official ServiceNow CSM term — the correct official term is 'Post Case Review'."
       },
       {
         q: "What are the three main components that make up Proactive Customer Service Operations (Choose three.)",
