@@ -37,8 +37,9 @@ function renderTheory(domainIdx) {
     mqHtml = `<div class="mini-quiz"><div class="mq-header"><span class="mq-label">🧪 ${lang==='en'?'Knowledge Check':'Verifica comprensione'}</span><span class="mq-sub" style="margin-left:8px;font-size:12px;color:var(--text2)">${topic.quiz.length} ${qWord}</span></div>`;
     topic.quiz.forEach((q, qi) => {
       const sk = 'mq_'+currentDomain+'_'+currentTopic+'_'+qi;
+      _mqExpStore[sk] = q.exp; // store explanation safely — avoids special-char issues in onclick strings
       mqHtml += `<div class="mq-q" id="${sk}"><div class="mq-qtext">${qi+1}. ${q.q}</div><div class="mq-opts">${
-        q.opts.map((o,oi) => `<button class="mq-opt" onclick="doMQ('${sk}',${oi},${q.ans},'${q.exp.replace(/'/g,"&apos;")}')"><span class="mq-letter">${String.fromCharCode(65+oi)}</span>${o}</button>`).join('')
+        q.opts.map((o,oi) => `<button class="mq-opt" onclick="doMQ('${sk}',${oi},${q.ans})"><span class="mq-letter">${String.fromCharCode(65+oi)}</span>${o}</button>`).join('')
       }</div><div class="mq-exp" id="${sk}-exp"></div></div>`;
     });
     mqHtml += '</div>';
@@ -85,7 +86,10 @@ function navToTopic(di, ti) {
   if (m) m.scrollTop = 0;
 }
 
-function doMQ(sk, chosen, correct, exp) {
+const _mqExpStore = {};
+
+function doMQ(sk, chosen, correct) {
+  const exp = _mqExpStore[sk] || '';
   const c = document.getElementById(sk); if (!c) return;
   c.querySelectorAll('.mq-opt').forEach((btn,i) => {
     btn.disabled = true;
