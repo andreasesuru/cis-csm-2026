@@ -438,6 +438,80 @@ const THEORY = [
 </tbody></table>
 <div class="callout warn"><span class="ci">⚠️</span><div><strong>Distinzione critica:</strong> Un Contact richiede SEMPRE un Account padre. Un Consumer non ha il campo Account. Non sono mai intercambiabili e usano tabelle diverse.</div></div>`
         }
+      },
+      {
+        title:{en:"Service-Aware Install Base & Account Relationships",it:"Install Base Service-Aware e Relazioni Account"},
+        tag:"blue",
+        quiz:[
+          {q:"Which field on an Install Base Item (IBI) creates a parent-child hierarchy between two IBIs?",opts:["Related CI","Sold Product","Parent Install Base Item","Account Relationship"],ans:2,exp:"The 'Parent Install Base Item' field links one IBI to another, modeling hierarchical relationships such as a server (parent) with its installed components (children). This is distinct from Account Hierarchy and CMDB CI relationships."},
+          {q:"What is the primary purpose of Service-Aware Install Base (SAIB)?",opts:["To replace the CMDB entirely","To link an Install Base Item to a CMDB Configuration Item, bridging the customer asset view with infrastructure","To track sold products without a customer account","To define account relationships of type Partner-Customer"],ans:1,exp:"SAIB connects an IBI (customer-facing CSM record) to a CMDB CI (infrastructure record). This lets teams manage both the customer relationship side (CSM) and the technical infrastructure side (CMDB) from a single linked record."},
+          {q:"A consultant works for two different client companies and must open cases for both. What CSM feature supports this?",opts:["Account Hierarchy with parent account","Account Relationship Record","Multi-account Contact association","Sold Product linking"],ans:2,exp:"A Contact can be associated with multiple Accounts (multi-account contact). This covers scenarios like a consultant or partner employee who manages cases for more than one customer company. Account Relationship Records define formal relationships between two distinct Account records, which is a different concept."}
+        ],
+        body:{
+          en:`<p class="theory-p">Beyond the basic Account/Contact model, Domain 1 includes several advanced data structures that represent real-world customer asset and relationship complexity. These are high-frequency exam topics.</p>
+<div class="callout info"><span class="ci">💡</span><div><strong>Install Base Item (IBI)</strong> lives in the <code>install_base_item</code> table and represents a specific product that has been deployed at a customer site. Unlike a Product Model (which is just a generic definition) or a Sold Product (which is a purchase record), the IBI captures the live, operational instance — including serial number, status, location, and the owning Account.</div></div>
+<table class="info-table2"><thead><tr><th>Entity</th><th>Table</th><th>What it represents</th><th>Exam distinction</th></tr></thead><tbody>
+<tr><td><strong>Product Model</strong></td><td>cmdb_model</td><td>Generic product definition (e.g., "Cisco Router 3000")</td><td>No customer, no serial — just a template</td></tr>
+<tr><td><strong>Sold Product</strong></td><td>sold_product</td><td>Purchase record linking Product Model + Account</td><td>Records the sale event, not the deployment</td></tr>
+<tr><td><strong>Install Base Item</strong></td><td>install_base_item</td><td>Specific deployed instance of a product at a customer</td><td>Operational record; has serial, location, status</td></tr>
+<tr><td><strong>CMDB CI</strong></td><td>cmdb_ci (and subtypes)</td><td>Infrastructure configuration item managed by ITSM/CMDB</td><td>IT-centric; linked to IBI via SAIB — not the same record</td></tr>
+</tbody></table>
+<p class="theory-p"><strong>Parent Install Base Item</strong> is a reference field on the IBI record that points to another IBI. This creates a hierarchical tree of deployed assets. A classic example: a physical server chassis is the parent IBI, and its installed RAM modules, storage drives, and network cards are child IBIs. This hierarchy helps agents understand the full configuration of what a customer has deployed without leaving the CSM context.</p>
+<div class="callout success"><span class="ci">✅</span><div><strong>Service-Aware Install Base (SAIB)</strong> is the feature that links an IBI to a CMDB Configuration Item. Without SAIB, the customer-facing asset world (CSM) and the infrastructure world (CMDB) are siloed. With SAIB, when a customer opens a case about a device, the agent can see the linked CMDB CI — including its relationships, change history, and health status — all from within CSM.</div></div>
+<p class="theory-p"><strong>Account Relationship Records</strong> define a formal, typed relationship between two separate Account records. This is entirely different from Account Hierarchy (which uses parent/child ownership).</p>
+<table class="info-table2"><thead><tr><th>Field</th><th>Purpose</th><th>Example value</th></tr></thead><tbody>
+<tr><td><strong>Relationship Type</strong></td><td>Classifies the nature of the relationship</td><td>Partner, Competitor, Distributor, Reseller</td></tr>
+<tr><td><strong>Source Account</strong></td><td>The originating account in the relationship</td><td>TechPartner S.r.l.</td></tr>
+<tr><td><strong>Target Account</strong></td><td>The other account in the relationship</td><td>Acme Corp Italy</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Account Relationship vs Account Hierarchy — exam trap.</strong> Account Hierarchy uses the <em>Parent Account</em> field to model ownership (subsidiary → parent company). Account Relationship Records model <em>lateral</em> or <em>cross-company</em> associations — partner networks, competitor tracking, distributor channels — between independent accounts. They do not imply ownership.</div></div>
+<p class="theory-p"><strong>Multi-account Contact</strong> allows a single Contact to be associated with more than one Account — for example, an independent IT consultant who manages cases for multiple client companies. You add associations via the Contact's related list without duplicating the record.</p>
+<div class="scenario-box" id="sc-saib-en">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-saib-en')"><span>🏭</span><span class="sc-badge">Scenario</span><span class="sc-title">Manufacturing firm: server with child components</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>Acme Manufacturing has a blade server chassis at their Turin plant. Inside are 8 blade modules, each a separately tracked asset. A customer engineer opens a case about "blade module 4 overheating."</p>
+    <div class="scenario-q">❓ How should this be modeled in CSM Install Base?</div>
+    <div class="scenario-a">✅ The blade chassis is the <strong>parent IBI</strong>. Each blade module is a <strong>child IBI</strong> with the "Parent Install Base Item" field pointing to the chassis. SAIB links each IBI to the corresponding CMDB CI, so the agent sees health and relationships for blade module 4 without leaving the case form.</div>
+  </div>
+</div>
+<div class="mistake-box"><div class="mb-title">⚠️ Common Mistakes</div><ul>
+  <li>Confusing IBI with CMDB CI — they are separate records; SAIB is the link between them, not an identity</li>
+  <li>Treating Sold Product as the operational asset — Sold Product records the purchase; IBI tracks the deployment</li>
+  <li>Thinking Account Relationship replaces Account Hierarchy — hierarchy is about ownership; Relationship Records are typed cross-account associations</li>
+  <li>Creating duplicate Contact records instead of using multi-account contact associations</li>
+</ul></div>`,
+          it:`<p class="theory-p">Al di là del modello base Account/Contact, il Dominio 1 include strutture dati avanzate che rappresentano la complessità reale degli asset cliente. Questi sono argomenti ad alta frequenza d'esame.</p>
+<div class="callout info"><span class="ci">💡</span><div><strong>Install Base Item (IBI)</strong> risiede nella tabella <code>install_base_item</code> e rappresenta un prodotto specifico deployato presso un cliente. A differenza del Product Model (solo una definizione) o del Sold Product (un record d'acquisto), l'IBI cattura l'istanza operativa live — incluso numero seriale, stato, posizione e Account proprietario.</div></div>
+<table class="info-table2"><thead><tr><th>Entità</th><th>Tabella</th><th>Cosa rappresenta</th><th>Distinzione esame</th></tr></thead><tbody>
+<tr><td><strong>Product Model</strong></td><td>cmdb_model</td><td>Definizione generica di prodotto</td><td>Nessun cliente, nessun seriale — solo un template</td></tr>
+<tr><td><strong>Sold Product</strong></td><td>sold_product</td><td>Record d'acquisto: Product Model + Account</td><td>Registra la vendita, non il deployment</td></tr>
+<tr><td><strong>Install Base Item</strong></td><td>install_base_item</td><td>Istanza specifica deployata presso un cliente</td><td>Record operativo; ha seriale, posizione, stato</td></tr>
+<tr><td><strong>CMDB CI</strong></td><td>cmdb_ci</td><td>Configuration Item gestito da ITSM/CMDB</td><td>IT-centrico; collegato all'IBI via SAIB</td></tr>
+</tbody></table>
+<div class="callout success"><span class="ci">✅</span><div><strong>Service-Aware Install Base (SAIB)</strong> collega un IBI a un CI del CMDB. Senza SAIB, il mondo degli asset cliente (CSM) e quello infrastrutturale (CMDB) sono separati. Con SAIB, quando un cliente apre un case su un dispositivo, l'agente vede il CI CMDB collegato — relazioni, cronologia change e stato — direttamente da CSM.</div></div>
+<p class="theory-p"><strong>Account Relationship Record</strong> definisce una relazione formale e tipizzata tra due Account distinti. Completamente diverso dall'Account Hierarchy (che usa parent/child per la proprietà).</p>
+<table class="info-table2"><thead><tr><th>Campo</th><th>Scopo</th><th>Esempio</th></tr></thead><tbody>
+<tr><td><strong>Relationship Type</strong></td><td>Classifica la natura della relazione</td><td>Partner, Competitor, Distributore</td></tr>
+<tr><td><strong>Source Account</strong></td><td>L'account di origine</td><td>TechPartner S.r.l.</td></tr>
+<tr><td><strong>Target Account</strong></td><td>L'altro account</td><td>Acme Corp Italy</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Account Relationship vs Account Hierarchy — trappola esame.</strong> L'Account Hierarchy modella la proprietà (sussidiaria → capogruppo). Gli Account Relationship Record modellano associazioni laterali tra account indipendenti (partner, competitor, distributori). Non implicano ownership.</div></div>
+<p class="theory-p"><strong>Multi-account Contact</strong> consente a un singolo Contact di essere associato a più Account — ad esempio un consulente IT indipendente che gestisce case per più clienti. Si aggiungono associazioni via related list senza duplicare il record.</p>
+<div class="scenario-box" id="sc-saib-it">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-saib-it')"><span>🏭</span><span class="sc-badge">Scenario</span><span class="sc-title">Azienda manifatturiera: server con componenti figli</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>Acme Manufacturing ha uno chassis blade server a Torino con 8 moduli blade, ciascuno tracciato separatamente. Un tecnico apre un case per "blade module 4 surriscaldato".</p>
+    <div class="scenario-q">❓ Come si modella nell'Install Base?</div>
+    <div class="scenario-a">✅ Lo chassis è l'<strong>IBI padre</strong>. Ogni blade è un <strong>IBI figlio</strong> con "Parent Install Base Item" che punta allo chassis. SAIB collega ogni IBI al CI CMDB corrispondente — l'agente vede stato e relazioni del blade 4 senza uscire dal case.</div>
+  </div>
+</div>
+<div class="mistake-box"><div class="mb-title">⚠️ Errori Comuni</div><ul>
+  <li>Confondere IBI con CMDB CI — sono record distinti; SAIB è il collegamento, non un'identità</li>
+  <li>Trattare Sold Product come asset operativo — Sold Product registra l'acquisto; IBI traccia il deployment</li>
+  <li>Pensare che Account Relationship sostituisca Account Hierarchy — gerarchia = ownership; Relationship = associazioni tipizzate tra account indipendenti</li>
+  <li>Creare record Contact duplicati invece di usare le associazioni multi-account</li>
+</ul></div>`
+        }
       }
     ]
   },
@@ -964,6 +1038,166 @@ P3 Medio: Risposta 4h / Risoluzione 24h<br>
 P4 Basso: Risposta 8h / Risoluzione 5 giorni</div></div>
 <div class="callout warn"><span class="ci">⚠️</span><div><strong>Condizioni Start/Pause/Stop:</strong> Pause = il case va in "Awaiting Info". Stop = case risolto o chiuso. Più SLA possono applicarsi a UN singolo case.</div></div>`
         }
+      },
+      {
+        title:{en:"AWA Advanced — Matching Criteria & Agent Affinity",it:"AWA Avanzato — Criteri di Matching e Agent Affinity"},
+        tag:"teal",
+        quiz:[
+          {q:"An AWA queue routes cases to the agent who last helped the same customer within 7 days. Which Agent Affinity type is this?",opts:["Related Task Affinity","Historical Affinity","Account Team Responsibility","Availability Criteria"],ans:1,exp:"Historical Affinity routes to the agent who previously worked with this customer within a configurable time window (e.g., 48 hours, 7 days). This preserves continuity of service and is the most common affinity type tested on the exam."},
+          {q:"Which AWA matching criteria type evaluates group-level workload and capacity before assigning a case?",opts:["Simple Match","Scripted","Aggregate","Availability"],ans:2,exp:"Aggregate criteria evaluate conditions at the group level — for example, if the total workload of Group X exceeds a threshold, route elsewhere. This is different from Availability (which checks individual agent status) and Simple Match (which checks field values)."},
+          {q:"Two Assignment Rules exist: Rule A (Order=10) and Rule B (Order=50). A case matches both. Which rule applies?",opts:["Rule B — higher order takes precedence","Both rules apply simultaneously","Rule A — lower order number = higher priority, fires first","The rule created most recently applies"],ans:2,exp:"Assignment Rule priority is determined by Order number: the LOWEST order number wins. Rule A (Order=10) is evaluated before Rule B (Order=50). When Rule A matches, processing stops — Rule B is never evaluated. This is a frequently tested concept."}
+        ],
+        body:{
+          en:`<p class="theory-p">AWA (Advanced Work Assignment) is one of the highest-tested areas in Domain 2. Beyond basic routing, the exam focuses on the five <strong>Matching Criteria types</strong>, the three <strong>Agent Affinity types</strong>, Overflow Assignment, and Assignment Rule priority order.</p>
+<div class="callout info"><span class="ci">💡</span><div><strong>AWA vs Assignment Rules:</strong> Assignment Rules route to a <em>group</em> based on conditions. AWA then picks the best <em>individual agent</em> within that group based on capacity, skills, availability, and affinity. They work together — not as alternatives.</div></div>
+<p class="theory-p"><strong>The 5 AWA Matching Criteria Types</strong> — this list is directly tested on the exam. Know each type and when to use it.</p>
+<table class="info-table2"><thead><tr><th>Criteria Type</th><th>What It Evaluates</th><th>Example Use Case</th></tr></thead><tbody>
+<tr><td><strong>1. Simple Match</strong></td><td>Field-value conditions on the work item</td><td>Priority = Critical → route to Critical Support group</td></tr>
+<tr><td><strong>2. Scripted</strong></td><td>Custom script logic for complex conditions</td><td>Route based on multi-field logic not expressible as simple conditions</td></tr>
+<tr><td><strong>3. Aggregate</strong></td><td>Group-level workload and capacity thresholds</td><td>If Group X queue exceeds 50 open cases → route to overflow group</td></tr>
+<tr><td><strong>4. Availability</strong></td><td>Whether the agent is currently online and available</td><td>Only assign to agents who are logged in and not at capacity</td></tr>
+<tr><td><strong>5. Selection Criteria</strong></td><td>Further filters the qualified agent pool after all other criteria</td><td>Among all available agents, select those with "Spanish" skill tag</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam Trap — Aggregate vs Availability:</strong> Aggregate works at the <em>group</em> level (total queue size, group capacity). Availability works at the <em>individual agent</em> level (is this specific agent online right now?). They are commonly confused in exam questions.</div></div>
+<p class="theory-p"><strong>Agent Affinity (3 Types)</strong> — Affinity prioritises agents who already have a relationship with the customer, improving satisfaction and resolution speed.</p>
+<table class="info-table2"><thead><tr><th>Affinity Type</th><th>Logic</th><th>Configuration Parameter</th></tr></thead><tbody>
+<tr><td><strong>Historical Affinity</strong></td><td>Routes to the agent who last worked with this customer within a configurable time window</td><td>Time window: e.g., 48 hours, 7 days, 30 days</td></tr>
+<tr><td><strong>Related Task Affinity</strong></td><td>Routes to the agent already working on a related task (same Incident, same Account, same open Case)</td><td>Relationship type: same record, same account, etc.</td></tr>
+<tr><td><strong>Account Team Responsibility</strong></td><td>Routes to the agent designated as the responsible agent for this specific Account</td><td>Set on the Account record — "Responsible Agent" field</td></tr>
+</tbody></table>
+<div class="scenario-box" id="sc-awa-adv1">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-awa-adv1')"><span>🔀</span><span class="sc-badge">Scenario</span><span class="sc-title">High-priority cases bypassing specialist agents</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>A support centre notices that Critical-priority cases are sometimes routed to generalist agents, bypassing the specialist Critical Support group. Investigation shows a conflicting assignment rule with a lower order number matches first.</p>
+    <div class="scenario-q">❓ What is the root cause and how do you fix it?</div>
+    <div class="scenario-a">✅ <strong>Rule Order conflict.</strong> A generalist rule (e.g., Order=5) matches Critical cases before the specialist rule (Order=20). Fix: change the Critical Support rule to Order=1 or lower than any conflicting rule. Only the lowest-order matching rule fires — subsequent rules are ignored. After the fix, Critical cases always reach the specialist group first.</div>
+  </div>
+</div>
+<p class="theory-p"><strong>Overflow Assignment</strong> — when a group reaches its maximum capacity, AWA can automatically redirect new work to a configured overflow group instead of creating an unbounded queue on the primary group.</p>
+<div class="callout success"><span class="ci">✅</span><div><strong>How to configure Overflow:</strong> Set the overflow group on the Service Channel or the AWA Queue record. When the primary group's active work count reaches the defined threshold, new assignments automatically route to the overflow group. This prevents indefinite queue growth on an overloaded team.</div></div>
+<div class="callout info"><span class="ci">💡</span><div><strong>Assignment Rule Order — the one-line rule:</strong> Lower Order number = higher priority = evaluated first. When the first matching rule fires, all lower-priority rules are skipped. Think of it as a sorted list: Rule Order=1 at the top, Rule Order=999 at the bottom.</div></div>
+<div class="mistake-box"><div class="mb-title">⚠️ Common Mistakes</div><ul>
+  <li>Confusing Aggregate (group workload) with Availability (individual agent status) — they operate at different levels</li>
+  <li>Thinking all three Affinity types apply simultaneously without priority — Historical Affinity is evaluated first if configured</li>
+  <li>Assuming higher Order number = higher priority — it is the OPPOSITE: lower number = higher priority</li>
+  <li>Forgetting that Selection Criteria comes AFTER the other criteria filter the pool — it is the final refinement step</li>
+</ul></div>`,
+          it:`<p class="theory-p">AWA (Advanced Work Assignment) è una delle aree più testate nel Dominio 2. L'esame si concentra sui cinque <strong>tipi di Matching Criteria</strong>, i tre <strong>tipi di Agent Affinity</strong>, l'Overflow Assignment e la priorità delle Assignment Rule.</p>
+<div class="callout info"><span class="ci">💡</span><div><strong>AWA vs Assignment Rules:</strong> Le Assignment Rules instradano verso un <em>gruppo</em> in base a condizioni. AWA poi seleziona il miglior <em>agente individuale</em> in quel gruppo in base a capacità, skill, disponibilità e affinity. Lavorano insieme — non sono alternative.</div></div>
+<p class="theory-p"><strong>I 5 Tipi di Matching Criteria AWA</strong> — questa lista è testata direttamente all'esame. Conosci ogni tipo e quando usarlo.</p>
+<table class="info-table2"><thead><tr><th>Tipo di Criteria</th><th>Cosa valuta</th><th>Esempio d'uso</th></tr></thead><tbody>
+<tr><td><strong>1. Simple Match</strong></td><td>Condizioni campo-valore sul work item</td><td>Priority = Critical → instrada al gruppo Critical Support</td></tr>
+<tr><td><strong>2. Scripted</strong></td><td>Logica script custom per condizioni complesse</td><td>Routing basato su logica multi-campo non esprimibile come condizioni semplici</td></tr>
+<tr><td><strong>3. Aggregate</strong></td><td>Soglie di workload e capacità a livello di gruppo</td><td>Se la coda del Gruppo X supera 50 case aperti → instrada al gruppo overflow</td></tr>
+<tr><td><strong>4. Availability</strong></td><td>Se l'agente è attualmente online e disponibile</td><td>Assegna solo agli agenti connessi e non al massimo della capacità</td></tr>
+<tr><td><strong>5. Selection Criteria</strong></td><td>Filtra ulteriormente il pool di agenti qualificati dopo tutti gli altri criteri</td><td>Tra tutti gli agenti disponibili, seleziona quelli con il tag skill "Spagnolo"</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Trappola esame — Aggregate vs Availability:</strong> Aggregate lavora a livello di <em>gruppo</em> (dimensione coda totale, capacità gruppo). Availability lavora a livello di <em>singolo agente</em> (questo specifico agente è online ora?). Sono frequentemente confusi nelle domande d'esame.</div></div>
+<p class="theory-p"><strong>Agent Affinity (3 Tipi)</strong> — L'Affinity prioritizza gli agenti che hanno già una relazione con il cliente, migliorando la soddisfazione e la velocità di risoluzione.</p>
+<table class="info-table2"><thead><tr><th>Tipo Affinity</th><th>Logica</th><th>Parametro di configurazione</th></tr></thead><tbody>
+<tr><td><strong>Historical Affinity</strong></td><td>Instrada all'agente che ha lavorato più di recente con questo cliente entro una finestra temporale configurabile</td><td>Finestra temporale: es. 48 ore, 7 giorni, 30 giorni</td></tr>
+<tr><td><strong>Related Task Affinity</strong></td><td>Instrada all'agente che sta già lavorando su un task correlato (stesso Incident, stesso Account, stesso Case aperto)</td><td>Tipo di relazione: stesso record, stesso account, ecc.</td></tr>
+<tr><td><strong>Account Team Responsibility</strong></td><td>Instrada all'agente designato come responsabile per questo specifico Account</td><td>Configurato sul record Account — campo "Responsible Agent"</td></tr>
+</tbody></table>
+<div class="scenario-box" id="sc-awa-adv1-it">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-awa-adv1-it')"><span>🔀</span><span class="sc-badge">Scenario</span><span class="sc-title">Case ad alta priorità che bypassano gli agenti specialisti</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>Un contact centre nota che i case Critical vengono talvolta instradati ad agenti generalisti, bypassando il gruppo Critical Support specializzato. L'indagine rivela una regola di assegnazione conflittuale con un numero d'ordine più basso che matcha per prima.</p>
+    <div class="scenario-q">❓ Qual è la causa principale e come si risolve?</div>
+    <div class="scenario-a">✅ <strong>Conflitto di Rule Order.</strong> Una regola generalista (es. Order=5) matcha i case Critical prima della regola specialista (Order=20). Soluzione: cambia l'ordine della regola Critical Support a Order=1 o inferiore a qualsiasi regola conflittuale. Solo la regola corrispondente con l'ordine più basso viene eseguita — le successive vengono ignorate.</div>
+  </div>
+</div>
+<p class="theory-p"><strong>Overflow Assignment</strong> — quando un gruppo raggiunge la capacità massima, AWA può reindirizzare automaticamente il nuovo lavoro a un gruppo overflow configurato.</p>
+<div class="callout success"><span class="ci">✅</span><div><strong>Come configurare l'Overflow:</strong> Imposta il gruppo overflow sul Service Channel o sul record AWA Queue. Quando il conteggio del lavoro attivo del gruppo primario raggiunge la soglia definita, le nuove assegnazioni vengono automaticamente instradate al gruppo overflow.</div></div>
+<div class="callout info"><span class="ci">💡</span><div><strong>Ordine delle Assignment Rule — la regola in una riga:</strong> Numero d'ordine più basso = priorità più alta = valutato per primo. Quando la prima regola corrispondente viene eseguita, tutte le regole a priorità inferiore vengono saltate.</div></div>
+<div class="mistake-box"><div class="mb-title">⚠️ Errori Comuni</div><ul>
+  <li>Confondere Aggregate (workload gruppo) con Availability (stato agente individuale) — operano a livelli diversi</li>
+  <li>Pensare che tutti e tre i tipi di Affinity si applichino simultaneamente senza priorità</li>
+  <li>Assumere che un numero d'ordine più alto = priorità più alta — è il CONTRARIO: numero più basso = priorità più alta</li>
+  <li>Dimenticare che Selection Criteria arriva DOPO che gli altri criteri filtrano il pool — è il passo di raffinamento finale</li>
+</ul></div>`
+        }
+      },
+      {
+        title:{en:"Proactive Customer Service Operations (PCSO)",it:"Operazioni Proattive di Customer Service (PCSO)"},
+        tag:"teal",
+        quiz:[
+          {q:"Which ServiceNow product does PCSO integrate with to detect infrastructure events before customers report them?",opts:["IT Service Management (ITSM)","IT Operations Management (ITOM)","Security Operations (SecOps)","Governance Risk and Compliance (GRC)"],ans:1,exp:"PCSO integrates CSM with IT Operations Management (ITOM) — specifically ITOM Health and Event Management. ITOM detects infrastructure anomalies (alerts, incidents), and PCSO translates these into customer-facing Outage Records and Proactive Cases before customers call in."},
+          {q:"In the PCSO flow, what record type is created in CSM to represent a service disruption affecting multiple customers?",opts:["Major Case","Problem Record","Outage Record (sn_customerservice_outage)","Service Request"],ans:2,exp:"An Outage Record (table: sn_customerservice_outage) represents the service disruption in CSM. It links the ITOM Alert/Incident to affected Accounts and drives the creation of Proactive Cases. A Major Case is reactive (starts from an incoming case), not proactive."},
+          {q:"How does a Proactive Case differ from a standard customer case in CSM?",opts:["It has a higher SLA priority","It is created by the system before the customer contacts support, triggered by an ITOM event","It skips the Assignment Rules engine","It is only visible to supervisors, not agents"],ans:1,exp:"A Proactive Case is created automatically by the PCSO process — before the customer contacts support. It is triggered by an ITOM event propagating through to an Outage Record. This means agents can begin working on the issue and notify customers proactively, reducing inbound call volume."}
+        ],
+        body:{
+          en:`<p class="theory-p"><strong>Proactive Customer Service Operations (PCSO)</strong> is the integration layer between CSM and IT Operations Management (ITOM). The goal is to detect infrastructure problems <em>before</em> customers call about them — shifting support from reactive to proactive.</p>
+<div class="callout info"><span class="ci">💡</span><div><strong>Required plugins for PCSO:</strong> <code>com.sn_cs_sm</code> (CSM core) + ITOM Health / Event Management plugin. Both must be active. PCSO does not work with ITSM alone — it specifically needs ITOM's event pipeline.</div></div>
+<p class="theory-p"><strong>The PCSO Flow</strong> — memorise this end-to-end sequence. The exam tests individual steps and their order.</p>
+<table class="info-table2"><thead><tr><th>Step</th><th>System</th><th>What Happens</th></tr></thead><tbody>
+<tr><td><strong>1</strong></td><td>ITOM Event Management</td><td>Infrastructure anomaly detected (e.g., database down, API timeout, network latency spike)</td></tr>
+<tr><td><strong>2</strong></td><td>ITOM</td><td>Event → Alert created → propagates to an ITOM Incident</td></tr>
+<tr><td><strong>3</strong></td><td>PCSO Engine</td><td>Impact analysis: which Accounts and Install Base Items are affected by this Alert/Incident?</td></tr>
+<tr><td><strong>4</strong></td><td>CSM</td><td><strong>Outage Record</strong> created (table: <code>sn_customerservice_outage</code>) to represent the service disruption</td></tr>
+<tr><td><strong>5</strong></td><td>CSM</td><td><strong>Proactive Cases</strong> automatically generated — one per impacted customer/account</td></tr>
+<tr><td><strong>6</strong></td><td>CSM / Notify</td><td>Targeted Communications sent to impacted customers <em>before</em> they contact support</td></tr>
+</tbody></table>
+<div class="scenario-box" id="sc-pcso1">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-pcso1')"><span>📡</span><span class="sc-badge">Scenario</span><span class="sc-title">Database outage affecting 200 enterprise customers</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>At 2:00 AM, ITOM Event Management detects a primary database failure. 200 enterprise customers have Install Base Items that depend on this database. Without PCSO, support would face 200+ inbound calls when customers arrive at work.</p>
+    <div class="scenario-q">❓ How does PCSO change this scenario?</div>
+    <div class="scenario-a">✅ <strong>PCSO automatically:</strong> (1) ITOM Alert triggers an Outage Record in CSM. (2) PCSO identifies 200 impacted Accounts via Install Base. (3) 200 Proactive Cases are created — agents begin working at 2:05 AM. (4) Targeted Communications email all 200 contacts by 2:10 AM. When customers arrive at 9 AM, they already have a case open and an update — inbound call volume drops dramatically.</div>
+  </div>
+</div>
+<p class="theory-p"><strong>Outage Record vs Major Case</strong> — a critical distinction for the exam:</p>
+<table class="info-table2"><thead><tr><th>Concept</th><th>Outage Record</th><th>Major Case</th></tr></thead><tbody>
+<tr><td><strong>Origin</strong></td><td>ITOM Alert/Incident (infrastructure)</td><td>Customer-reported high-impact case</td></tr>
+<tr><td><strong>Direction</strong></td><td>Proactive — system detects before customer reports</td><td>Reactive — customer contacts support first</td></tr>
+<tr><td><strong>Table</strong></td><td><code>sn_customerservice_outage</code></td><td><code>sn_si_task</code> (Major Case table)</td></tr>
+<tr><td><strong>States</strong></td><td>Open → In Progress → Resolved</td><td>Open → In Progress → Resolved → Closed</td></tr>
+<tr><td><strong>Creates</strong></td><td>Proactive Cases for impacted customers</td><td>Child Cases (related tasks) for investigation</td></tr>
+</tbody></table>
+<div class="callout success"><span class="ci">✅</span><div><strong>Proactive Case characteristics:</strong> Created by the system (not the customer). Distinguished in reporting so it does not count as a "customer contact" for metrics. Agents manage the outage centrally via the Outage Record; individual communications go to each impacted customer.</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam Trap:</strong> "An ITOM alert causes 50 customer notifications — what was created in CSM?" → <strong>Outage Record</strong> first, then Proactive Cases. Not Major Cases, not standard Cases. The Outage Record is the anchor that ties ITOM to CSM.</div></div>
+<div class="mistake-box"><div class="mb-title">⚠️ Common Mistakes</div><ul>
+  <li>Confusing Outage Record with Major Case — Major Case is reactive (customer-initiated), Outage Record is proactive (ITOM-initiated)</li>
+  <li>Thinking PCSO works with ITSM alone — it requires ITOM Health/Event Management plugin specifically</li>
+  <li>Forgetting that Proactive Cases are excluded from "customer contact" KPI metrics — they are system-generated</li>
+  <li>Missing the step where PCSO evaluates Install Base Items to determine which accounts are impacted</li>
+</ul></div>`,
+          it:`<p class="theory-p"><strong>Proactive Customer Service Operations (PCSO)</strong> è il livello di integrazione tra CSM e IT Operations Management (ITOM). L'obiettivo è rilevare problemi infrastrutturali <em>prima</em> che i clienti li segnalino — trasformando il supporto da reattivo a proattivo.</p>
+<div class="callout info"><span class="ci">💡</span><div><strong>Plugin richiesti per PCSO:</strong> <code>com.sn_cs_sm</code> (CSM core) + plugin ITOM Health / Event Management. Entrambi devono essere attivi. PCSO non funziona con ITSM da solo — richiede specificamente la pipeline degli eventi di ITOM.</div></div>
+<p class="theory-p"><strong>Il Flusso PCSO</strong> — memorizza questa sequenza end-to-end. L'esame testa i singoli step e il loro ordine.</p>
+<table class="info-table2"><thead><tr><th>Step</th><th>Sistema</th><th>Cosa succede</th></tr></thead><tbody>
+<tr><td><strong>1</strong></td><td>ITOM Event Management</td><td>Anomalia infrastrutturale rilevata (es. database down, timeout API, spike latenza rete)</td></tr>
+<tr><td><strong>2</strong></td><td>ITOM</td><td>Evento → Alert creato → si propaga a un Incident ITOM</td></tr>
+<tr><td><strong>3</strong></td><td>PCSO Engine</td><td>Analisi impatto: quali Account e Install Base Item sono impattati da questo Alert/Incident?</td></tr>
+<tr><td><strong>4</strong></td><td>CSM</td><td><strong>Outage Record</strong> creato (tabella: <code>sn_customerservice_outage</code>) per rappresentare l'interruzione del servizio</td></tr>
+<tr><td><strong>5</strong></td><td>CSM</td><td><strong>Proactive Case</strong> generati automaticamente — uno per cliente/account impattato</td></tr>
+<tr><td><strong>6</strong></td><td>CSM / Notify</td><td>Targeted Communications inviate ai clienti impattati <em>prima</em> che contattino il supporto</td></tr>
+</tbody></table>
+<div class="scenario-box" id="sc-pcso1-it">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-pcso1-it')"><span>📡</span><span class="sc-badge">Scenario</span><span class="sc-title">Interruzione database che impatta 200 clienti enterprise</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>Alle 2:00 di notte, ITOM Event Management rileva un guasto al database primario. 200 clienti enterprise hanno Install Base Item che dipendono da questo database. Senza PCSO, il supporto riceverebbe 200+ chiamate inbound quando i clienti arrivano al lavoro.</p>
+    <div class="scenario-q">❓ Come cambia questo scenario con PCSO?</div>
+    <div class="scenario-a">✅ <strong>PCSO automaticamente:</strong> (1) L'Alert ITOM scatena un Outage Record in CSM. (2) PCSO identifica 200 Account impattati tramite Install Base. (3) Vengono creati 200 Proactive Case — gli agenti iniziano a lavorare alle 2:05. (4) Le Targeted Communications inviano email a tutti i 200 contatti entro le 2:10. Quando i clienti arrivano alle 9:00, hanno già un case aperto e un aggiornamento — il volume di chiamate inbound crolla drasticamente.</div>
+  </div>
+</div>
+<p class="theory-p"><strong>Outage Record vs Major Case</strong> — distinzione critica per l'esame:</p>
+<table class="info-table2"><thead><tr><th>Concetto</th><th>Outage Record</th><th>Major Case</th></tr></thead><tbody>
+<tr><td><strong>Origine</strong></td><td>Alert/Incident ITOM (infrastruttura)</td><td>Case ad alto impatto segnalato dal cliente</td></tr>
+<tr><td><strong>Direzione</strong></td><td>Proattivo — il sistema rileva prima che il cliente segnali</td><td>Reattivo — il cliente contatta il supporto per primo</td></tr>
+<tr><td><strong>Tabella</strong></td><td><code>sn_customerservice_outage</code></td><td><code>sn_si_task</code> (tabella Major Case)</td></tr>
+<tr><td><strong>Stati</strong></td><td>Open → In Progress → Resolved</td><td>Open → In Progress → Resolved → Closed</td></tr>
+<tr><td><strong>Crea</strong></td><td>Proactive Case per i clienti impattati</td><td>Child Case (task correlati) per l'indagine</td></tr>
+</tbody></table>
+<div class="callout success"><span class="ci">✅</span><div><strong>Caratteristiche dei Proactive Case:</strong> Creati dal sistema (non dal cliente). Distinti nel reporting — non contano come "contatto cliente" per i KPI. Gli agenti gestiscono l'outage centralmente tramite l'Outage Record; le comunicazioni individuali raggiungono ciascun cliente impattato.</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Trappola esame:</strong> "Un alert ITOM causa 50 notifiche clienti — cosa è stato creato in CSM?" → <strong>Outage Record</strong> prima, poi Proactive Case. Non Major Case, non Case standard. L'Outage Record è l'ancora che collega ITOM a CSM.</div></div>
+<div class="mistake-box"><div class="mb-title">⚠️ Errori Comuni</div><ul>
+  <li>Confondere l'Outage Record con il Major Case — il Major Case è reattivo (avviato dal cliente), l'Outage Record è proattivo (avviato da ITOM)</li>
+  <li>Pensare che PCSO funzioni solo con ITSM — richiede specificamente il plugin ITOM Health/Event Management</li>
+  <li>Dimenticare che i Proactive Case sono esclusi dai KPI "customer contact" — sono generati dal sistema</li>
+  <li>Saltare lo step in cui PCSO valuta gli Install Base Item per determinare quali account sono impattati</li>
+</ul></div>`
+        }
       }
     ]
   },
@@ -1194,6 +1428,85 @@ P4 Basso: Risposta 8h / Risoluzione 5 giorni</div></div>
 <tr><td>Collegamento Major Issue</td><td>Case collegato a un Major Case attivo</td><td>Comunicazione a cascata a tutti i clienti impattati</td></tr>
 </tbody></table>
 <div class="callout warn"><span class="ci">⚠️</span><div><strong>Focus esame:</strong> Le Escalation Rule scattano DOPO la creazione del case (reattive). Le Assignment Rule scattano ALLA creazione del case (proattive). Fondamentale saperle distinguere nelle domande a scenario.</div></div>`
+        }
+      },
+      {
+        title:{en:"Action Status Indicators, Case Lines & Auto-Close",it:"Indicatori di Stato Azione, Case Lines e Auto-Chiusura"},
+        tag:"purple",
+        quiz:[
+          {q:"A case shows a RED action status indicator in the Configurable Workspace. What does this mean?",opts:["The case has been escalated to a manager","The case resolution is hard-blocked (e.g., by an open task or pending external dependency)","The customer has sent a new message requiring agent attention","The case SLA is about to breach"],ans:1,exp:"A red indicator signals a hard block — the case cannot progress until the blocking condition is resolved (e.g., an open child task, a waiting-on-vendor situation). Blue indicates the customer or a system has updated the case and the agent needs to review it. Red is about resolution being blocked, not urgency alone."},
+          {q:"An e-commerce order contains 5 products and 3 of them have separate issues. What is the recommended CSM approach?",opts:["Create 3 separate cases, one per product issue","Create 1 case with 3 Case Lines, one per product issue","Use 3 child cases linked to a parent case","Create one case and log all issues in the work notes"],ans:1,exp:"Case Lines (table: sn_customerservice_case_line) are designed for this scenario — one order with multiple line items each potentially having its own issue. One case with N case lines avoids case sprawl while keeping each issue trackable independently."},
+          {q:"What happens to a secondary case when two cases are merged in CSM?",opts:["It is deleted permanently","Its state changes to Cancelled and the primary case inherits its activities and notes","It is archived with read-only access","It becomes a child case of the primary"],ans:1,exp:"When cases are merged, the secondary case is set to 'Cancelled' state. The primary case inherits all work notes, activities, and attachments from the secondary. The secondary record still exists in the system for audit purposes."}
+        ],
+        body:{
+          en:`<p class="theory-p">This topic covers four operational mechanics that appear repeatedly on the exam: Action Status Indicators, Case Lines, Auto-Close behavior, and Case Merge/Reopen.</p>
+<p class="theory-p"><strong>Action Status Indicators</strong> are visual signals in the <strong>Configurable Workspace</strong> that help agents and supervisors understand what kind of attention a case needs at a glance.</p>
+<table class="info-table2"><thead><tr><th>Indicator</th><th>Meaning</th><th>Triggered by</th></tr></thead><tbody>
+<tr><td>🔵 <strong>Blue</strong></td><td>Case updated by customer or system — agent review needed</td><td>Customer portal reply, inbound email, integration update</td></tr>
+<tr><td>🔴 <strong>Red</strong></td><td>Hard block — resolution cannot proceed</td><td>Open child task, waiting on external vendor, manual agent override</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam distinction:</strong> Blue does NOT mean high priority — it means "something changed, review this." Red does NOT mean SLA breach — it means the resolution path is specifically blocked. These are workflow state signals, not SLA metrics. Agents can manually override the indicator when the automated trigger does not reflect reality.</div></div>
+<p class="theory-p"><strong>Case Lines</strong> address the e-commerce problem of one order with multiple items, each with potentially different issues. Instead of creating separate cases per item, a single case holds N Case Lines — each tracking its own issue, status, and notes independently.</p>
+<table class="info-table2"><thead><tr><th>Property</th><th>Detail</th></tr></thead><tbody>
+<tr><td><strong>Table</strong></td><td>sn_customerservice_case_line</td></tr>
+<tr><td><strong>Parent</strong></td><td>One Case record (the order container)</td></tr>
+<tr><td><strong>Use case</strong></td><td>E-commerce, field service, subscription orders with multiple products</td></tr>
+</tbody></table>
+<div class="scenario-box" id="sc-caselines-en">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-caselines-en')"><span>🏭</span><span class="sc-badge">Scenario</span><span class="sc-title">E-commerce order: 4 products, 2 defective</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>A customer orders a laptop, docking station, keyboard, and monitor. The laptop arrives damaged and the docking station is missing.</p>
+    <div class="scenario-q">❓ How should this be handled in CSM?</div>
+    <div class="scenario-a">✅ Create <strong>one Case</strong> for the order with <strong>two Case Lines</strong> — one for the damaged laptop, one for the missing docking station. Each Case Line tracks its issue independently. One case number, unified customer experience.</div>
+  </div>
+</div>
+<p class="theory-p"><strong>Auto-Close</strong> automates the Resolved → Closed transition via the OOTB flow <strong>"Auto Close Resolved Cases"</strong>:</p>
+<div class="callout success"><span class="ci">✅</span><div><strong>Auto-Close sequence:</strong>
+<ol style="margin:6px 0 0 16px;padding:0">
+  <li>Case reaches <strong>Resolved</strong> state</li>
+  <li>Flow waits <strong>N days</strong> (configurable; default <strong>3 days</strong>)</li>
+  <li>Sends a <strong>reminder email</strong> to the customer</li>
+  <li>No customer reply → case moves to <strong>Closed</strong></li>
+  <li>Customer replies → case is <strong>reopened</strong> (SLA resets)</li>
+</ol></div></div>
+<p class="theory-p"><strong>Case Merge:</strong> When two cases describe the same issue, merge them. The secondary case is set to <strong>Cancelled</strong> (not deleted — kept for audit). The primary case inherits all work notes, activities, and attachments. <strong>Case Reopening:</strong> A Closed case CAN be reopened in CSM — the SLA clock resets from the reopening moment.</p>
+<div class="mistake-box"><div class="mb-title">⚠️ Common Mistakes</div><ul>
+  <li>Thinking blue indicator = high priority — it means "review this update"</li>
+  <li>Confusing Case Lines with child cases — Case Lines are sub-records within one case; child cases are separate case records</li>
+  <li>Assuming Auto-Close is not configurable — both N-day wait and email template are OOTB configurable</li>
+  <li>Thinking the secondary case is deleted after merge — it is Cancelled and kept for audit</li>
+  <li>Forgetting that reopening a Closed case resets the SLA clock</li>
+</ul></div>`,
+          it:`<p class="theory-p">Questo topic copre quattro meccanismi operativi che compaiono ripetutamente nell'esame: Action Status Indicators, Case Lines, Auto-Close e comportamento di Merge/Riapertura.</p>
+<p class="theory-p"><strong>Gli Action Status Indicators</strong> sono segnali visivi nel <strong>Configurable Workspace</strong> che aiutano agenti e supervisori a capire immediatamente di che attenzione ha bisogno un case.</p>
+<table class="info-table2"><thead><tr><th>Indicatore</th><th>Significato</th><th>Scatenato da</th></tr></thead><tbody>
+<tr><td>🔵 <strong>Blu</strong></td><td>Case aggiornato da cliente o sistema — l'agente deve revisionarlo</td><td>Risposta portale, email in entrata, aggiornamento integrazione</td></tr>
+<tr><td>🔴 <strong>Rosso</strong></td><td>Hard block — la risoluzione è bloccata</td><td>Task figlio aperto, attesa vendor esterno, override manuale</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Distinzione esame:</strong> Blu NON significa alta priorità — significa "qualcosa è cambiato, revisionalo." Rosso NON significa breach SLA — significa che il percorso di risoluzione è bloccato. Sono segnali di stato workflow, non metriche SLA. Gli agenti possono fare override manuale quando il trigger automatico non riflette la realtà.</div></div>
+<p class="theory-p"><strong>Le Case Lines</strong> risolvono il problema degli ordini e-commerce multi-prodotto. Invece di creare N case per N item, un singolo case contiene N Case Lines, ognuna con il proprio issue, stato e note indipendenti.</p>
+<table class="info-table2"><thead><tr><th>Proprietà</th><th>Dettaglio</th></tr></thead><tbody>
+<tr><td><strong>Tabella</strong></td><td>sn_customerservice_case_line</td></tr>
+<tr><td><strong>Padre</strong></td><td>Un record Case (il contenitore ordine)</td></tr>
+<tr><td><strong>Use case</strong></td><td>E-commerce, field service, ordini abbonamento multi-prodotto</td></tr>
+</tbody></table>
+<div class="scenario-box" id="sc-caselines-it">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-caselines-it')"><span>🏭</span><span class="sc-badge">Scenario</span><span class="sc-title">Ordine e-commerce: 4 prodotti, 2 difettosi</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>Un cliente ordina laptop, docking station, tastiera e monitor. Il laptop arriva danneggiato e la docking station è mancante.</p>
+    <div class="scenario-q">❓ Come si gestisce in CSM?</div>
+    <div class="scenario-a">✅ Si crea <strong>un solo Case</strong> con <strong>due Case Lines</strong> — una per il laptop danneggiato, una per la docking station mancante. Un numero di case, esperienza cliente unificata.</div>
+  </div>
+</div>
+<p class="theory-p"><strong>Auto-Close</strong> automatizza la transizione Resolved → Closed tramite il flow OOTB <strong>"Auto Close Resolved Cases"</strong>: attende N giorni (default <strong>3 giorni</strong>) → invia reminder email → se nessuna risposta → Closed. Se il cliente risponde → case riaperto con SLA resettato.</p>
+<p class="theory-p"><strong>Case Merge:</strong> Il case secondario viene impostato a <strong>Cancelled</strong> (non eliminato — mantenuto per audit). Il primario eredita note, attività e allegati. <strong>Riapertura:</strong> Un case Closed PUÒ essere riaperto — il contatore SLA riparte dal momento della riapertura.</p>
+<div class="mistake-box"><div class="mb-title">⚠️ Errori Comuni</div><ul>
+  <li>Pensare che indicatore blu = alta priorità — significa "c'è un aggiornamento da revisionare"</li>
+  <li>Confondere Case Lines con case figli — Case Lines sono sotto-record di un singolo case</li>
+  <li>Assumere che Auto-Close non sia configurabile — sia i giorni sia il template email sono configurabili OOTB</li>
+  <li>Pensare che il case secondario venga eliminato nel merge — viene impostato a Cancelled</li>
+  <li>Dimenticare che la riapertura di un Closed resetta lo SLA</li>
+</ul></div>`
         }
       }
     ]
@@ -1650,6 +1963,113 @@ Ogni story ha <strong>Acceptance Criteria</strong> — condizioni misurabili che
 <tr><td><strong>Configuration Consultant</strong></td><td>Costruisce la soluzione negli sprint</td></tr>
 </tbody></table>
 <div class="callout warn"><span class="ci">⚠️</span><div><strong>Errori comuni:</strong> Test viene PRIMA di Deploy. Il BPO definisce i requisiti (non l'architetto). Le modifiche di scope richiedono una change request formale — non si aggiungono mid-sprint.</div></div>`
+        }
+      },
+      {
+        title:{en:"Knowledge Product Entitlements & Access Control",it:"Entitlement Prodotto per la Knowledge e Controllo Accessi"},
+        tag:"red",
+        quiz:[
+          {q:"To restrict KB article visibility to only customers who own a specific product, which feature is used?",opts:["User Criteria — Can Read","Knowledge Base Category restrictions","Knowledge Product Entitlements (Enable access control of Knowledge Articles)","Article Versioning with draft state"],ans:2,exp:"Knowledge Product Entitlements control visibility of KB articles based on the customer's owned products (Install Base Item / Sold Product). The system property 'Enable access control of Knowledge Articles' must be enabled. User Criteria controls who can read/write, but Product Entitlements link article access to owning a specific product."},
+          {q:"In ServiceNow Knowledge Management, User Criteria can be applied to which of the following? (Select the correct pair)",opts:["Knowledge Base and Category","Category and Article","Knowledge Base and Article","All three: Knowledge Base, Category, and Article"],ans:2,exp:"User Criteria applies to: Knowledge Base (who can access the whole KB) and Article (who can access that specific article). It does NOT apply to Category — this is a frequently tested exam trap. Article-level criteria override KB-level criteria (more granular wins)."},
+          {q:"An agent cannot find a relevant KB article for a case. To formally signal this gap to the knowledge team, they should:",opts:["Send an email to the KB manager","Create a new draft article manually","Use the 'Report Knowledge Gap' related link on the case form","Open a Problem record linked to the case"],ans:2,exp:"The 'Report Knowledge Gap' related link on the Case form creates a formal knowledge gap feedback record for knowledge managers. This is the OOTB CSM mechanism — not email, not manual drafts. Knowledge managers review gaps and create missing articles."}
+        ],
+        body:{
+          en:`<p class="theory-p">Domain 5 tests Knowledge Management beyond basic article lifecycle. The exam focuses on <strong>Product Entitlements</strong>, <strong>User Criteria scope</strong> (KB vs Article vs Category), Article Versioning, Knowledge Gap Reporting, and WebDAV integration.</p>
+<div class="callout info"><span class="ci">💡</span><div><strong>Knowledge Product Entitlements — one-line summary:</strong> Link KB article visibility to owning a specific product. A customer without the product licence cannot see those articles, even if the KB itself is "Customer Visible".</div></div>
+<p class="theory-p"><strong>How Knowledge Product Entitlements Work:</strong></p>
+<table class="info-table2"><thead><tr><th>Component</th><th>Role</th></tr></thead><tbody>
+<tr><td><strong>System Property</strong></td><td>Enable "Access control of Knowledge Articles" in KB properties</td></tr>
+<tr><td><strong>Sold Product / Install Base Item</strong></td><td>Represents the specific product the customer owns (licence, SKU)</td></tr>
+<tr><td><strong>Knowledge Article Tag</strong></td><td>Tag on the article that maps to a product — only customers owning that product see the article</td></tr>
+<tr><td><strong>Result</strong></td><td>Enterprise-licence customers see Enterprise articles; Standard-licence customers do not</td></tr>
+</tbody></table>
+<div class="scenario-box" id="sc-kb-ent1">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-kb-ent1')"><span>🔐</span><span class="sc-badge">Scenario</span><span class="sc-title">SaaS vendor hiding advanced feature articles from free-tier customers</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>A SaaS company has two product tiers: Standard (free) and Enterprise (paid). The KB contains articles about advanced AI features that only Enterprise customers have access to. They want to prevent Standard customers from seeing these articles on the portal.</p>
+    <div class="scenario-q">❓ What is the correct configuration approach?</div>
+    <div class="scenario-a">✅ Enable <strong>Knowledge Product Entitlements</strong>. Create a Product Tag for "Enterprise Tier". Tag the advanced AI articles with this tag. Link the tag to the Enterprise Sold Product / Install Base Item. When a Standard customer logs in to the portal, those articles are invisible. Enterprise customers with the product in their Install Base see the full library.</div>
+  </div>
+</div>
+<p class="theory-p"><strong>User Criteria in Knowledge Management</strong> — one of the most precisely tested topics. Know the three types AND which record levels they apply to.</p>
+<table class="info-table2"><thead><tr><th>User Criteria Type</th><th>Controls</th><th>Applied On</th></tr></thead><tbody>
+<tr><td><strong>Can Read</strong></td><td>Who can VIEW the KB or article</td><td>Knowledge Base ✓ · Article ✓ · Category ✗</td></tr>
+<tr><td><strong>Can Contribute</strong></td><td>Who can CREATE/EDIT articles</td><td>Knowledge Base ✓ · Article ✓ · Category ✗</td></tr>
+<tr><td><strong>Cannot Contribute</strong></td><td>Explicit blocklist — excluded from writing even if "Can Contribute" allows it</td><td>Knowledge Base ✓ · Article ✓ · Category ✗</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Critical Exam Fact — Category has NO User Criteria:</strong> User Criteria applies to the <strong>Knowledge Base</strong> level and the <strong>Article</strong> level only. It does <strong>NOT</strong> apply to Knowledge Categories. If an exam question offers "Category" as an option for User Criteria, it is wrong.</div></div>
+<div class="callout success"><span class="ci">✅</span><div><strong>Granularity rule:</strong> Article-level User Criteria overrides KB-level User Criteria. If a KB says "Can Read = Customers" but a specific article says "Can Read = VIP Customers only", the article rule wins for that article.</div></div>
+<p class="theory-p"><strong>Article Versioning</strong> — enables tracking the history of a KB article across time, supporting compliance and audit requirements.</p>
+<table class="info-table2"><thead><tr><th>Feature</th><th>Details</th></tr></thead><tbody>
+<tr><td><strong>Version Increment</strong></td><td>Each time a Published article is updated and republished, the version number increments (e.g., v1.0 → v2.0)</td></tr>
+<tr><td><strong>Rollback</strong></td><td>Administrators can revert to a previous version if a bad update is published</td></tr>
+<tr><td><strong>In Review update</strong></td><td>When an In Review article is updated and republished, version increments and the updated content goes live</td></tr>
+<tr><td><strong>Use Case</strong></td><td>Compliance, regulated industries, audit trails — prove what the published guidance said on a specific date</td></tr>
+</tbody></table>
+<p class="theory-p"><strong>Knowledge Gap Reporting</strong> — the OOTB mechanism for agents to signal missing knowledge to the knowledge team.</p>
+<div class="callout info"><span class="ci">💡</span><div><strong>How it works:</strong> Agent opens a Case and searches KB — no article found. Agent clicks <strong>"Report Knowledge Gap"</strong> related link on the Case form. This creates a formal Knowledge Gap record visible to Knowledge Managers. KM team reviews gaps, creates new articles, and closes the gap. No emails, no manual drafts needed — the loop is closed in-platform.</div></div>
+<p class="theory-p"><strong>WebDAV Integration</strong> — Knowledge Management can index and surface content from external repositories without duplicating it in ServiceNow.</p>
+<table class="info-table2"><thead><tr><th>Concept</th><th>Details</th></tr></thead><tbody>
+<tr><td><strong>Requirement</strong></td><td>External repository must be <strong>WebDAV-compliant</strong> (e.g., SharePoint with WebDAV enabled)</td></tr>
+<tr><td><strong>Behaviour</strong></td><td>Content is indexed and appears in KB search results — not duplicated/copied into ServiceNow</td></tr>
+<tr><td><strong>Customer Portal</strong></td><td>Customers can find WebDAV-sourced content through the same CSP search interface</td></tr>
+<tr><td><strong>Exam angle</strong></td><td>"What is the requirement to integrate external content with ServiceNow KB?" → WebDAV compliance of the source</td></tr>
+</tbody></table>
+<div class="mistake-box"><div class="mb-title">⚠️ Common Mistakes</div><ul>
+  <li>Thinking User Criteria can be applied to Categories — it CANNOT. Only Knowledge Base and Article level</li>
+  <li>Confusing Product Entitlements with User Criteria — Entitlements restrict by owned product; User Criteria restricts by user/group membership</li>
+  <li>Forgetting to enable the "Access control of Knowledge Articles" system property before expecting Product Entitlements to work</li>
+  <li>Thinking WebDAV duplicates content in ServiceNow — it indexes and surfaces it; the source content stays external</li>
+  <li>Using manual article creation instead of "Report Knowledge Gap" — the latter creates a trackable, manageable gap record for the KM team</li>
+</ul></div>`,
+          it:`<p class="theory-p">Il Dominio 5 testa la Knowledge Management oltre il ciclo di vita base degli articoli. L'esame si concentra su <strong>Product Entitlement</strong>, <strong>scope degli User Criteria</strong> (KB vs Articolo vs Categoria), Versioning degli articoli, Knowledge Gap Reporting e integrazione WebDAV.</p>
+<div class="callout info"><span class="ci">💡</span><div><strong>Knowledge Product Entitlement — sintesi in una riga:</strong> Collega la visibilità degli articoli KB al possesso di un prodotto specifico. Un cliente senza licenza del prodotto non può vedere quegli articoli, anche se la KB è "Customer Visible".</div></div>
+<p class="theory-p"><strong>Come funzionano i Knowledge Product Entitlement:</strong></p>
+<table class="info-table2"><thead><tr><th>Componente</th><th>Ruolo</th></tr></thead><tbody>
+<tr><td><strong>System Property</strong></td><td>Abilitare "Access control of Knowledge Articles" nelle proprietà KB</td></tr>
+<tr><td><strong>Sold Product / Install Base Item</strong></td><td>Rappresenta il prodotto specifico posseduto dal cliente (licenza, SKU)</td></tr>
+<tr><td><strong>Tag Articolo Knowledge</strong></td><td>Tag sull'articolo che si mappa a un prodotto — solo i clienti che possiedono quel prodotto vedono l'articolo</td></tr>
+<tr><td><strong>Risultato</strong></td><td>I clienti con licenza Enterprise vedono gli articoli Enterprise; i clienti Standard no</td></tr>
+</tbody></table>
+<div class="scenario-box" id="sc-kb-ent1-it">
+  <div class="scenario-hdr" onclick="toggleScenario('sc-kb-ent1-it')"><span>🔐</span><span class="sc-badge">Scenario</span><span class="sc-title">Vendor SaaS che nasconde articoli su feature avanzate ai clienti free</span><span class="sc-arr">▶</span></div>
+  <div class="scenario-body">
+    <p>Un'azienda SaaS ha due tier di prodotto: Standard (gratuito) e Enterprise (a pagamento). La KB contiene articoli sulle funzionalità AI avanzate accessibili solo ai clienti Enterprise. Vogliono impedire ai clienti Standard di vedere questi articoli sul portale.</p>
+    <div class="scenario-q">❓ Qual è l'approccio di configurazione corretto?</div>
+    <div class="scenario-a">✅ Abilitare i <strong>Knowledge Product Entitlement</strong>. Creare un Tag Prodotto "Enterprise Tier". Taggare gli articoli AI avanzati con questo tag. Collegare il tag al Sold Product / Install Base Item Enterprise. Quando un cliente Standard accede al portale, quegli articoli sono invisibili. I clienti Enterprise con il prodotto nell'Install Base vedono la libreria completa.</div>
+  </div>
+</div>
+<p class="theory-p"><strong>User Criteria nella Knowledge Management</strong> — uno degli argomenti testati più precisamente. Conosci i tre tipi E a quali livelli di record si applicano.</p>
+<table class="info-table2"><thead><tr><th>Tipo User Criteria</th><th>Controlla</th><th>Applicato su</th></tr></thead><tbody>
+<tr><td><strong>Can Read</strong></td><td>Chi può VISUALIZZARE la KB o l'articolo</td><td>Knowledge Base ✓ · Articolo ✓ · Categoria ✗</td></tr>
+<tr><td><strong>Can Contribute</strong></td><td>Chi può CREARE/MODIFICARE articoli</td><td>Knowledge Base ✓ · Articolo ✓ · Categoria ✗</td></tr>
+<tr><td><strong>Cannot Contribute</strong></td><td>Lista di blocco esplicita — escluso dalla scrittura anche se "Can Contribute" lo consente</td><td>Knowledge Base ✓ · Articolo ✓ · Categoria ✗</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Fatto critico per l'esame — La Categoria NON ha User Criteria:</strong> Gli User Criteria si applicano al livello <strong>Knowledge Base</strong> e al livello <strong>Articolo</strong> solamente. <strong>NON</strong> si applicano alle Categorie Knowledge. Se una domanda d'esame offre "Categoria" come opzione per User Criteria, è sbagliata.</div></div>
+<div class="callout success"><span class="ci">✅</span><div><strong>Regola di granularità:</strong> Gli User Criteria a livello di Articolo sovrascrivono quelli a livello di KB. Se una KB dice "Can Read = Customers" ma un articolo specifico dice "Can Read = VIP Customers only", la regola dell'articolo vince per quell'articolo.</div></div>
+<p class="theory-p"><strong>Article Versioning</strong> — abilita il tracciamento della storia di un articolo KB nel tempo, supportando requisiti di compliance e audit.</p>
+<table class="info-table2"><thead><tr><th>Funzionalità</th><th>Dettagli</th></tr></thead><tbody>
+<tr><td><strong>Incremento versione</strong></td><td>Ogni volta che un articolo Published viene aggiornato e ripubblicato, il numero di versione aumenta (es. v1.0 → v2.0)</td></tr>
+<tr><td><strong>Rollback</strong></td><td>Gli amministratori possono tornare a una versione precedente se viene pubblicato un aggiornamento errato</td></tr>
+<tr><td><strong>Aggiornamento In Review</strong></td><td>Quando un articolo In Review viene aggiornato e ripubblicato, la versione viene incrementata e il contenuto aggiornato va in pubblicazione</td></tr>
+<tr><td><strong>Caso d'uso</strong></td><td>Compliance, settori regolamentati, audit trail — dimostra cosa diceva la guida pubblicata in una data specifica</td></tr>
+</tbody></table>
+<p class="theory-p"><strong>Knowledge Gap Reporting</strong> — il meccanismo OOTB per gli agenti per segnalare le lacune di conoscenza al team knowledge.</p>
+<div class="callout info"><span class="ci">💡</span><div><strong>Come funziona:</strong> L'agente apre un Case e cerca nella KB — nessun articolo trovato. L'agente clicca il related link <strong>"Report Knowledge Gap"</strong> nel form del Case. Questo crea un record formale di Knowledge Gap visibile ai Knowledge Manager. Il team KM esamina i gap, crea nuovi articoli e chiude il gap. Nessuna email, nessun draft manuale — il ciclo si chiude nella piattaforma.</div></div>
+<p class="theory-p"><strong>Integrazione WebDAV</strong> — la Knowledge Management può indicizzare e mostrare contenuti da repository esterni senza duplicarli in ServiceNow.</p>
+<table class="info-table2"><thead><tr><th>Concetto</th><th>Dettagli</th></tr></thead><tbody>
+<tr><td><strong>Requisito</strong></td><td>Il repository esterno deve essere <strong>WebDAV-compliant</strong> (es. SharePoint con WebDAV abilitato)</td></tr>
+<tr><td><strong>Comportamento</strong></td><td>Il contenuto viene indicizzato e appare nei risultati di ricerca KB — non duplicato/copiato in ServiceNow</td></tr>
+<tr><td><strong>Customer Portal</strong></td><td>I clienti trovano i contenuti provenienti da WebDAV attraverso la stessa interfaccia di ricerca del CSP</td></tr>
+<tr><td><strong>Angolo esame</strong></td><td>"Qual è il requisito per integrare contenuti esterni con la KB di ServiceNow?" → Conformità WebDAV della sorgente</td></tr>
+</tbody></table>
+<div class="mistake-box"><div class="mb-title">⚠️ Errori Comuni</div><ul>
+  <li>Pensare che gli User Criteria si possano applicare alle Categorie — NON è possibile. Solo a livello Knowledge Base e Articolo</li>
+  <li>Confondere Product Entitlement con User Criteria — gli Entitlement restringono per prodotto posseduto; gli User Criteria restringono per appartenenza a utente/gruppo</li>
+  <li>Dimenticare di abilitare la system property "Access control of Knowledge Articles" prima di aspettarsi che i Product Entitlement funzionino</li>
+  <li>Pensare che WebDAV duplichi i contenuti in ServiceNow — li indicizza e li mostra; il contenuto sorgente rimane esterno</li>
+  <li>Creare articoli manualmente invece di usare "Report Knowledge Gap" — quest'ultimo crea un record di gap tracciabile e gestibile per il team KM</li>
+</ul></div>`
         }
       }
     ]

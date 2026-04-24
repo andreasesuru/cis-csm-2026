@@ -1,6 +1,6 @@
 # CIS-CSM 2026 Study App 🎯
 
-![Version](https://img.shields.io/badge/version-1.4.0-teal) ![Lang](https://img.shields.io/badge/lang-EN%20%2F%20IT-blue)
+![Version](https://img.shields.io/badge/version-1.5.0-teal) ![Lang](https://img.shields.io/badge/lang-EN%20%2F%20IT-blue)
 
 Interactive study app for the ServiceNow **Certified Implementation Specialist – Customer Service Management (CIS-CSM)** exam. Bilingual: **English 🇬🇧 / Italian 🇮🇹**.
 
@@ -152,6 +152,7 @@ Mock tests carry the most weight once you start them — they're the closest thi
 
 | Version | Changes |
 |---------|---------|
+| **v1.5.0** | Theory expanded from 25 to 33 topics — 8 new topics covering SAIB & Account Relationships (D1), AWA Advanced Matching Criteria & Agent Affinity (D2), PCSO & Outage Records (D2), Action Status Indicators & Case Lines (D3), Knowledge Product Entitlements (D5) |
 | **v1.4.0** | Domain quizzes (15 q's per domain, dot navigation, results screen, progress tracking) · 10 inline diagrams in quiz explanations · Custom reset confirmation modal with progress summary · GitHub link in sidebar · version badge |
 | **v1.3.0** | Fixed mock test answer errors (T2, T3, T4, T6) · Fixed theory mini-quiz click bug |
 | **v1.2.0** | UI polish and improvements |

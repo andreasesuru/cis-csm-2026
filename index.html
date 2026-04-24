@@ -16,7 +16,7 @@
   <div class="sidebar-logo">
     <div class="logo-tag">ServiceNow Cert</div>
     <h1>CIS-CSM</h1>
-    <div class="logo-sub">2026 Study App · <span style="font-family:var(--font-mono);color:var(--teal)">v1.4.0</span></div>
+    <div class="logo-sub">2026 Study App · <span style="font-family:var(--font-mono);color:var(--teal)">v1.5.0</span></div>
   </div>
 
   <div class="lang-toggle">
@@ -261,6 +261,23 @@
     <div class="modal-actions">
       <button class="btn-secondary modal-cancel" onclick="cancelReset()" id="rm-cancel">Cancel</button>
       <button class="modal-reset-btn" onclick="doReset()" id="rm-confirm">↺ Yes, reset everything</button>
+    </div>
+  </div>
+</div>
+
+<!-- WHATS NEW MODAL -->
+<div class="modal-overlay" id="wn-modal" onclick="dismissWhatsNew()" style="display:none">
+  <div class="modal-box wn-box" onclick="event.stopPropagation()">
+    <div class="wn-header">
+      <span class="wn-emoji">🚀</span>
+      <div>
+        <div class="wn-tag" id="wn-tag">App updated</div>
+        <h3 class="modal-title" id="wn-title">What's new</h3>
+      </div>
+    </div>
+    <div class="wn-items" id="wn-items"></div>
+    <div class="modal-actions" style="justify-content:center;margin-top:20px">
+      <button class="wn-ok-btn" onclick="dismissWhatsNew()" id="wn-ok">Got it!</button>
     </div>
   </div>
 </div>
