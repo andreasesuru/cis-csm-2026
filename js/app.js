@@ -12,7 +12,7 @@ function loadProgress() {
     const raw = localStorage.getItem('cis_csm_progress_v2');
     if (raw) return JSON.parse(raw);
   } catch(e) {}
-  return { topicsDone: [], quizResults: [], fcKnew: [], fcMissed: [], totalQAnswered: 0, totalQCorrect: 0 };
+  return { topicsDone: [], quizResults: [], fcKnew: [], fcMissed: [], totalQAnswered: 0, totalQCorrect: 0, domainQuizResults: [] };
 }
 
 function saveProgress() {
@@ -21,7 +21,7 @@ function saveProgress() {
 
 function confirmReset() {
   if (confirm(lang === 'en' ? 'Reset ALL progress? This cannot be undone.' : 'Azzerare TUTTI i progressi? Non è reversibile.')) {
-    progress = { topicsDone: [], quizResults: [], fcKnew: [], fcMissed: [], totalQAnswered: 0, totalQCorrect: 0 };
+    progress = { topicsDone: [], quizResults: [], fcKnew: [], fcMissed: [], totalQAnswered: 0, totalQCorrect: 0, domainQuizResults: [] };
     saveProgress();
     quizState = { block: 0, answers: {}, started: false, currentQ: 0 };
     showView('home');
@@ -162,7 +162,7 @@ function applyLang() {
        Quello che questa app <em>farà</em> è aiutarti ad arrivare preparato: teoria, quiz, flashcard e 6 mock test completi — tutti con spiegazioni. Considerala il tuo compagno di studio ideale: sempre disponibile, non ti giudica se sbagli la stessa domanda quattro volte, e non mangia le tue merendine.<br><br>
        Per i corsi e i lab ufficiali che fanno parte del percorso di certificazione, vai su <strong>ServiceNow Now Learning</strong> — il link è qui sotto. Usali entrambi. 👇`);
   set('wf-t1', l ? 'Theory'            : 'Teoria');
-  set('wf-d1', l ? ' · 5 domains, full explanations, diagrams, bilingual EN/IT'    : ' · 5 domini, spiegazioni complete, diagrammi, bilingue EN/IT');
+  set('wf-d1', l ? ' · 5 domains, full explanations, diagrams + 15-question domain quiz per domain, bilingual EN/IT' : ' · 5 domini, spiegazioni complete, diagrammi + quiz da 15 domande per dominio, bilingue EN/IT');
   set('wf-t2', l ? 'Exam Quiz'         : 'Quiz d\'esame');
   set('wf-d2', l ? ' · 120 questions in 3 blocks of 40, immediate feedback'        : ' · 120 domande in 3 blocchi da 40, feedback immediato');
   set('wf-t3', l ? 'Flashcards'        : 'Flashcard');

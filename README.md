@@ -1,5 +1,7 @@
 # CIS-CSM 2026 Study App 🎯
 
+![Version](https://img.shields.io/badge/version-1.4.0-teal) ![Lang](https://img.shields.io/badge/lang-EN%20%2F%20IT-blue)
+
 Interactive study app for the ServiceNow **Certified Implementation Specialist – Customer Service Management (CIS-CSM)** exam. Bilingual: **English 🇬🇧 / Italian 🇮🇹**.
 
 > Updated: **April 2026** — aligned with the official Now Learning path and 2026 exam blueprint.
@@ -28,11 +30,11 @@ To share with the team, enable **GitHub Pages** (`Settings → Pages → main br
 
 | Section | Description |
 |---------|-------------|
-| 📖 **Theory** | 5 domains with full explanations, diagrams, tables, callout boxes, and inline knowledge checks |
+| 📖 **Theory** | 5 domains with full explanations, diagrams, tables, callout boxes, inline knowledge checks, and a **15-question domain quiz** at the end of each domain |
 | 🎯 **Exam Quiz** | 120 questions across 3 blocks of 40 — immediate feedback + explanation per answer |
 | ⚡ **Flashcards** | 30 key concepts — flip, mark what you know, filter by domain |
 | 🏆 **Mock Tests** | 6 full-length exam simulations, 340 questions total — optional 90-min countdown, full review after each test |
-| 📊 **Progress** | Per-user stats in **localStorage** — theory, quiz, flashcards and mock test scores all tracked |
+| 📊 **Progress** | Per-user stats in **localStorage** — theory, quiz, flashcards, domain quizzes and mock test scores all tracked |
 | 🌐 **Bilingual** | Switch between EN/IT at any time — all UI and content updates instantly |
 
 ---
@@ -109,6 +111,7 @@ cis-csm-2026/
 │   ├── theory-data.js            ← 5 domains, bilingual content
 │   ├── quiz-data.js              ← 120 questions + 3 blocks
 │   ├── flashcards-data.js        ← 30 flashcards
+│   ├── domain-quiz-data.js       ← 75 domain quiz questions (15 per domain)
 │   ├── mock-data-part1.js        ← mock tests 1–3 (180 questions + answers + explanations)
 │   ├── mock-data-part2.js        ← mock tests 4–6 (160 questions + answers + explanations)
 │   └── mock-data.js              ← merges part1 + part2 into MOCK_TESTS global
@@ -143,6 +146,21 @@ Mock tests carry the most weight once you start them — they're the closest thi
 
 ---
 
+---
+
+## 📝 Changelog
+
+| Version | Changes |
+|---------|---------|
+| **v1.4.0** | Domain quizzes (15 q's per domain, dot navigation, results screen, progress tracking) · GitHub link in sidebar · version badge |
+| **v1.3.0** | Fixed mock test answer errors (T2, T3, T4, T6) · Fixed theory mini-quiz click bug |
+| **v1.2.0** | UI polish and improvements |
+| **v1.1.0** | Mock tests (6 full exams, 340 questions, optional timer) · Welcome page |
+| **v1.0.0** | Modular JS/HTML architecture · Stable base |
+| **v0.x** | Theory build-out (25 topics), bilingual parity, knowledge checks, SVG diagrams |
+
+---
+
 *Built for the April 2026 CIS-CSM exam cycle. Based on official ServiceNow Now Learning path documentation and real-style exam questions.*
 
-Built by **Andrea Sesuru** 🚀
+Built by **Andrea Sesuru** 🚀 · [github.com/andreasesuru/cis-csm-2026](https://github.com/andreasesuru/cis-csm-2026)

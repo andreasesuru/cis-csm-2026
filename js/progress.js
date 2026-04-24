@@ -97,6 +97,27 @@ function renderProgress() {
     </div>`;
   });
 
+  // ── Domain Quiz Results
+  const dqAll = progress.domainQuizResults || [];
+  if (dqAll.length > 0) {
+    html += `<h3 style="font-size:15px;font-weight:600;margin:24px 0 12px;color:var(--text)">${l?'Domain Quiz Results':'Risultati Quiz Dominio'}</h3>`;
+    html += '<div style="display:flex;flex-direction:column;gap:8px">';
+    THEORY.forEach((domain, di) => {
+      const dqRes  = dqAll.filter(r => r.domainIdx === di);
+      const best   = dqRes.length ? Math.max(...dqRes.map(r => r.pct)) : null;
+      const passed = best !== null && best >= 70;
+      html += `
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);border-left:3px solid ${domain.color}">
+          <span style="font-size:13px;font-weight:500;color:var(--text);flex:1">${domain.title[lang]}</span>
+          <span style="font-size:12px;color:var(--text3)">${dqRes.length} ${l?'attempt':'tentativo'}${dqRes.length !== 1?'s':''}</span>
+          <span style="font-family:var(--font-mono);font-size:14px;font-weight:700;color:${best===null?'var(--text3)':passed?'var(--green)':'var(--amber)'}">
+            ${best !== null ? best+'%' : '—'}
+          </span>
+        </div>`;
+    });
+    html += '</div>';
+  }
+
   // Mock test scores per test
   html += `<h3 style="font-size:15px;font-weight:600;margin:24px 0 12px;color:var(--text)">${l?'Mock Test Results':'Risultati Mock Test'}</h3>`;
   const testColors = ['var(--blue)','var(--teal)','var(--purple)','var(--amber)','var(--red)','var(--green)'];
