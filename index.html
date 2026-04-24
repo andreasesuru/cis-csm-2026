@@ -250,6 +250,21 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- RESET CONFIRM MODAL -->
+<div class="modal-overlay" id="reset-modal" onclick="cancelReset()" style="display:none">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-icon">⚠️</div>
+    <h3 class="modal-title" id="rm-title">Reset all progress?</h3>
+    <p class="modal-sub" id="rm-sub">This will permanently delete everything you've done so far.</p>
+    <div class="modal-stats" id="rm-stats"></div>
+    <p class="modal-warn" id="rm-warn">This action cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn-secondary modal-cancel" onclick="cancelReset()" id="rm-cancel">Cancel</button>
+      <button class="modal-reset-btn" onclick="doReset()" id="rm-confirm">↺ Yes, reset everything</button>
+    </div>
+  </div>
+</div>
+
 <!-- DATA -->
 <script src="data/theory-data.js"></script>
 <script src="data/quiz-data.js"></script>

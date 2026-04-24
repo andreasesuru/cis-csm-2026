@@ -30,7 +30,7 @@ To share with the team, enable **GitHub Pages** (`Settings → Pages → main br
 
 | Section | Description |
 |---------|-------------|
-| 📖 **Theory** | 5 domains with full explanations, diagrams, tables, callout boxes, inline knowledge checks, and a **15-question domain quiz** at the end of each domain |
+| 📖 **Theory** | 5 domains with full explanations, diagrams, tables, callout boxes, inline knowledge checks, and a **15-question domain quiz** per domain with inline visual diagrams in explanations |
 | 🎯 **Exam Quiz** | 120 questions across 3 blocks of 40 — immediate feedback + explanation per answer |
 | ⚡ **Flashcards** | 30 key concepts — flip, mark what you know, filter by domain |
 | 🏆 **Mock Tests** | 6 full-length exam simulations, 340 questions total — optional 90-min countdown, full review after each test |
@@ -152,7 +152,7 @@ Mock tests carry the most weight once you start them — they're the closest thi
 
 | Version | Changes |
 |---------|---------|
-| **v1.4.0** | Domain quizzes (15 q's per domain, dot navigation, results screen, progress tracking) · GitHub link in sidebar · version badge |
+| **v1.4.0** | Domain quizzes (15 q's per domain, dot navigation, results screen, progress tracking) · 10 inline diagrams in quiz explanations · Custom reset confirmation modal with progress summary · GitHub link in sidebar · version badge |
 | **v1.3.0** | Fixed mock test answer errors (T2, T3, T4, T6) · Fixed theory mini-quiz click bug |
 | **v1.2.0** | UI polish and improvements |
 | **v1.1.0** | Mock tests (6 full exams, 340 questions, optional timer) · Welcome page |

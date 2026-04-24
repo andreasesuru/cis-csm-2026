@@ -20,14 +20,54 @@ function saveProgress() {
 }
 
 function confirmReset() {
-  if (confirm(lang === 'en' ? 'Reset ALL progress? This cannot be undone.' : 'Azzerare TUTTI i progressi? Non è reversibile.')) {
-    progress = { topicsDone: [], quizResults: [], fcKnew: [], fcMissed: [], totalQAnswered: 0, totalQCorrect: 0, domainQuizResults: [] };
-    saveProgress();
-    quizState = { block: 0, answers: {}, started: false, currentQ: 0 };
-    showView('home');
-    updateSidebarProgress();
-    showToast(lang === 'en' ? '↺ Progress reset' : '↺ Progressi azzerati', 'info');
-  }
+  const l = lang === 'en';
+
+  // Gather stats to show what will be lost
+  const totalTopics  = typeof THEORY !== 'undefined' ? THEORY.reduce((s,d) => s + d.topics.length, 0) : 0;
+  const topicsDone   = progress.topicsDone.length;
+  const quizQ        = progress.totalQAnswered;
+  const fcKnown      = progress.fcKnew.length;
+  const dqAttempts   = (progress.domainQuizResults || []).length;
+  const mockProg     = (function(){ try { const r = localStorage.getItem('cis_csm_mock_progress_v1'); return r ? JSON.parse(r) : {results:[]}; } catch(e){ return {results:[]}; } })();
+  const mockAttempts = new Set((mockProg.results||[]).map(r => r.testIdx)).size;
+
+  // Build stats HTML
+  const rows = [];
+  if (topicsDone > 0)   rows.push(`<div class="rm-stat"><span>${l?'Theory topics read':'Argomenti letti'}</span><strong>${topicsDone}/${totalTopics}</strong></div>`);
+  if (quizQ > 0)        rows.push(`<div class="rm-stat"><span>${l?'Quiz questions answered':'Domande risposto ai quiz'}</span><strong>${quizQ}</strong></div>`);
+  if (fcKnown > 0)      rows.push(`<div class="rm-stat"><span>${l?'Flashcards marked known':'Flashcard conosciute'}</span><strong>${fcKnown}</strong></div>`);
+  if (dqAttempts > 0)   rows.push(`<div class="rm-stat"><span>${l?'Domain quiz attempts':'Tentativi quiz dominio'}</span><strong>${dqAttempts}</strong></div>`);
+  if (mockAttempts > 0) rows.push(`<div class="rm-stat"><span>${l?'Mock tests attempted':'Mock test tentati'}</span><strong>${mockAttempts}/6</strong></div>`);
+
+  document.getElementById('rm-title').textContent   = l ? 'Reset all progress?' : 'Azzerare tutti i progressi?';
+  document.getElementById('rm-sub').textContent     = l
+    ? 'This will permanently delete everything you\'ve done so far:'
+    : 'Questo cancellerà definitivamente tutto quello che hai fatto finora:';
+  document.getElementById('rm-stats').innerHTML     = rows.length
+    ? rows.join('')
+    : `<div class="rm-stat rm-stat-empty">${l?'No progress recorded yet.':'Nessun progresso registrato.'}</div>`;
+  document.getElementById('rm-warn').textContent    = l ? 'This action cannot be undone.' : 'Questa azione non può essere annullata.';
+  document.getElementById('rm-cancel').textContent  = l ? 'Cancel' : 'Annulla';
+  document.getElementById('rm-confirm').textContent = l ? '↺ Yes, reset everything' : '↺ Sì, azzera tutto';
+
+  document.getElementById('reset-modal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function cancelReset() {
+  document.getElementById('reset-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function doReset() {
+  progress = { topicsDone: [], quizResults: [], fcKnew: [], fcMissed: [], totalQAnswered: 0, totalQCorrect: 0, domainQuizResults: [] };
+  saveProgress();
+  try { localStorage.removeItem('cis_csm_mock_progress_v1'); } catch(e) {}
+  quizState = { block: 0, answers: {}, started: false, currentQ: 0 };
+  cancelReset();
+  showView('home');
+  updateSidebarProgress();
+  showToast(lang === 'en' ? '↺ Progress reset' : '↺ Progressi azzerati', 'info');
 }
 
 // ── Language
@@ -264,3 +304,4 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cancelReset(); });

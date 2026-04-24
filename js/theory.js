@@ -1,6 +1,187 @@
 // ── Domain Quiz State
 let domainQuizState = { active: false, domainIdx: 0, answers: {}, currentQ: 0 };
 
+// ── Inline diagrams for domain quiz explanations
+const QUIZ_DIAGRAMS = {
+
+  'case-state-flow': `
+    <div class="dq-diagram">
+      <div class="dqd-label">📋 Case State Flow (OOTB)</div>
+      <div class="dqd-flow">
+        <div class="dqd-state">New</div>
+        <div class="dqd-arrow">→</div>
+        <div class="dqd-state dqd-highlight">Open</div>
+        <div class="dqd-arrow">→</div>
+        <div class="dqd-state">Awaiting<br>Info</div>
+        <div class="dqd-arrow">→</div>
+        <div class="dqd-state">Resolved</div>
+        <div class="dqd-arrow">→</div>
+        <div class="dqd-state">Closed</div>
+      </div>
+      <div class="dqd-note">⬆ Highlighted = correct answer · "In Progress" is NOT a default CSM state</div>
+    </div>`,
+
+  'account-hierarchy': `
+    <div class="dq-diagram">
+      <div class="dqd-label">🏢 Account Hierarchy</div>
+      <div class="dqd-tree">
+        <div class="dqd-parent">🌐 Corporate Parent Account<br><span class="dqd-sub">Executive visibility across all subsidiaries</span></div>
+        <div class="dqd-connector-v"></div>
+        <div class="dqd-children">
+          <div class="dqd-child">🏢 Subsidiary US<br><span class="dqd-sub">Own case queue</span></div>
+          <div class="dqd-child">🏢 Subsidiary EU<br><span class="dqd-sub">Own case queue</span></div>
+          <div class="dqd-child">🏢 Subsidiary APAC<br><span class="dqd-sub">Own case queue</span></div>
+        </div>
+      </div>
+    </div>`,
+
+  'household-b2c': `
+    <div class="dq-diagram">
+      <div class="dqd-label">👨‍👩‍👧 Household (B2C Model)</div>
+      <div class="dqd-tree">
+        <div class="dqd-parent" style="background:var(--amber-dim);border-color:var(--amber)">🏠 Household<br><span class="dqd-sub">Groups consumers at same address</span></div>
+        <div class="dqd-connector-v"></div>
+        <div class="dqd-children">
+          <div class="dqd-child" style="border-color:var(--amber)">👤 Consumer 1</div>
+          <div class="dqd-child" style="border-color:var(--amber)">👤 Consumer 2</div>
+          <div class="dqd-child" style="border-color:var(--amber)">👤 Consumer 3</div>
+        </div>
+      </div>
+      <div class="dqd-note">Each Consumer has independent cases · Household enables shared entitlement mgmt</div>
+    </div>`,
+
+  'entitlement-types': `
+    <div class="dq-diagram">
+      <div class="dqd-label">🔐 Entitlement Types Comparison</div>
+      <div class="dqd-cols">
+        <div class="dqd-col">
+          <div class="dqd-col-head" style="background:var(--blue-dim);color:var(--blue)">Allocated</div>
+          <div class="dqd-col-body">Tracks by <strong>case count</strong><br><br>e.g. 50 cases/year<br><br>Decrements per case opened</div>
+        </div>
+        <div class="dqd-col dqd-col-active">
+          <div class="dqd-col-head" style="background:var(--teal-dim);color:var(--teal)">⭐ Time-Based</div>
+          <div class="dqd-col-body">Tracks by <strong>hours consumed</strong><br><br>e.g. 40 hours/month<br><br>Decrements per time logged</div>
+        </div>
+        <div class="dqd-col">
+          <div class="dqd-col-head" style="background:var(--green-dim);color:var(--green)">Service</div>
+          <div class="dqd-col-body">Defines a <strong>service level</strong><br><br>No cap / unlimited<br><br>SLA-based, not quantity</div>
+        </div>
+      </div>
+    </div>`,
+
+  'playbook-phases': `
+    <div class="dq-diagram">
+      <div class="dqd-label">📋 Playbook Structure (PAD)</div>
+      <div class="dqd-playbook">
+        <div class="dqd-phase-col">
+          <div class="dqd-phase-head">Phase 1: Triage</div>
+          <div class="dqd-phase-lane">🔵 Legal Team</div>
+          <div class="dqd-activity">Assess severity</div>
+          <div class="dqd-phase-lane">🟣 Agent</div>
+          <div class="dqd-activity">Log initial details</div>
+        </div>
+        <div class="dqd-phase-arrow">→</div>
+        <div class="dqd-phase-col">
+          <div class="dqd-phase-head">Phase 2: Legal Review</div>
+          <div class="dqd-phase-lane">🔵 Legal Team</div>
+          <div class="dqd-activity">Review compliance</div>
+          <div class="dqd-phase-lane">🟣 Manager</div>
+          <div class="dqd-activity">Approve response</div>
+        </div>
+        <div class="dqd-phase-arrow">→</div>
+        <div class="dqd-phase-col">
+          <div class="dqd-phase-head">Phase 3: Notification</div>
+          <div class="dqd-phase-lane">🟣 Agent</div>
+          <div class="dqd-activity">Contact customers</div>
+          <div class="dqd-phase-lane">🔵 Legal Team</div>
+          <div class="dqd-activity">Sign-off</div>
+        </div>
+      </div>
+      <div class="dqd-note">PAD = phases + lanes + activities · Flow Designer has no UI-visible Playbook</div>
+    </div>`,
+
+  'awa-routing': `
+    <div class="dq-diagram">
+      <div class="dqd-label">⚙️ AWA Skills-Based Routing Setup</div>
+      <div class="dqd-flow dqd-flow-wrap">
+        <div class="dqd-step">1️⃣<br>Create<br><strong>Skill</strong><br><span class="dqd-sub">e.g. "Spanish"</span></div>
+        <div class="dqd-arrow">→</div>
+        <div class="dqd-step">2️⃣<br>Assign to<br><strong>Agent Profile</strong><br><span class="dqd-sub">eligible agents</span></div>
+        <div class="dqd-arrow">→</div>
+        <div class="dqd-step">3️⃣<br>Configure<br><strong>AWA Queue</strong><br><span class="dqd-sub">require skill</span></div>
+        <div class="dqd-arrow">→</div>
+        <div class="dqd-step dqd-highlight">✅<br>AWA matches<br><strong>case → agent</strong><br><span class="dqd-sub">by skill</span></div>
+      </div>
+    </div>`,
+
+  'major-case-flow': `
+    <div class="dq-diagram">
+      <div class="dqd-label">🚨 Major Issue Management Flow</div>
+      <div class="dqd-flow dqd-flow-wrap">
+        <div class="dqd-step">📋 Case<br><span class="dqd-sub">Agent flags as candidate</span></div>
+        <div class="dqd-arrow">→</div>
+        <div class="dqd-step dqd-highlight">✅ Approval<br><span class="dqd-sub">Manager reviews &amp; approves</span></div>
+        <div class="dqd-arrow">→</div>
+        <div class="dqd-step" style="border-color:var(--red);background:var(--red-dim)">🚨 Major Case<br><span class="dqd-sub">Formally promoted</span></div>
+        <div class="dqd-arrow">→</div>
+        <div class="dqd-step">👥 Child Cases<br><span class="dqd-sub">All affected customers linked</span></div>
+      </div>
+      <div class="dqd-note">Approval is REQUIRED · Direct Major Case creation bypasses governance</div>
+    </div>`,
+
+  'customer-central': `
+    <div class="dq-diagram">
+      <div class="dqd-label">🔭 Customer Central — 360° View</div>
+      <div class="dqd-hub-layout">
+        <div class="dqd-hub">Customer<br>Central</div>
+        <div class="dqd-spokes">
+          <div class="dqd-spoke">🏢 Account Details</div>
+          <div class="dqd-spoke">📋 All Cases<br><span class="dqd-sub">open + closed</span></div>
+          <div class="dqd-spoke">🔐 Entitlements</div>
+          <div class="dqd-spoke">📦 Install Base</div>
+          <div class="dqd-spoke">👤 Contacts</div>
+        </div>
+      </div>
+      <div class="dqd-note">Single workspace screen · No cross-module navigation needed</div>
+    </div>`,
+
+  'knowledge-blocks': `
+    <div class="dq-diagram">
+      <div class="dqd-label">📄 Knowledge Article Structure (KCS)</div>
+      <div class="dqd-blocks">
+        <div class="dqd-block" style="border-color:var(--red);background:var(--red-dim)">
+          <strong style="color:var(--red)">🔴 SYMPTOM</strong><br>What did the customer experience?<br><span class="dqd-sub">Error message, behavior, impact</span>
+        </div>
+        <div class="dqd-block-arrow">↓</div>
+        <div class="dqd-block" style="border-color:var(--amber);background:var(--amber-dim)">
+          <strong style="color:var(--amber)">🟡 CAUSE</strong><br>Why did it happen?<br><span class="dqd-sub">Root cause, technical reason</span>
+        </div>
+        <div class="dqd-block-arrow">↓</div>
+        <div class="dqd-block" style="border-color:var(--green);background:var(--green-dim)">
+          <strong style="color:var(--green)">🟢 RESOLUTION</strong><br>How was it fixed?<br><span class="dqd-sub">Step-by-step solution</span>
+        </div>
+      </div>
+      <div class="dqd-note">Consistent structure = faster search, better reuse (core KCS goal)</div>
+    </div>`,
+
+  'nowcreate-phases': `
+    <div class="dq-diagram">
+      <div class="dqd-label">🚀 Now Create — 5 Phases</div>
+      <div class="dqd-flow dqd-flow-wrap">
+        <div class="dqd-step">1️⃣<br><strong>Initiate</strong><br><span class="dqd-sub">Kickoff, scope, stakeholders</span></div>
+        <div class="dqd-arrow">→</div>
+        <div class="dqd-step dqd-highlight">2️⃣<br><strong>Plan</strong><br><span class="dqd-sub">Backlog, sprints, resources</span></div>
+        <div class="dqd-arrow">→</div>
+        <div class="dqd-step">3️⃣<br><strong>Execute</strong><br><span class="dqd-sub">Build, workshops, sprints</span></div>
+        <div class="dqd-arrow">→</div>
+        <div class="dqd-step">4️⃣<br><strong>Deliver</strong><br><span class="dqd-sub">UAT, go-live</span></div>
+        <div class="dqd-arrow">→</div>
+        <div class="dqd-step">5️⃣<br><strong>Close</strong><br><span class="dqd-sub">Handover, sign-off</span></div>
+      </div>
+      <div class="dqd-note">⬆ Highlighted = correct answer · Exit gates separate each phase</div>
+    </div>`,
+};
+
 function renderTheory(domainIdx) {
   if (domainIdx !== undefined) currentDomain = domainIdx;
   const domain = THEORY[currentDomain];
@@ -175,7 +356,10 @@ function renderDomainQuizContent() {
     const icon = ans.correct
       ? `<strong style="color:var(--green)">✓ ${l?'Correct!':'Corretto!'}</strong>`
       : `<strong style="color:var(--red)">✗ ${l?'Incorrect.':'Sbagliato.'}</strong>`;
-    expHtml = `<div class="dq-exp show">${icon} <strong>${l?'Why:':'Perché:'}</strong> ${q.exp}</div>`;
+    const diagramHtml = q.diagram && QUIZ_DIAGRAMS[q.diagram]
+      ? `<div class="dqd-wrap">${QUIZ_DIAGRAMS[q.diagram]}</div>`
+      : '';
+    expHtml = `<div class="dq-exp show">${icon} <strong>${l?'Why:':'Perché:'}</strong> ${q.exp}${diagramHtml}</div>`;
   }
 
   // Footer: Prev / Next / Finish
@@ -272,10 +456,13 @@ function finishDomainQuiz() {
   qs.forEach((q, qi) => {
     const a = domainQuizState.answers[qi];
     const correct = a && a.correct;
+    const diagramHtml = q.diagram && QUIZ_DIAGRAMS[q.diagram]
+      ? `<div class="dqd-wrap">${QUIZ_DIAGRAMS[q.diagram]}</div>`
+      : '';
     reviewHtml += `<div class="dq-review-item ${correct?'correct':'wrong'}">
       <div class="dq-review-q"><span class="dq-review-icon">${correct?'✓':'✗'}</span> ${qi+1}. ${q.q}</div>
       <div class="dq-review-ans">${l?'Your answer:':'La tua risposta:'} <strong>${q.opts[a?a.chosen:0]}</strong>${!correct?` · ${l?'Correct:':'Corretta:'} <strong style="color:var(--green)">${q.opts[q.ans]}</strong>`:''}</div>
-      <div class="dq-review-exp">${q.exp}</div>
+      <div class="dq-review-exp">${q.exp}${diagramHtml}</div>
     </div>`;
   });
 

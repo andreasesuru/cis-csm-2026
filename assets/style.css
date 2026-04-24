@@ -414,6 +414,51 @@ input, select { font-family: var(--font); }
 .wc-label { font-size: 9px; color: var(--text3); font-family: var(--font-mono); text-align: center; }
 .wc-pct { font-size: 10px; color: var(--blue); font-family: var(--font-mono); font-weight: 600; }
 
+/* ── RESET CONFIRM MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(4px);
+  z-index: 1000; display: flex; align-items: center; justify-content: center;
+  animation: fadeIn .15s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-box {
+  background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--radius-lg);
+  padding: 28px 30px; max-width: 420px; width: calc(100% - 32px);
+  box-shadow: 0 24px 64px rgba(0,0,0,.5);
+  animation: slideUp .18s ease;
+}
+@keyframes slideUp { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.modal-icon { font-size: 36px; margin-bottom: 12px; }
+.modal-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.modal-sub   { font-size: 13px; color: var(--text2); margin-bottom: 14px; }
+
+.modal-stats {
+  background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 10px 14px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 7px;
+}
+.rm-stat {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px; color: var(--text2);
+}
+.rm-stat strong { color: var(--text); font-family: var(--font-mono); font-size: 13px; }
+.rm-stat.rm-stat-empty { color: var(--text3); font-style: italic; justify-content: center; }
+
+.modal-warn {
+  font-size: 12px; color: var(--red); font-weight: 600; margin-bottom: 20px;
+  font-family: var(--font-mono); letter-spacing: .02em;
+}
+
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.modal-cancel  { flex-shrink: 0; }
+.modal-reset-btn {
+  padding: 9px 18px; border-radius: var(--radius); font-size: 13px; font-weight: 600;
+  background: var(--red); color: #fff; border: none; cursor: pointer;
+  transition: var(--transition);
+}
+.modal-reset-btn:hover { background: #c0392b; box-shadow: 0 0 0 3px rgba(248,81,73,.25); }
+
 /* notification toast */
 .toast {
   position: fixed; bottom: 24px; right: 24px; background: var(--bg3);
@@ -640,6 +685,131 @@ input, select { font-family: var(--font); }
 .dq-review-icon { margin-right: 4px; }
 .dq-review-ans { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
 .dq-review-exp { font-size: 12px; color: var(--text3); line-height: 1.6; padding-top: 6px; border-top: 1px solid var(--border); margin-top: 6px; }
+
+/* ══════════════════════════════════════════════
+   DOMAIN QUIZ DIAGRAMS
+   ══════════════════════════════════════════════ */
+
+/* Wrapper injected after explanation text */
+.dqd-wrap { margin-top: 14px; }
+
+/* Diagram container */
+.dq-diagram {
+  background: var(--bg); border: 1px solid var(--border2); border-radius: var(--radius);
+  padding: 14px 16px; font-size: 12px; color: var(--text2);
+}
+.dqd-label {
+  font-size: 10px; font-family: var(--font-mono); text-transform: uppercase;
+  letter-spacing: .1em; color: var(--text3); margin-bottom: 12px;
+}
+.dqd-note {
+  font-size: 10px; color: var(--text3); margin-top: 10px; font-style: italic;
+  border-top: 1px solid var(--border); padding-top: 7px;
+}
+
+/* ── Linear Flow (states / steps) ── */
+.dqd-flow {
+  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+}
+.dqd-flow-wrap { gap: 6px; }
+.dqd-state {
+  padding: 6px 10px; border: 1px solid var(--border2); border-radius: var(--radius);
+  background: var(--bg3); color: var(--text2); font-size: 11px; text-align: center; line-height: 1.3;
+}
+.dqd-state.dqd-highlight, .dqd-step.dqd-highlight {
+  border-color: var(--teal); background: var(--teal-dim); color: var(--teal);
+}
+.dqd-arrow {
+  color: var(--text3); font-size: 13px; flex-shrink: 0;
+}
+.dqd-step {
+  padding: 8px 10px; border: 1px solid var(--border2); border-radius: var(--radius);
+  background: var(--bg3); color: var(--text2); font-size: 11px; text-align: center;
+  line-height: 1.5; min-width: 70px;
+}
+.dqd-sub { font-size: 10px; color: var(--text3); display: block; margin-top: 2px; }
+
+/* ── Tree (hierarchy) ── */
+.dqd-tree { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.dqd-parent {
+  padding: 8px 16px; border: 1px solid var(--blue); border-radius: var(--radius);
+  background: var(--blue-dim); color: var(--text); font-size: 12px; font-weight: 500;
+  text-align: center; line-height: 1.4;
+}
+.dqd-connector-v {
+  width: 2px; height: 16px; background: var(--border2); margin: 0 auto;
+}
+.dqd-children {
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+}
+.dqd-child {
+  padding: 6px 12px; border: 1px solid var(--border2); border-radius: var(--radius);
+  background: var(--bg3); color: var(--text2); font-size: 11px; text-align: center;
+  line-height: 1.4;
+}
+
+/* ── 3-Column Comparison ── */
+.dqd-cols { display: flex; gap: 8px; flex-wrap: wrap; }
+.dqd-col {
+  flex: 1; min-width: 90px; border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden;
+}
+.dqd-col-head {
+  padding: 6px 8px; font-size: 11px; font-weight: 700; text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.dqd-col-body {
+  padding: 8px; font-size: 11px; color: var(--text2); line-height: 1.6; background: var(--bg3);
+}
+.dqd-col.dqd-col-active { border-width: 2px; }
+
+/* ── Playbook phases (PAD) ── */
+.dqd-playbook { display: flex; align-items: flex-start; gap: 4px; flex-wrap: wrap; }
+.dqd-phase-col {
+  flex: 1; min-width: 100px; border: 1px solid var(--border2); border-radius: var(--radius);
+  overflow: hidden;
+}
+.dqd-phase-head {
+  background: var(--purple-dim); color: var(--purple); font-size: 10px; font-weight: 700;
+  padding: 5px 8px; text-align: center; border-bottom: 1px solid var(--border2);
+}
+.dqd-phase-lane {
+  background: var(--bg4); font-size: 10px; color: var(--text3); padding: 3px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.dqd-activity {
+  font-size: 10px; color: var(--text2); padding: 4px 8px; border-bottom: 1px solid var(--border);
+}
+.dqd-phase-arrow { color: var(--text3); font-size: 18px; padding-top: 30px; }
+
+/* ── Hub & Spokes (Customer Central) ── */
+.dqd-hub-layout { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.dqd-hub {
+  width: 90px; height: 90px; border-radius: 50%; border: 2px solid var(--teal);
+  background: var(--teal-dim); color: var(--teal); font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  flex-shrink: 0; line-height: 1.3;
+}
+.dqd-spokes { display: flex; flex-direction: column; gap: 5px; }
+.dqd-spoke {
+  padding: 5px 10px; background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 99px; font-size: 11px; color: var(--text2); line-height: 1.3;
+}
+
+/* ── Stacked Blocks (Knowledge) ── */
+.dqd-blocks { display: flex; flex-direction: column; gap: 0; }
+.dqd-block {
+  padding: 10px 14px; border: 1px solid var(--border); border-radius: 0;
+  font-size: 12px; line-height: 1.5; color: var(--text2);
+}
+.dqd-blocks .dqd-block:first-child { border-radius: var(--radius) var(--radius) 0 0; }
+.dqd-blocks .dqd-block:last-child  { border-radius: 0 0 var(--radius) var(--radius); }
+.dqd-block-arrow {
+  text-align: center; font-size: 16px; color: var(--text3); line-height: 1;
+  margin: -1px 0; z-index: 1; position: relative;
+  background: var(--bg3); padding: 2px 0; border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border); width: 40px; align-self: center;
+}
 
 /* ══════════════════════════════════════════════
    MOCK TESTS — styles
