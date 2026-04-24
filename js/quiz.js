@@ -13,7 +13,7 @@ function renderQuizSetup() {
     document.getElementById('quiz-area').innerHTML = `<div class="card" style="text-align:center;padding:32px">
       <div style="font-size:32px;margin-bottom:12px">🎯</div>
       <div style="font-size:16px;font-weight:500;margin-bottom:8px">${lang==='en'?'Select a block above to start':'Seleziona un blocco per iniziare'}</div>
-      <div style="font-size:13px;color:var(--text2)">${lang==='en'?'120 questions total · 40 per block · No time limit':'120 domande totali · 40 per blocco · Nessun limite di tempo'}</div>
+      <div style="font-size:13px;color:var(--text2)">${lang==='en'?'126 questions total · 42 per block · No time limit':'126 domande totali · 42 per blocco · Nessun limite di tempo'}</div>
     </div>`;
     return;
   }

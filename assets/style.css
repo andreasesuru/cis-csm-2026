@@ -1,3 +1,43 @@
+/* ══════════════════════════════════════════════════════════════
+   CIS-CSM 2026 — style.css
+   Table of Contents
+   ──────────────────────────────────────────────────────────────
+    1.  Design Tokens (:root)                          ~  1
+    2.  Layout                                         ~ 37
+    3.  Sidebar                                        ~ 40
+    4.  Main Content                                   ~118
+    5.  Welcome Page                                   ~122
+    6.  Header Bar                                     ~175
+    7.  Cards                                          ~181
+    8.  Theory View                                    ~188
+    9.  Quiz View                                      ~250
+   10.  Flashcard View                                 ~327
+   11.  Dashboard View                                 ~356
+   12.  Home View                                      ~374
+   13.  Reset Confirm Modal                            ~417
+   14.  What's New Modal                               ~462
+   15.  Responsive (base)                              ~517
+   16.  Theory Sidebar TOC                             ~538
+   17.  Topic Pills Nav                                ~551
+   18.  Domain Hero                                    ~559
+   19.  Topic Content Styles                           ~570
+   20.  Scenario Box                                   ~589
+   21.  PDI Exercise                                   ~602
+   22.  Mistake Box                                    ~617
+   23.  Mini Quiz in Theory                            ~623
+   24.  Topic Footer Nav                               ~644
+   25.  Quiz Pill                                      ~648
+   26.  TOC Quiz Entry                                 ~653
+   27.  Domain Quiz Diagrams                           ~657
+   28.  Mock Test — Selection Grid                     ~846
+   29.  Mock Test — Header Bar                         ~898
+   30.  Mock Test — Question Dots                      ~924
+   31.  Mock Test — Options & Controls                 ~952
+   32.  Mock Test — Review Section                     ~993
+   33.  Mock Test — Start Modal                        ~1020
+   34.  Responsive (mock)                              ~1052
+   ══════════════════════════════════════════════════════════════ */
+
 :root {
   --bg: #0d1117;
   --bg2: #161b22;

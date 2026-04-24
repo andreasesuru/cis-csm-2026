@@ -1,6 +1,6 @@
 # CIS-CSM 2026 Study App 🎯
 
-![Version](https://img.shields.io/badge/version-1.5.0-teal) ![Lang](https://img.shields.io/badge/lang-EN%20%2F%20IT-blue)
+![Version](https://img.shields.io/badge/version-1.6.0-teal) ![Lang](https://img.shields.io/badge/lang-EN%20%2F%20IT-blue)
 
 Interactive study app for the ServiceNow **Certified Implementation Specialist – Customer Service Management (CIS-CSM)** exam. Bilingual: **English 🇬🇧 / Italian 🇮🇹**.
 
@@ -30,7 +30,7 @@ To share with the team, enable **GitHub Pages** (`Settings → Pages → main br
 
 | Section | Description |
 |---------|-------------|
-| 📖 **Theory** | 5 domains with full explanations, diagrams, tables, callout boxes, inline knowledge checks, and a **15-question domain quiz** per domain with inline visual diagrams in explanations |
+| 📖 **Theory** | 5 domains · 33 topics · full explanations, diagrams, tables, callout boxes, inline knowledge checks, and a **domain quiz** per domain (15–18 questions) with inline visual diagrams in explanations |
 | 🎯 **Exam Quiz** | 120 questions across 3 blocks of 40 — immediate feedback + explanation per answer |
 | ⚡ **Flashcards** | 30 key concepts — flip, mark what you know, filter by domain |
 | 🏆 **Mock Tests** | 6 full-length exam simulations, 340 questions total — optional 90-min countdown, full review after each test |
@@ -111,7 +111,7 @@ cis-csm-2026/
 │   ├── theory-data.js            ← 5 domains, bilingual content
 │   ├── quiz-data.js              ← 120 questions + 3 blocks
 │   ├── flashcards-data.js        ← 30 flashcards
-│   ├── domain-quiz-data.js       ← 75 domain quiz questions (15 per domain)
+│   ├── domain-quiz-data.js       ← 82 domain quiz questions (15–18 per domain)
 │   ├── mock-data-part1.js        ← mock tests 1–3 (180 questions + answers + explanations)
 │   ├── mock-data-part2.js        ← mock tests 4–6 (160 questions + answers + explanations)
 │   └── mock-data.js              ← merges part1 + part2 into MOCK_TESTS global
@@ -152,6 +152,7 @@ Mock tests carry the most weight once you start them — they're the closest thi
 
 | Version | Changes |
 |---------|---------|
+| **v1.6.0** | 16 new quiz questions covering all 8 topics from v1.5.0 (SAIB, AWA Advanced, Outage Records, Action Status Indicators, Case Lines) · Exam quiz 120→126 questions (42/block) · Domain quizzes D1/D2/D3 now 17–18 questions · Codebase refactor: theory split into 5 domain files, release-notes.js extracted, CSS TOC added |
 | **v1.5.0** | Theory expanded from 25 to 33 topics — 8 new topics covering SAIB & Account Relationships (D1), AWA Advanced Matching Criteria & Agent Affinity (D2), PCSO & Outage Records (D2), Action Status Indicators & Case Lines (D3), Knowledge Product Entitlements (D5) |
 | **v1.4.0** | Domain quizzes (15 q's per domain, dot navigation, results screen, progress tracking) · 10 inline diagrams in quiz explanations · Custom reset confirmation modal with progress summary · GitHub link in sidebar · version badge |
 | **v1.3.0** | Fixed mock test answer errors (T2, T3, T4, T6) · Fixed theory mini-quiz click bug |
