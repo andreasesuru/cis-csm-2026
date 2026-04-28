@@ -1,6 +1,24 @@
 // Release notes — shown in the "What's New" modal on first open after each update
 // To add a new release: copy the latest block, bump the version key, update content.
 const RELEASE_NOTES = {
+  '1.6.1': {
+    en: {
+      tag: 'Bug fix',
+      title: "What's new in v1.6.1",
+      items: [
+        { icon: '🐛', text: '<strong>Fixed:</strong> Mock Test "Retake" button did nothing — null reference error in retakeMockTest() now resolved' },
+        { icon: '🔝', text: 'Page now scrolls to top when viewing results and when retaking (exam quiz + mock tests)' },
+      ]
+    },
+    it: {
+      tag: 'Bug fix',
+      title: 'Novità nella v1.6.1',
+      items: [
+        { icon: '🐛', text: '<strong>Fixato:</strong> Il bottone "Riprendi test" nei Mock Test non faceva nulla — errore null reference in retakeMockTest() risolto' },
+        { icon: '🔝', text: 'La pagina ora torna in cima quando si vedono i risultati e quando si riprende un test (quiz esame + mock test)' },
+      ]
+    }
+  },
   '1.6.0': {
     en: {
       tag: 'Quiz update',

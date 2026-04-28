@@ -143,6 +143,8 @@ function finishQuiz() {
 
   document.getElementById('quiz-result').style.display = 'block';
   document.getElementById('quiz-setup').style.display = 'none';
+  const _main = document.getElementById('main');
+  if (_main) _main.scrollTop = 0;
   document.getElementById('quiz-result').innerHTML = `
     <div class="result-screen">
       <div class="rs-score ${passed?'rs-pass':'rs-fail'}">${pct}%</div>
@@ -162,5 +164,7 @@ function finishQuiz() {
 function retakeQuiz() {
   document.getElementById('quiz-result').style.display = 'none';
   document.getElementById('quiz-setup').style.display = 'block';
+  const main = document.getElementById('main');
+  if (main) main.scrollTop = 0;
   startQuizBlock(quizState.block);
 }

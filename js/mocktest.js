@@ -466,20 +466,11 @@ function finishMockTest(timedOut = false) {
 function retakeMockTest() {
   const testIdx = mockState.testIdx;
   _stopMockTimer();
-  mockState = { testIdx, started: true, currentQ: 0, answers: {}, pending: [], useTimer: false, startTime: null, timedOut: false };
-  // Show modal again so user can pick timer
-  _pendingTestIdx = testIdx;
-  _modalUseTimer  = false;
-  const test   = MOCK_TESTS[testIdx];
-  const qCount = test.data.length;
-  document.getElementById('mm-title').textContent = test.title;
-  document.getElementById('mm-meta').textContent  = `${qCount} questions · Passing: 70%`;
-  document.getElementById('mm-notimer').classList.add('active');
-  document.getElementById('mm-timer').classList.remove('active');
-  mockState.started = false;
-  renderMockTestGrid();
-  // Re-open modal
-  setTimeout(() => showMockStartModal(testIdx), 50);
+  mockState = { testIdx, started: false, currentQ: 0, answers: {}, pending: [], useTimer: false, startTime: null, timedOut: false };
+  renderMockTestGrid(); // creates modal DOM elements
+  const main = document.getElementById('main');
+  if (main) main.scrollTop = 0;
+  setTimeout(() => showMockStartModal(testIdx), 50); // showMockStartModal handles all modal setup
 }
 
 function exitToMockGrid() {

@@ -1,5 +1,5 @@
 // ── App version (bump this on every release)
-const APP_VERSION = '1.6.0';
+const APP_VERSION = '1.6.1';
 
 // ── State
 let lang = 'en';
