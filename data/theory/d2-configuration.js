@@ -253,11 +253,11 @@ const THEORY_D2 = {
         title:{en:"CSM-ITSM Bridge",it:"Bridge CSM-ITSM"},
         tag:"amber",
         quiz:[
-          {q:"Which Business Rule automatically updates a CSM Case when the linked ITSM Incident is closed?",opts:["Close Case on Incident Resolve","Update Case on Incident Closure","Sync Case Status from Incident","Cascade Incident Closure"],ans:1,exp:"'Update Case on Incident Closure' is the specific Business Rule name that handles the reverse bridge flow. This exact name is tested on the exam."},
-          {q:"In the CSM-ITSM Bridge field mapping, which Case field maps to Incident 'Urgency'?",opts:["Category","Severity","Priority","Impact"],ans:2,exp:"Case Priority maps to Incident Urgency in the CSM-ITSM Bridge. This ensures the Incident is prioritized appropriately based on the customer case's priority level."}
+          {q:"In the CSM–Incident Management integration, what is synchronized back to the CSM case when the linked incident is updated or resolved?",opts:["Nothing — the case must be updated manually","The incident's state changes, comments, and resolution notes/code are copied into the case work notes","The incident deletes the case automatically","The customer's account balance"],ans:1,exp:"Per ServiceNow docs, the Incident Management integration copies incident updates to the case: work notes when the incident state changes, added comments, and — on resolve/close — the resolution notes and resolution code, all into the case work notes. A case can be linked to only one incident, and this is managed in CSM Configurable Workspace."},
+          {q:"When an agent creates an Incident from a CSM case, which case details are copied to the new incident?",opts:["Only the case number","Short description, description, and priority","The customer's password","Nothing is copied"],ans:1,exp:"Creating an incident from a case copies details such as the short description, description, and priority to the incident. A case can be associated with only one incident; once linked, the Create Incident action no longer appears on that case."}
         ],
         body:{
-          en:`<p class="theory-p">The CSM-ITSM Bridge connects customer-facing case management with internal IT incident management — one of the <strong>most frequently tested configuration topics</strong>.</p>
+          en:`<p class="theory-p">The CSM-ITSM Bridge (officially, <em>CSM integration with Incident Management</em>) connects customer-facing case management with internal IT incident management — one of the <strong>most frequently tested configuration topics</strong>.</p>
 <div class="diagram-wrap2">
 <svg viewBox="0 0 560 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px">
   <rect x="20" y="25" width="160" height="70" rx="8" fill="#0f6e56" stroke="#3fb950" stroke-width="2"/>
@@ -266,28 +266,28 @@ const THEORY_D2 = {
   <text x="100" y="82" text-anchor="middle" fill="#8b949e" font-size="10">Customer-facing</text>
   <path d="M188 60 Q240 20 292 60" fill="none" stroke="#d29922" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr1)"/>
   <text x="240" y="24" text-anchor="middle" fill="#d29922" font-size="11" font-weight="600">Create Incident →</text>
-  <text x="240" y="38" text-anchor="middle" fill="#8b949e" font-size="9">field mapping: Priority→Urgency</text>
+  <text x="240" y="38" text-anchor="middle" fill="#8b949e" font-size="9">copies: short desc · desc · priority</text>
   <rect x="296" y="25" width="244" height="70" rx="8" fill="#3b2e0e" stroke="#d29922" stroke-width="2"/>
   <text x="418" y="52" text-anchor="middle" fill="#f5d87a" font-size="13" font-weight="600">ITSM Incident</text>
   <text x="418" y="68" text-anchor="middle" fill="#e6edf3" font-size="11">State: In Progress</text>
   <text x="418" y="82" text-anchor="middle" fill="#8b949e" font-size="10">Internal IT resolution</text>
   <path d="M292 80 Q240 110 188 80" fill="none" stroke="#58a6ff" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr2)"/>
-  <text x="240" y="113" text-anchor="middle" fill="#58a6ff" font-size="10">BR: "Update Case on Incident Closure"</text>
+  <text x="240" y="113" text-anchor="middle" fill="#58a6ff" font-size="10">Incident updates → sync to Case work notes</text>
   <defs>
     <marker id="arr1" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#d29922"/></marker>
     <marker id="arr2" markerWidth="7" markerHeight="7" refX="1" refY="3.5" orient="auto"><path d="M7,0 L0,3.5 L7,7 Z" fill="#58a6ff"/></marker>
   </defs>
 </svg>
-<div class="diagram-caption">Bidirectional bridge · Case→Incident (manual) · Incident closure→Case update (automatic BR)</div>
+<div class="diagram-caption">Case→Incident (manual, one incident per case) · Incident updates &amp; resolution sync back to the case work notes</div>
 </div>
 <ul class="theory-ul">
   <li><strong>Enable:</strong> CSM Properties → toggle "Create Incident from Case".</li>
-  <li><strong>Field Mapping:</strong> Case Priority → Incident Urgency · Short Description → Short Description.</li>
-  <li><strong>Linked Incident:</strong> Visible in Case "Related Records" tab.</li>
-  <li><strong>Reverse flow:</strong> Business Rule <code>"Update Case on Incident Closure"</code> auto-updates Case state. <em>Know this exact BR name.</em></li>
+  <li><strong>Copied to Incident:</strong> Short Description, Description, and Priority carry forward from the case.</li>
+  <li><strong>Linked Incident:</strong> Visible in Case "Related Records" tab — a case links to <strong>one</strong> incident.</li>
+  <li><strong>Sync back:</strong> When the incident's state changes or it's resolved/closed, its comments and resolution notes/code are copied into the case work notes.</li>
 </ul>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam question:</strong> "Which Business Rule handles the Case update when the linked Incident closes?" → <strong>"Update Case on Incident Closure"</strong></div></div>`,
-          it:`<p class="theory-p">Il Bridge CSM-ITSM collega la gestione case verso i clienti con la gestione incident IT interna — uno degli argomenti di configurazione <strong>più testati</strong>.</p>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam note:</strong> Don't memorize a specific "business-rule name" here — the integration <strong>synchronizes incident work notes / resolution notes back to the case</strong>, and a case can be linked to <strong>exactly one</strong> incident.</div></div>`,
+          it:`<p class="theory-p">Il Bridge CSM-ITSM (ufficialmente <em>CSM integration with Incident Management</em>) collega la gestione case verso i clienti con la gestione incident IT interna — uno degli argomenti di configurazione <strong>più testati</strong>.</p>
 <div class="diagram-wrap2">
 <svg viewBox="0 0 560 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px">
   <rect x="20" y="25" width="160" height="70" rx="8" fill="#0f6e56" stroke="#3fb950" stroke-width="2"/>
@@ -296,38 +296,38 @@ const THEORY_D2 = {
   <text x="100" y="82" text-anchor="middle" fill="#8b949e" font-size="10">Lato cliente</text>
   <path d="M188 60 Q240 20 292 60" fill="none" stroke="#d29922" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr1it)"/>
   <text x="240" y="24" text-anchor="middle" fill="#d29922" font-size="11" font-weight="600">Crea Incident →</text>
-  <text x="240" y="38" text-anchor="middle" fill="#8b949e" font-size="9">mapping: Priority→Urgency</text>
+  <text x="240" y="38" text-anchor="middle" fill="#8b949e" font-size="9">copia: short desc · desc · priority</text>
   <rect x="296" y="25" width="244" height="70" rx="8" fill="#3b2e0e" stroke="#d29922" stroke-width="2"/>
   <text x="418" y="52" text-anchor="middle" fill="#f5d87a" font-size="13" font-weight="600">ITSM Incident</text>
   <text x="418" y="68" text-anchor="middle" fill="#e6edf3" font-size="11">Stato: In Progress</text>
   <text x="418" y="82" text-anchor="middle" fill="#8b949e" font-size="10">Risoluzione IT interna</text>
   <path d="M292 80 Q240 110 188 80" fill="none" stroke="#58a6ff" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr2it)"/>
-  <text x="240" y="113" text-anchor="middle" fill="#58a6ff" font-size="10">BR: "Update Case on Incident Closure"</text>
+  <text x="240" y="113" text-anchor="middle" fill="#58a6ff" font-size="10">Incident updates → sync to Case work notes</text>
   <defs>
     <marker id="arr1it" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#d29922"/></marker>
     <marker id="arr2it" markerWidth="7" markerHeight="7" refX="1" refY="3.5" orient="auto"><path d="M7,0 L0,3.5 L7,7 Z" fill="#58a6ff"/></marker>
   </defs>
 </svg>
-<div class="diagram-caption">Bridge bidirezionale · Case→Incident (manuale) · Chiusura Incident→aggiornamento Case (BR automatica)</div>
+<div class="diagram-caption">Case→Incident (manuale, un incident per case) · Gli aggiornamenti e la risoluzione dell'Incident si sincronizzano nelle work notes del Case</div>
 </div>
 <ul class="theory-ul">
   <li><strong>Abilitare:</strong> CSM Properties → toggle "Create Incident from Case".</li>
-  <li><strong>Field Mapping:</strong> Case Priority → Incident Urgency · Short Description → Short Description.</li>
-  <li><strong>Incident collegato:</strong> Visibile nella tab "Related Records" del Case.</li>
-  <li><strong>Flusso inverso:</strong> Business Rule <code>"Update Case on Incident Closure"</code> aggiorna automaticamente lo stato del Case. <em>Conosci questo nome esatto.</em></li>
+  <li><strong>Copiato sull'Incident:</strong> Short Description, Description e Priority vengono riportati dal case.</li>
+  <li><strong>Incident collegato:</strong> Visibile nella tab "Related Records" del Case — un case si collega a <strong>un solo</strong> incident.</li>
+  <li><strong>Sincronizzazione:</strong> Quando l'Incident cambia stato o viene risolto/chiuso, i suoi commenti e le resolution notes/code vengono copiati nelle work notes del Case.</li>
 </ul>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Domanda esame:</strong> "Quale Business Rule aggiorna il Case quando l'Incident collegato viene chiuso?" → <strong>"Update Case on Incident Closure"</strong></div></div>`
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Nota esame:</strong> Non memorizzare un "nome di business rule" specifico — l'integrazione <strong>sincronizza le work notes / resolution notes dell'Incident nel Case</strong>, e un case può essere collegato a <strong>un solo</strong> incident.</div></div>`
         }
       },
       {
-        title:{en:"Agent Workspace & Special Handling Notes",it:"Agent Workspace e Special Handling Notes"},
+        title:{en:"CSM Configurable Workspace & Special Handling Notes",it:"CSM Configurable Workspace e Special Handling Notes"},
         tag:"teal",
         quiz:[
-          {q:"Which tool configures the CSM Agent Workspace layouts and side panels?",opts:["Classic UI form editor","Workflow Editor","UI Builder","Studio IDE"],ans:2,exp:"UI Builder configures the Configurable Workspace — layouts, workspace views, side panels, and list customization. This is the Next Experience approach, separate from Service Portal."},
-          {q:"Agents see customer-specific instructions automatically when opening a case for a VIP. What feature is this?",opts:["Case Digest","Playbook Notes","Special Handling Notes","Priority Banner"],ans:2,exp:"Special Handling Notes are configured per Account or Contact and appear automatically in the Agent Workspace. Example: 'VIP — respond within 30 min. Escalate to Sr. Manager after 2 hours.'"}
+          {q:"Which tool configures the CSM Configurable Workspace layouts and side panels?",opts:["Classic UI form editor","Workflow Editor","UI Builder","Studio IDE"],ans:2,exp:"UI Builder configures the CSM Configurable Workspace — layouts, workspace views, side panels, and list customization. This is the Next Experience approach that replaced the deprecated Agent Workspace, and is separate from Service Portal."},
+          {q:"Agents see customer-specific instructions automatically when opening a case for a VIP. What feature is this?",opts:["Case Digest","Playbook Notes","Special Handling Notes","Priority Banner"],ans:2,exp:"Special Handling Notes are configured per Account or Contact and appear automatically in the CSM Configurable Workspace. Example: 'VIP — respond within 30 min. Escalate to Sr. Manager after 2 hours.'"}
         ],
         body:{
-          en:`<p class="theory-p">The Agent Workspace is the primary interface for CSM agents. The exam tests <strong>configuration knowledge</strong>, not just usage.</p>
+          en:`<p class="theory-p">The <strong>CSM Configurable Workspace</strong> (built with UI Builder on the Next Experience UI) is the current primary interface for CSM agents — it replaced the now-deprecated Agent Workspace. The exam tests <strong>configuration knowledge</strong>, not just usage.</p>
 <table class="info-table2"><thead><tr><th>Component</th><th>Purpose</th><th>Configured In</th></tr></thead><tbody>
 <tr><td><strong>Configurable Workspace</strong></td><td>Main agent interface with panels, lists, forms</td><td>UI Builder</td></tr>
 <tr><td><strong>Contextual Side Panels</strong></td><td>Auto-show Account, Contact, IBI info for open case</td><td>UI Builder</td></tr>
@@ -336,16 +336,16 @@ const THEORY_D2 = {
 <tr><td><strong>Knowledge Panel</strong></td><td>Surfaces KB articles and similar past cases</td><td>Workspace config</td></tr>
 <tr><td><strong>Activity Stream</strong></td><td>Full chronological case history</td><td>Auto (all interactions)</td></tr>
 </tbody></table>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Two frameworks — don't confuse them:</strong><br>🔵 <strong>Agent Workspace</strong> (Next Experience) → configured via <strong>UI Builder</strong><br>🟢 <strong>Customer Service Portal</strong> (Service Portal / AngularJS) → configured via <strong>Service Portal admin</strong></div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Two frameworks — don't confuse them:</strong><br>🔵 <strong>CSM Configurable Workspace</strong> (Next Experience — the current agent UI; Agent Workspace is the deprecated legacy) → configured via <strong>UI Builder</strong><br>🟢 <strong>Customer Service Portal</strong> (Service Portal / AngularJS) → configured via <strong>Service Portal admin</strong></div></div>
 <div class="scenario-box" id="sc-ws-1">
   <div class="scenario-hdr" onclick="toggleScenario('sc-ws-1')"><span>⭐</span><span class="sc-badge">Scenario</span><span class="sc-title">VIP customer instructions not visible to agents</span><span class="sc-arr">▶</span></div>
   <div class="scenario-body">
     <p>A manager complains that agents are not following special procedures for a key enterprise customer. The procedures exist in a document but agents rarely read it.</p>
     <div class="scenario-q">❓ What CSM feature solves this permanently?</div>
-    <div class="scenario-a">✅ <strong>Special Handling Notes on the Account record.</strong> Configure the notes with the VIP procedures. They will automatically appear in the Agent Workspace every time an agent opens a case for that customer — impossible to miss, no document needed.</div>
+    <div class="scenario-a">✅ <strong>Special Handling Notes on the Account record.</strong> Configure the notes with the VIP procedures. They will automatically appear in the CSM Configurable Workspace every time an agent opens a case for that customer — impossible to miss, no document needed.</div>
   </div>
 </div>`,
-          it:`<p class="theory-p">L'Agent Workspace è l'interfaccia principale per gli agenti CSM. L'esame testa la <strong>conoscenza della configurazione</strong>, non solo l'utilizzo.</p>
+          it:`<p class="theory-p">Il <strong>CSM Configurable Workspace</strong> (costruito con UI Builder sulla UI Next Experience) è l'interfaccia principale attuale per gli agenti CSM — ha sostituito l'ormai deprecato Agent Workspace. L'esame testa la <strong>conoscenza della configurazione</strong>, non solo l'utilizzo.</p>
 <table class="info-table2"><thead><tr><th>Componente</th><th>Scopo</th><th>Configurato in</th></tr></thead><tbody>
 <tr><td><strong>Configurable Workspace</strong></td><td>Interfaccia principale con pannelli, liste, form</td><td>UI Builder</td></tr>
 <tr><td><strong>Pannelli laterali contestuali</strong></td><td>Mostra Account, Contact, IBI per il case aperto</td><td>UI Builder</td></tr>
@@ -354,13 +354,13 @@ const THEORY_D2 = {
 <tr><td><strong>Knowledge Panel</strong></td><td>Articoli KB e case simili del passato</td><td>Config workspace</td></tr>
 <tr><td><strong>Activity Stream</strong></td><td>Cronologia completa del case</td><td>Auto (tutte le interazioni)</td></tr>
 </tbody></table>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Due framework — non confonderli:</strong><br>🔵 <strong>Agent Workspace</strong> (Next Experience) → configurato via <strong>UI Builder</strong><br>🟢 <strong>Customer Service Portal</strong> (Service Portal / AngularJS) → configurato via <strong>admin Service Portal</strong></div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Due framework — non confonderli:</strong><br>🔵 <strong>CSM Configurable Workspace</strong> (Next Experience — la UI agente attuale; Agent Workspace è il legacy deprecato) → configurato via <strong>UI Builder</strong><br>🟢 <strong>Customer Service Portal</strong> (Service Portal / AngularJS) → configurato via <strong>admin Service Portal</strong></div></div>
 <div class="scenario-box" id="sc-ws-1-it">
   <div class="scenario-hdr" onclick="toggleScenario('sc-ws-1-it')"><span>⭐</span><span class="sc-badge">Scenario</span><span class="sc-title">Istruzioni per cliente VIP non visibili agli agenti</span><span class="sc-arr">▶</span></div>
   <div class="scenario-body">
     <p>Un manager si lamenta che gli agenti non seguono le procedure speciali per un cliente enterprise chiave. Le procedure esistono in un documento, ma gli agenti raramente lo leggono.</p>
     <div class="scenario-q">❓ Quale funzionalità CSM risolve questo definitivamente?</div>
-    <div class="scenario-a">✅ <strong>Special Handling Notes nel record Account.</strong> Configura le note con le procedure VIP. Appariranno automaticamente nell'Agent Workspace ogni volta che un agente apre un case di quel cliente — impossibile ignorarle, nessun documento necessario.</div>
+    <div class="scenario-a">✅ <strong>Special Handling Notes nel record Account.</strong> Configura le note con le procedure VIP. Appariranno automaticamente nel CSM Configurable Workspace ogni volta che un agente apre un case di quel cliente — impossibile ignorarle, nessun documento necessario.</div>
   </div>
 </div>`
         }
@@ -606,18 +606,18 @@ P4 Basso: Risposta 8h / Risoluzione 5 giorni</div></div>
         tag:"teal",
         quiz:[
           {q:"Which ServiceNow product does PCSO integrate with to detect infrastructure events before customers report them?",opts:["IT Service Management (ITSM)","IT Operations Management (ITOM)","Security Operations (SecOps)","Governance Risk and Compliance (GRC)"],ans:1,exp:"PCSO integrates CSM with IT Operations Management (ITOM) — specifically ITOM Health and Event Management. ITOM detects infrastructure anomalies (alerts, incidents), and PCSO translates these into customer-facing Outage Records and Proactive Cases before customers call in."},
-          {q:"In the PCSO flow, what record type is created in CSM to represent a service disruption affecting multiple customers?",opts:["Major Case","Problem Record","Outage Record (sn_customerservice_outage)","Service Request"],ans:2,exp:"An Outage Record (table: sn_customerservice_outage) represents the service disruption in CSM. It links the ITOM Alert/Incident to affected Accounts and drives the creation of Proactive Cases. A Major Case is reactive (starts from an incoming case), not proactive."},
+          {q:"In the PCSO flow, what record type is created in CSM to represent a service disruption affecting multiple customers?",opts:["Major Case","Problem Record","Outage record","Service Request"],ans:2,exp:"An Outage record represents the service disruption in CSM. It links the ITOM Alert/Incident to the affected Accounts/install base and drives the creation of Proactive Cases. A Major Case is reactive (starts from an incoming case), not proactive."},
           {q:"How does a Proactive Case differ from a standard customer case in CSM?",opts:["It has a higher SLA priority","It is created by the system before the customer contacts support, triggered by an ITOM event","It skips the Assignment Rules engine","It is only visible to supervisors, not agents"],ans:1,exp:"A Proactive Case is created automatically by the PCSO process — before the customer contacts support. It is triggered by an ITOM event propagating through to an Outage Record. This means agents can begin working on the issue and notify customers proactively, reducing inbound call volume."}
         ],
         body:{
           en:`<p class="theory-p"><strong>Proactive Customer Service Operations (PCSO)</strong> is the integration layer between CSM and IT Operations Management (ITOM). The goal is to detect infrastructure problems <em>before</em> customers call about them — shifting support from reactive to proactive.</p>
-<div class="callout info"><span class="ci">💡</span><div><strong>Required plugins for PCSO:</strong> <code>com.sn_cs_sm</code> (CSM core) + ITOM Health / Event Management plugin. Both must be active. PCSO does not work with ITSM alone — it specifically needs ITOM's event pipeline.</div></div>
+<div class="callout info"><span class="ci">💡</span><div><strong>Required plugins for PCSO:</strong> <code>com.snc.proactive_cs_ops</code> (Proactive Customer Service Operations) + an ITOM Health / Event Management plugin. Both must be active. PCSO does not work with ITSM alone — it specifically needs ITOM's event pipeline.</div></div>
 <p class="theory-p"><strong>The PCSO Flow</strong> — memorise this end-to-end sequence. The exam tests individual steps and their order.</p>
 <table class="info-table2"><thead><tr><th>Step</th><th>System</th><th>What Happens</th></tr></thead><tbody>
 <tr><td><strong>1</strong></td><td>ITOM Event Management</td><td>Infrastructure anomaly detected (e.g., database down, API timeout, network latency spike)</td></tr>
 <tr><td><strong>2</strong></td><td>ITOM</td><td>Event → Alert created → propagates to an ITOM Incident</td></tr>
 <tr><td><strong>3</strong></td><td>PCSO Engine</td><td>Impact analysis: which Accounts and Install Base Items are affected by this Alert/Incident?</td></tr>
-<tr><td><strong>4</strong></td><td>CSM</td><td><strong>Outage Record</strong> created (table: <code>sn_customerservice_outage</code>) to represent the service disruption</td></tr>
+<tr><td><strong>4</strong></td><td>CSM</td><td>An <strong>Outage</strong> record is created (via PCSO / Event Management) to represent the service disruption affecting the install base</td></tr>
 <tr><td><strong>5</strong></td><td>CSM</td><td><strong>Proactive Cases</strong> automatically generated — one per impacted customer/account</td></tr>
 <tr><td><strong>6</strong></td><td>CSM / Notify</td><td>Targeted Communications sent to impacted customers <em>before</em> they contact support</td></tr>
 </tbody></table>
@@ -633,7 +633,7 @@ P4 Basso: Risposta 8h / Risoluzione 5 giorni</div></div>
 <table class="info-table2"><thead><tr><th>Concept</th><th>Outage Record</th><th>Major Case</th></tr></thead><tbody>
 <tr><td><strong>Origin</strong></td><td>ITOM Alert/Incident (infrastructure)</td><td>Customer-reported high-impact case</td></tr>
 <tr><td><strong>Direction</strong></td><td>Proactive — system detects before customer reports</td><td>Reactive — customer contacts support first</td></tr>
-<tr><td><strong>Table</strong></td><td><code>sn_customerservice_outage</code></td><td><code>sn_si_task</code> (Major Case table)</td></tr>
+<tr><td><strong>Record</strong></td><td>Outage record (PCSO / Event Management)</td><td>A case promoted to Major Case via Major Issue Management (on <code>sn_customerservice_case</code>)</td></tr>
 <tr><td><strong>States</strong></td><td>Open → In Progress → Resolved</td><td>Open → In Progress → Resolved → Closed</td></tr>
 <tr><td><strong>Creates</strong></td><td>Proactive Cases for impacted customers</td><td>Child Cases (related tasks) for investigation</td></tr>
 </tbody></table>
@@ -646,13 +646,13 @@ P4 Basso: Risposta 8h / Risoluzione 5 giorni</div></div>
   <li>Missing the step where PCSO evaluates Install Base Items to determine which accounts are impacted</li>
 </ul></div>`,
           it:`<p class="theory-p"><strong>Proactive Customer Service Operations (PCSO)</strong> è il livello di integrazione tra CSM e IT Operations Management (ITOM). L'obiettivo è rilevare problemi infrastrutturali <em>prima</em> che i clienti li segnalino — trasformando il supporto da reattivo a proattivo.</p>
-<div class="callout info"><span class="ci">💡</span><div><strong>Plugin richiesti per PCSO:</strong> <code>com.sn_cs_sm</code> (CSM core) + plugin ITOM Health / Event Management. Entrambi devono essere attivi. PCSO non funziona con ITSM da solo — richiede specificamente la pipeline degli eventi di ITOM.</div></div>
+<div class="callout info"><span class="ci">💡</span><div><strong>Plugin richiesti per PCSO:</strong> <code>com.snc.proactive_cs_ops</code> (Proactive Customer Service Operations) + un plugin ITOM Health / Event Management. Entrambi devono essere attivi. PCSO non funziona con ITSM da solo — richiede specificamente la pipeline degli eventi di ITOM.</div></div>
 <p class="theory-p"><strong>Il Flusso PCSO</strong> — memorizza questa sequenza end-to-end. L'esame testa i singoli step e il loro ordine.</p>
 <table class="info-table2"><thead><tr><th>Step</th><th>Sistema</th><th>Cosa succede</th></tr></thead><tbody>
 <tr><td><strong>1</strong></td><td>ITOM Event Management</td><td>Anomalia infrastrutturale rilevata (es. database down, timeout API, spike latenza rete)</td></tr>
 <tr><td><strong>2</strong></td><td>ITOM</td><td>Evento → Alert creato → si propaga a un Incident ITOM</td></tr>
 <tr><td><strong>3</strong></td><td>PCSO Engine</td><td>Analisi impatto: quali Account e Install Base Item sono impattati da questo Alert/Incident?</td></tr>
-<tr><td><strong>4</strong></td><td>CSM</td><td><strong>Outage Record</strong> creato (tabella: <code>sn_customerservice_outage</code>) per rappresentare l'interruzione del servizio</td></tr>
+<tr><td><strong>4</strong></td><td>CSM</td><td>Viene creato un record <strong>Outage</strong> (tramite PCSO / Event Management) per rappresentare l'interruzione del servizio che impatta l'install base</td></tr>
 <tr><td><strong>5</strong></td><td>CSM</td><td><strong>Proactive Case</strong> generati automaticamente — uno per cliente/account impattato</td></tr>
 <tr><td><strong>6</strong></td><td>CSM / Notify</td><td>Targeted Communications inviate ai clienti impattati <em>prima</em> che contattino il supporto</td></tr>
 </tbody></table>
@@ -668,7 +668,7 @@ P4 Basso: Risposta 8h / Risoluzione 5 giorni</div></div>
 <table class="info-table2"><thead><tr><th>Concetto</th><th>Outage Record</th><th>Major Case</th></tr></thead><tbody>
 <tr><td><strong>Origine</strong></td><td>Alert/Incident ITOM (infrastruttura)</td><td>Case ad alto impatto segnalato dal cliente</td></tr>
 <tr><td><strong>Direzione</strong></td><td>Proattivo — il sistema rileva prima che il cliente segnali</td><td>Reattivo — il cliente contatta il supporto per primo</td></tr>
-<tr><td><strong>Tabella</strong></td><td><code>sn_customerservice_outage</code></td><td><code>sn_si_task</code> (tabella Major Case)</td></tr>
+<tr><td><strong>Record</strong></td><td>Record Outage (PCSO / Event Management)</td><td>Un case promosso a Major Case via Major Issue Management (su <code>sn_customerservice_case</code>)</td></tr>
 <tr><td><strong>Stati</strong></td><td>Open → In Progress → Resolved</td><td>Open → In Progress → Resolved → Closed</td></tr>
 <tr><td><strong>Crea</strong></td><td>Proactive Case per i clienti impattati</td><td>Child Case (task correlati) per l'indagine</td></tr>
 </tbody></table>

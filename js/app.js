@@ -1,5 +1,5 @@
 // ── App version (bump this on every release)
-const APP_VERSION = '1.6.1';
+const APP_VERSION = '1.7.0';
 
 // ── State
 let lang = 'en';
@@ -97,7 +97,7 @@ function t(key) {
     'Study Domains':       { it: 'Domini di studio' },
     'Select a domain from the sidebar to begin.': { it: 'Seleziona un dominio dalla barra laterale.' },
     'Exam Quiz':           { it: 'Quiz d\'esame' },
-    'Blocks of 40 questions · English · Answer and read explanation immediately': { it: 'Blocchi da 40 domande · Inglese · Rispondi e leggi subito la spiegazione' },
+    'Blocks of 42 questions · English · Answer and read explanation immediately': { it: 'Blocchi da 42 domande · Inglese · Rispondi e leggi subito la spiegazione' },
     'Flashcards':          { it: 'Flashcard' },
     'Click card to reveal answer · Mark what you know': { it: 'Clicca la card per vedere la risposta · Segna cosa conosci' },
     'My Progress':         { it: 'I miei progressi' },
@@ -111,7 +111,7 @@ function t(key) {
     'Study Theory':        { it: 'Studia la teoria' },
     '5 domains, full explanations with diagrams. Switch EN/IT.': { it: '5 domini, spiegazioni complete con diagrammi. Cambia EN/IT.' },
     'Take a Quiz':         { it: 'Fai un quiz' },
-    '120+ exam-style questions in blocks of 40. Full explanations.': { it: '120+ domande da esame in blocchi da 40. Spiegazioni complete.' },
+    '126 exam-style questions in blocks of 42. Full explanations.': { it: '126 domande da esame in blocchi da 42. Spiegazioni complete.' },
     'Quick concept review — flip cards, mark what you know.': { it: 'Ripasso rapido — gira le card, segna cosa conosci.' },
     'Track quiz scores, topics completed, and readiness level.': { it: 'Traccia punteggi, argomenti completati e livello di preparazione.' },
     'Mock Tests':           { it: 'Mock Test' },
@@ -129,8 +129,8 @@ function t(key) {
     '60 questions':        { it: '60 domande' },
     '90 minutes':          { it: '90 minuti' },
     '~70% to pass':        { it: '~70% per passare' },
-    '$315 fee':            { it: 'Costo $315' },
-    'Prereq: CSA':         { it: 'Prerequisito: CSA' },
+    '$450 fee':            { it: 'Costo $450' },
+    'CSA recommended':     { it: 'CSA consigliata' },
     'ServiceNow Certified Implementation Specialist · Customer Service Management': { it: 'ServiceNow Certified Implementation Specialist · Customer Service Management' },
     'About this app':      { it: 'Informazioni sull\'app' },
     'All':                 { it: 'Tutti' },
@@ -171,15 +171,17 @@ function applyLang() {
   set('home-title',         t('CIS-CSM 2026 Study Hub'));
   set('home-sub',           t('ServiceNow Certified Implementation Specialist · Customer Service Management'));
   set('domain-chart-label', t('Domain Weights'));
+  set('weight-note',        l ? 'Approximate study weights kept from the earlier blueprint — confirm the exact 2026 percentages on the official blueprint (ServiceNow University, KB0011529).' : 'Pesi di studio indicativi mantenuti dalla blueprint precedente — conferma le percentuali 2026 esatte sulla blueprint ufficiale (ServiceNow University, KB0011529).');
   set('badge-q',            t('60 questions'));
   set('badge-t',            t('90 minutes'));
   set('badge-p',            t('~70% to pass'));
-  set('badge-c',            t('$315 fee'));
-  set('badge-pre',          t('Prereq: CSA'));
+  set('badge-c',            t('$450 fee'));
+  set('badge-pre',          t('CSA recommended'));
+  set('exam-note',          l ? 'Delivered via Pearson VUE (booked through ServiceNow University). The passing score is not officially published — ~70% is a community estimate. CSA is recommended, not required.' : 'Erogato tramite Pearson VUE (prenotazione via ServiceNow University). Il punteggio minimo non è pubblicato ufficialmente — ~70% è una stima della community. La CSA è consigliata, non obbligatoria.');
   set('hc-t1',              t('Study Theory'));
   set('hc-d1',              t('5 domains, full explanations with diagrams. Switch EN/IT.'));
   set('hc-t2',              t('Take a Quiz'));
-  set('hc-d2',              t('120+ exam-style questions in blocks of 40. Full explanations.'));
+  set('hc-d2',              t('126 exam-style questions in blocks of 42. Full explanations.'));
   set('hc-t3',              t('Flashcards'));
   set('hc-d3',              t('Quick concept review — flip cards, mark what you know.'));
   set('hc-t4',              t('My Progress'));
@@ -192,7 +194,7 @@ function applyLang() {
   set('hc-a4',              t('→ View stats'));
   set('hc-a5',              t('→ Simulate exam'));
   // Welcome page
-  set('wl-tag',        'ServiceNow Cert · April 2026');
+  set('wl-tag',        'ServiceNow Cert · 2026');
   set('wl-sub',        l ? 'Study App' : 'App di Studio');
   set('wl-tagline',    l ? 'Certified Implementation Specialist · Customer Service Management'
                          : 'Certified Implementation Specialist · Customer Service Management');
@@ -205,9 +207,9 @@ function applyLang() {
        Quello che questa app <em>farà</em> è aiutarti ad arrivare preparato: teoria, quiz, flashcard e 6 mock test completi — tutti con spiegazioni. Considerala il tuo compagno di studio ideale: sempre disponibile, non ti giudica se sbagli la stessa domanda quattro volte, e non mangia le tue merendine.<br><br>
        Per i corsi e i lab ufficiali che fanno parte del percorso di certificazione, vai su <strong>ServiceNow Now Learning</strong> — il link è qui sotto. Usali entrambi. 👇`);
   set('wf-t1', l ? 'Theory'            : 'Teoria');
-  set('wf-d1', l ? ' · 5 domains, full explanations, diagrams + 15-question domain quiz per domain, bilingual EN/IT' : ' · 5 domini, spiegazioni complete, diagrammi + quiz da 15 domande per dominio, bilingue EN/IT');
+  set('wf-d1', l ? ' · 5 domains, full explanations, diagrams + 15–18-question domain quiz per domain, bilingual EN/IT' : ' · 5 domini, spiegazioni complete, diagrammi + quiz da 15–18 domande per dominio, bilingue EN/IT');
   set('wf-t2', l ? 'Exam Quiz'         : 'Quiz d\'esame');
-  set('wf-d2', l ? ' · 120 questions in 3 blocks of 40, immediate feedback'        : ' · 120 domande in 3 blocchi da 40, feedback immediato');
+  set('wf-d2', l ? ' · 126 questions in 3 blocks of 42, immediate feedback'        : ' · 126 domande in 3 blocchi da 42, feedback immediato');
   set('wf-t3', l ? 'Flashcards'        : 'Flashcard');
   set('wf-d3', l ? ' · 30 key concepts, flip & mark what you know'                 : ' · 30 concetti chiave, gira e segna cosa conosci');
   set('wf-t4', l ? 'Mock Tests'        : 'Mock Test');
@@ -223,7 +225,7 @@ function applyLang() {
   set('bc-mock',            t('PRACTICE'));
   set('bc-prog',            t('PROGRESS'));
   set('quiz-title',         t('Exam Quiz'));
-  set('quiz-sub',           t('Blocks of 40 questions · English · Answer and read explanation immediately'));
+  set('quiz-sub',           t('Blocks of 42 questions · English · Answer and read explanation immediately'));
   set('qs-select-label',    t('Select a question block:'));
   set('fc-title',           t('Flashcards'));
   set('fc-sub',             t('Click card to reveal answer · Mark what you know'));

@@ -16,7 +16,7 @@
   <div class="sidebar-logo">
     <div class="logo-tag">ServiceNow Cert</div>
     <h1>CIS-CSM</h1>
-    <div class="logo-sub">2026 Study App · <span style="font-family:var(--font-mono);color:var(--teal)">v1.6.1</span></div>
+    <div class="logo-sub">2026 Study App · <span style="font-family:var(--font-mono);color:var(--teal)">v1.7.0</span></div>
   </div>
 
   <div class="lang-toggle">
@@ -96,7 +96,7 @@
 <!-- WELCOME VIEW -->
 <div class="view active" id="view-welcome" style="max-width:680px">
   <div class="welcome-logo">
-    <div class="wl-tag" id="wl-tag">ServiceNow Cert · April 2026</div>
+    <div class="wl-tag" id="wl-tag">ServiceNow Cert · 2026</div>
     <h1 class="wl-title">CIS-CSM<br><span id="wl-sub">Study App</span></h1>
     <p class="wl-tagline" id="wl-tagline">Certified Implementation Specialist · Customer Service Management</p>
   </div>
@@ -111,7 +111,7 @@
 
   <div class="welcome-features">
     <div class="wf-item"><span class="wf-icon">📖</span><div><strong id="wf-t1">Theory</strong><span id="wf-d1"> · 5 domains, full explanations, diagrams, bilingual EN/IT</span></div></div>
-    <div class="wf-item"><span class="wf-icon">🎯</span><div><strong id="wf-t2">Exam Quiz</strong><span id="wf-d2"> · 120 questions in 3 blocks of 40, immediate feedback</span></div></div>
+    <div class="wf-item"><span class="wf-icon">🎯</span><div><strong id="wf-t2">Exam Quiz</strong><span id="wf-d2"> · 126 questions in 3 blocks of 42, immediate feedback</span></div></div>
     <div class="wf-item"><span class="wf-icon">⚡</span><div><strong id="wf-t3">Flashcards</strong><span id="wf-d3"> · 30 key concepts, flip & mark what you know</span></div></div>
     <div class="wf-item"><span class="wf-icon">🏆</span><div><strong id="wf-t4">Mock Tests</strong><span id="wf-d4"> · 6 full exams, 340 questions, optional 90-min timer</span></div></div>
     <div class="wf-item"><span class="wf-icon">📊</span><div><strong id="wf-t5">Progress</strong><span id="wf-d5"> · Exam readiness score, all stats saved locally</span></div></div>
@@ -140,9 +140,10 @@
       <span class="exam-badge" id="badge-q">60 questions</span>
       <span class="exam-badge" id="badge-t">90 minutes</span>
       <span class="exam-badge" id="badge-p">~70% to pass</span>
-      <span class="exam-badge" id="badge-c">$315 fee</span>
-      <span class="exam-badge" id="badge-pre">Prereq: CSA</span>
+      <span class="exam-badge" id="badge-c">$450 fee</span>
+      <span class="exam-badge" id="badge-pre">CSA recommended</span>
     </div>
+    <p id="exam-note" style="font-size:11px;color:var(--text3);margin:2px 0 14px;line-height:1.5"></p>
     <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:16px">
       <div style="font-size:12px;color:var(--text3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px" id="domain-chart-label">Domain Weights</div>
       <div class="weight-chart">
@@ -152,6 +153,7 @@
         <div class="wc-bar-wrap"><div class="wc-bar" style="height:50%;background:var(--amber)"></div><div class="wc-pct">15%</div><div class="wc-label">WS &amp; Analytics</div></div>
         <div class="wc-bar-wrap"><div class="wc-bar" style="height:33%;background:var(--red)"></div><div class="wc-pct">10%</div><div class="wc-label">Knowledge</div></div>
       </div>
+      <p id="weight-note" style="font-size:11px;color:var(--text3);margin:10px 0 0;line-height:1.5"></p>
     </div>
   </div>
   <div class="home-cards">
@@ -164,7 +166,7 @@
     <div class="home-card" onclick="showView('quiz')">
       <div class="hc-icon">🎯</div>
       <div class="hc-title" id="hc-t2">Take a Quiz</div>
-      <div class="hc-desc" id="hc-d2">120+ exam-style questions in blocks of 40. Full explanations.</div>
+      <div class="hc-desc" id="hc-d2">126 exam-style questions in blocks of 42. Full explanations.</div>
       <div class="hc-arrow" id="hc-a2">→ Test yourself</div>
     </div>
     <div class="home-card" onclick="showView('flashcards')">

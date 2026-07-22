@@ -1,10 +1,10 @@
 # CIS-CSM 2026 Study App 🎯
 
-![Version](https://img.shields.io/badge/version-1.6.1-teal) ![Lang](https://img.shields.io/badge/lang-EN%20%2F%20IT-blue)
+![Version](https://img.shields.io/badge/version-1.7.0-teal) ![Lang](https://img.shields.io/badge/lang-EN%20%2F%20IT-blue)
 
 Interactive study app for the ServiceNow **Certified Implementation Specialist – Customer Service Management (CIS-CSM)** exam. Bilingual: **English 🇬🇧 / Italian 🇮🇹**.
 
-> Updated: **April 2026** — aligned with the official Now Learning path and 2026 exam blueprint.
+> Updated: **July 2026** — realigned to the current ServiceNow 2026 certification: Pearson VUE delivery, CSM Configurable Workspace, corrected data-model table names, Now Create phases (Initiate → Plan → Execute → Deliver → Close), and Now Assist / Agentic AI.
 
 ---
 
@@ -66,7 +66,9 @@ Results feed directly into the **Exam Readiness** score on the Progress page.
 | D2 — CSM Configuration | 30% | System setup, Assignment Rules, AWA, Case Types, Service Definitions, Agent Workspace, Playbooks, CSM-ITSM Bridge |
 | D3 — Case Management | 20% | Case lifecycle, Major Issue Management, Communication channels, Escalation, SLAs |
 | D4 — Workspace, Portals & Analytics | 15% | CSP, Service Catalog, Performance Analytics, KPIs, Reporting |
-| D5 — Knowledge Management & Best Practices | 10% | KCS, article lifecycle, Now Create Methodology, 2026 AI features |
+| D5 — Knowledge Management & Best Practices | 10% | KCS, Article Quality Index (AQI), article lifecycle, Now Create Methodology, 2026 AI features |
+
+> ⚠️ **Weights note:** these percentages are kept from the earlier published blueprint. The official 2026 blueprint (ServiceNow University, KB0011529) uses the same five domain areas but re-weights them — Configuration is the largest area and Workspace/Portals the smallest. Confirm exact percentages on the live blueprint before relying on them.
 
 ---
 
@@ -76,14 +78,17 @@ Results feed directly into the **Exam Readiness** score on the Progress page.
 |--------|------|
 | Questions | 60 multiple choice |
 | Duration | 90 minutes |
-| Passing Score | ~70% |
-| Cost | $315 |
-| Prerequisite | CSA certification |
-| Delivery | Kryterion (online proctored or test center) |
+| Passing Score | Not officially published (~70% is a community estimate) |
+| Cost | **$450** (retake $225) |
+| Prerequisite | CSA **recommended, not required** (verify CIS-DF prereq status on the current blueprint) |
+| Delivery | **Pearson VUE** — online proctored or test center, booked through **ServiceNow University** (Webassessor/Kryterion retired Nov 2025) |
+| Eligibility | Unlock by completing the required course on ServiceNow University (voucher model retired); once registered you have 90 days to sit the exam |
 
 ---
 
-## 📋 Official Learning Path (Now Learning)
+## 📋 Official Learning Path (ServiceNow University)
+
+> The old **Now Learning** portal is now **ServiceNow University**, and the **Now Create** methodology portal was replaced by the **Best Practices** hub (Dec 2025). The methodology and content live on — only the portal branding changed.
 
 **Required:**
 - ServiceNow Administration Fundamentals
@@ -152,6 +157,7 @@ Mock tests carry the most weight once you start them — they're the closest thi
 
 | Version | Changes |
 |---------|---------|
+| **v1.7.0** | **2026 exam realignment.** Delivery Kryterion→**Pearson VUE** · fee $315→**$450** · CSA now *recommended, not required* · corrected table names (**csm_consumer**, **sn_install_base_item**, **sn_install_base_sold_product**, **sn_case_line**) · removed non-existent `glide.cs.enable.b2b` (B2B/B2C via Guided Setup + plugins) · **Agent Workspace → CSM Configurable Workspace** throughout · Now Create phases fixed to **Initiate → Plan → Execute → Deliver → Close** · Action Status Indicators fixed (**red = blocked, blue = needs attention**) · auto-close corrected (reminder 5d, close 10d, off by default) · KCS = *Knowledge-Centered Service* · added **Article Quality Index (AQI)** · expanded **Now Assist for CSM** + **Agentic AI** · CSM-ITSM reframed as work-note sync (one incident per case) · quiz answers aligned; welcome copy 126/42 |
 | **v1.6.1** | Fixed: Mock Test "Retake" button broken (null reference error in retakeMockTest before DOM creation) · Scroll-to-top added on results and retake for exam quiz and mock tests |
 | **v1.6.0** | 16 new quiz questions covering all 8 topics from v1.5.0 (SAIB, AWA Advanced, Outage Records, Action Status Indicators, Case Lines) · Exam quiz 120→126 questions (42/block) · Domain quizzes D1/D2/D3 now 17–18 questions · Codebase refactor: theory split into 5 domain files, release-notes.js extracted, CSS TOC added |
 | **v1.5.0** | Theory expanded from 25 to 33 topics — 8 new topics covering SAIB & Account Relationships (D1), AWA Advanced Matching Criteria & Agent Affinity (D2), PCSO & Outage Records (D2), Action Status Indicators & Case Lines (D3), Knowledge Product Entitlements (D5) |
@@ -164,6 +170,6 @@ Mock tests carry the most weight once you start them — they're the closest thi
 
 ---
 
-*Built for the April 2026 CIS-CSM exam cycle. Based on official ServiceNow Now Learning path documentation and real-style exam questions.*
+*Built for the 2026 CIS-CSM exam cycle and refreshed in July 2026 against current ServiceNow documentation (Zurich / Australia release family). Based on official ServiceNow documentation and real-style exam questions.*
 
 Built by **Andrea Sesuru** 🚀 · [github.com/andreasesuru/cis-csm-2026](https://github.com/andreasesuru/cis-csm-2026)

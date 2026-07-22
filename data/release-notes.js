@@ -1,6 +1,32 @@
 // Release notes — shown in the "What's New" modal on first open after each update
 // To add a new release: copy the latest block, bump the version key, update content.
 const RELEASE_NOTES = {
+  '1.7.0': {
+    en: {
+      tag: '2026 alignment',
+      title: "What's new in v1.7.0",
+      items: [
+        { icon: '🎓', text: '<strong>Exam facts updated:</strong> delivery is now <strong>Pearson VUE</strong> (via ServiceNow University), fee <strong>$450</strong>, CSA <strong>recommended, not required</strong>' },
+        { icon: '🗄️', text: '<strong>Corrected table names:</strong> Consumer = <code>csm_consumer</code>, Install Base = <code>sn_install_base_item</code>, Sold Product = <code>sn_install_base_sold_product</code>, Case Line = <code>sn_case_line</code>' },
+        { icon: '🧭', text: 'Removed the non-existent <code>glide.cs.enable.b2b</code> property — B2B/B2C is set up via CSM Guided Setup + plugins' },
+        { icon: '🖥️', text: '<strong>Agent Workspace → CSM Configurable Workspace</strong> throughout (Agent Workspace is deprecated)' },
+        { icon: '📋', text: 'Now Create phases fixed to <strong>Initiate → Plan → Execute → Deliver → Close</strong>; Action Status Indicators fixed (<strong>red = blocked, blue = needs attention</strong>); auto-close corrected (reminder 5d, close 10d, off by default)' },
+        { icon: '🤖', text: 'KCS = <strong>Knowledge-Centered Service</strong>; added <strong>Article Quality Index (AQI)</strong>; expanded <strong>Now Assist for CSM</strong> + <strong>Agentic AI</strong>' },
+      ]
+    },
+    it: {
+      tag: 'Allineamento 2026',
+      title: 'Novità nella v1.7.0',
+      items: [
+        { icon: '🎓', text: '<strong>Dati esame aggiornati:</strong> erogazione ora <strong>Pearson VUE</strong> (via ServiceNow University), costo <strong>$450</strong>, CSA <strong>consigliata, non obbligatoria</strong>' },
+        { icon: '🗄️', text: '<strong>Nomi tabella corretti:</strong> Consumer = <code>csm_consumer</code>, Install Base = <code>sn_install_base_item</code>, Sold Product = <code>sn_install_base_sold_product</code>, Case Line = <code>sn_case_line</code>' },
+        { icon: '🧭', text: 'Rimossa la proprietà inesistente <code>glide.cs.enable.b2b</code> — il B2B/B2C si configura via CSM Guided Setup + plugin' },
+        { icon: '🖥️', text: '<strong>Agent Workspace → CSM Configurable Workspace</strong> ovunque (Agent Workspace è deprecato)' },
+        { icon: '📋', text: 'Fasi Now Create corrette in <strong>Initiate → Plan → Execute → Deliver → Close</strong>; Action Status Indicators corretti (<strong>rosso = bloccato, blu = da revisionare</strong>); auto-close corretto (reminder 5gg, chiusura 10gg, disattivo di default)' },
+        { icon: '🤖', text: 'KCS = <strong>Knowledge-Centered Service</strong>; aggiunto <strong>Article Quality Index (AQI)</strong>; ampliati <strong>Now Assist for CSM</strong> + <strong>Agentic AI</strong>' },
+      ]
+    }
+  },
   '1.6.1': {
     en: {
       tag: 'Bug fix',

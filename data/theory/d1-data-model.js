@@ -9,7 +9,7 @@ const THEORY_D1 = {
         tag:"blue",
         quiz:[
           {q:"A utility company supports millions of individual residential customers with no company affiliation. Which CSM model?",opts:["B2B with Account and Contact","B2C with Consumer as primary entity","B2B with Consumer linked to Accounts","B2C with Contact as standalone"],ans:1,exp:"B2C model with Consumer entity. Individual residential customers have no company (Account) affiliation. Consumer is standalone — perfect for B2C. B2B Account/Contact is for company customers."},
-          {q:"Which system property controls B2B vs B2C mode in ServiceNow CSM?",opts:["csm.model.selector","glide.cs.enable.b2b","cs.b2c.mode","customer_service.model"],ans:1,exp:"The property 'glide.cs.enable.b2b' under Customer Service > Administration > Properties controls B2B/B2C mode. When true, B2B (Account/Contact) is active."},
+          {q:"How is the B2C (Consumer) data model enabled in ServiceNow CSM?",opts:["By setting a single glide.cs.enable.b2b system property to false","By activating the customer data model plugins and configuring them through CSM Guided Setup (B2C uses the standalone Consumer entity + Consumer Service Portal)","By deleting every Account record in the instance","By buying a separate B2C-only license"],ans:1,exp:"There is no single boolean property that toggles B2B/B2C. The customer data model depends on which plugins are activated (Customer Service Base for Account/Contact; Consumer Service Management / Customer Data Models for B2B2C for Consumers) and how it is configured via Customer Service > Administration > Guided Setup. B2B uses Account + Contact; B2C uses the standalone Consumer entity surfaced through the Consumer Service Portal."},
           {q:"In B2B mode, which field is REQUIRED on a Contact record?",opts:["Consumer","Install Base Item","Account","Contract"],ans:2,exp:"Every Contact must be linked to an Account in B2B mode. The Account field is required — it represents the company the person works for."}
         ],
         body:{
@@ -38,19 +38,19 @@ const THEORY_D1 = {
 </svg>
 <div class="diagram-caption">B2B: Account + Contact hierarchy · B2C: standalone Consumer entity</div>
 </div>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam Trap:</strong> <code>glide.cs.enable.b2b</code> toggles the model. Contact MUST have a parent Account. Consumer has NO Account. They are never interchangeable.</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam Trap:</strong> There is no single "B2B on/off" property — the customer data model is driven by which plugins are activated and how it's configured through <strong>CSM Guided Setup</strong>. What you must know: a Contact MUST have a parent Account (B2B); a Consumer has NO Account (B2C). They are never interchangeable.</div></div>
 <div class="scenario-box" id="sc-b2b-1">
   <div class="scenario-hdr" onclick="toggleScenario('sc-b2b-1')"><span>🏭</span><span class="sc-badge">Scenario</span><span class="sc-title">Telecom with 3M individual subscribers</span><span class="sc-arr">▶</span></div>
   <div class="scenario-body">
     <p>A major telecom company wants to implement CSM. Customers are individual people paying for mobile plans — no corporate accounts involved.</p>
     <div class="scenario-q">❓ Which data model, and why?</div>
-    <div class="scenario-a">✅ <strong>B2C with Consumer entity.</strong> Each subscriber = one Consumer record (standalone, no Account). Cases link directly to Consumer. Set <code>glide.cs.enable.b2b = false</code>. Using B2B here would force creating dummy Accounts for every individual, which makes no business sense.</div>
+    <div class="scenario-a">✅ <strong>B2C with Consumer entity.</strong> Each subscriber = one Consumer record (standalone, no Account). Cases link directly to Consumer. Enable the Consumer (B2C) data model via CSM Guided Setup and the Consumer Service Management plugin, and expose the Consumer Service Portal. Using B2B here would force creating dummy Accounts for every individual, which makes no business sense.</div>
   </div>
 </div>
 <div class="mistake-box"><div class="mb-title">⚠️ Common Mistakes</div><ul>
   <li>Using Contact for B2C customers — Contact REQUIRES an Account parent, so it's always B2B</li>
   <li>Thinking Consumer and Contact are interchangeable — they are completely different tables</li>
-  <li>Forgetting to set the system property before configuring entities</li>
+  <li>Assuming a single system property toggles B2B/B2C — the model is set up through plugin activation and CSM Guided Setup</li>
 </ul></div>`,
           it:`<p class="theory-p">ServiceNow CSM supporta due modelli di business fondamentalmente diversi. Questo è il <strong>concetto più testato nel Dominio 1</strong>.</p>
 <div class="callout info"><span class="ci">ℹ️</span><div><strong>B2B (Business-to-Business):</strong> I clienti sono aziende. Entità principali: <strong>Account</strong> (azienda) + <strong>Contact</strong> (persona nell'azienda). Ogni Case si collega a un Account. Tipico per software enterprise, manifattura, servizi finanziari.</div></div>
@@ -77,19 +77,19 @@ const THEORY_D1 = {
 </svg>
 <div class="diagram-caption">B2B: gerarchia Account + Contact · B2C: entità Consumer standalone</div>
 </div>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Trappola esame:</strong> <code>glide.cs.enable.b2b</code> controlla il modello. Contact DEVE avere un Account padre. Consumer NON ha Account. Non sono mai intercambiabili.</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Trappola esame:</strong> Non esiste una singola proprietà "B2B on/off" — il data model cliente dipende da quali plugin sono attivati e da come viene configurato tramite <strong>CSM Guided Setup</strong>. Da ricordare: un Contact DEVE avere un Account padre (B2B); un Consumer NON ha Account (B2C). Non sono mai intercambiabili.</div></div>
 <div class="scenario-box" id="sc-b2b-1-it">
   <div class="scenario-hdr" onclick="toggleScenario('sc-b2b-1-it')"><span>🏭</span><span class="sc-badge">Scenario</span><span class="sc-title">Telco con 3 milioni di abbonati individuali</span><span class="sc-arr">▶</span></div>
   <div class="scenario-body">
     <p>Un'importante azienda telecom vuole implementare CSM. I clienti sono persone fisiche con piani mobili — nessun account aziendale coinvolto.</p>
     <div class="scenario-q">❓ Quale data model e perché?</div>
-    <div class="scenario-a">✅ <strong>B2C con entità Consumer.</strong> Ogni abbonato = un record Consumer standalone (senza Account). I Case si collegano direttamente al Consumer. Imposta <code>glide.cs.enable.b2b = false</code>. Usare B2B richiederebbe Account fittizi per ogni individuo — privo di senso commerciale.</div>
+    <div class="scenario-a">✅ <strong>B2C con entità Consumer.</strong> Ogni abbonato = un record Consumer standalone (senza Account). I Case si collegano direttamente al Consumer. Abilita il data model Consumer (B2C) tramite CSM Guided Setup e il plugin Consumer Service Management, ed esponi il Consumer Service Portal. Usare B2B richiederebbe Account fittizi per ogni individuo — privo di senso commerciale.</div>
   </div>
 </div>
 <div class="mistake-box"><div class="mb-title">⚠️ Errori Comuni</div><ul>
   <li>Usare Contact per clienti B2C — Contact richiede un Account padre, è sempre B2B</li>
   <li>Pensare che Consumer e Contact siano intercambiabili — sono tabelle completamente diverse</li>
-  <li>Dimenticare di impostare la proprietà di sistema prima di configurare le entità</li>
+  <li>Pensare che una singola proprietà di sistema attivi B2B/B2C — il modello si configura tramite attivazione plugin e CSM Guided Setup</li>
 </ul></div>`
         }
       },
@@ -105,7 +105,7 @@ const THEORY_D1 = {
 <table class="info-table2"><thead><tr><th>Entity</th><th>Table</th><th>Parent Required</th><th>Primary Use</th></tr></thead><tbody>
 <tr><td><strong>Account</strong></td><td>customer_account</td><td>None (or parent Account)</td><td>Customer company, contracts, hierarchy root</td></tr>
 <tr><td><strong>Contact</strong></td><td>customer_contact</td><td>Account (mandatory)</td><td>Individual person at the company</td></tr>
-<tr><td><strong>Consumer</strong></td><td>customer_service_consumer</td><td>None (standalone)</td><td>End-user in B2C model</td></tr>
+<tr><td><strong>Consumer</strong></td><td>csm_consumer</td><td>None (standalone)</td><td>End-user in B2C model</td></tr>
 </tbody></table>
 <p class="theory-p"><strong>Account Hierarchy</strong> supports unlimited levels — parent Account can have child Accounts. Cases and entitlements can be associated at any level.</p>
 <div class="diagram-wrap2">
@@ -142,7 +142,7 @@ const THEORY_D1 = {
 <table class="info-table2"><thead><tr><th>Entità</th><th>Tabella</th><th>Padre richiesto</th><th>Uso principale</th></tr></thead><tbody>
 <tr><td><strong>Account</strong></td><td>customer_account</td><td>Nessuno (o Account padre)</td><td>Azienda cliente, contratti, radice gerarchia</td></tr>
 <tr><td><strong>Contact</strong></td><td>customer_contact</td><td>Account (obbligatorio)</td><td>Persona fisica nell'azienda</td></tr>
-<tr><td><strong>Consumer</strong></td><td>customer_service_consumer</td><td>Nessuno (standalone)</td><td>Utente finale nel modello B2C</td></tr>
+<tr><td><strong>Consumer</strong></td><td>csm_consumer</td><td>Nessuno (standalone)</td><td>Utente finale nel modello B2C</td></tr>
 </tbody></table>
 <p class="theory-p"><strong>Gerarchia Account</strong> supporta livelli illimitati — un Account padre può avere Account figli. Case ed entitlement si associano a qualsiasi livello della gerarchia.</p>
 <div class="diagram-wrap2">
@@ -216,7 +216,7 @@ const THEORY_D1 = {
   <li><strong>Install Base Item (IBI):</strong> A specific instance deployed for a specific Account. Has serial number, location, status.</li>
   <li><strong>CMDB CI:</strong> Optional link — an IBI can be linked to a CMDB CI for ITSM alignment, but they are separate entities with separate tables.</li>
 </ul>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam Tip:</strong> "Which table tracks deployed customer products in CSM?" → <code>install_base_item</code>. CMDB CIs (<code>cmdb_ci</code>) belong to ITSM. They can be linked but are NOT the same.</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam Tip:</strong> "Which table tracks deployed customer products in CSM?" → <code>sn_install_base_item</code>. CMDB CIs (<code>cmdb_ci</code>) belong to ITSM. They can be linked but are NOT the same.</div></div>
 <div class="scenario-box" id="sc-ib-1">
   <div class="scenario-hdr" onclick="toggleScenario('sc-ib-1')"><span>💼</span><span class="sc-badge">Scenario</span><span class="sc-title">SaaS vendor tracking software versions per customer</span><span class="sc-arr">▶</span></div>
   <div class="scenario-body">
@@ -256,7 +256,7 @@ const THEORY_D1 = {
   <li><strong>Install Base Item (IBI):</strong> Istanza specifica distribuita per un Account specifico. Ha numero seriale, posizione, stato.</li>
   <li><strong>CMDB CI:</strong> Link opzionale — un IBI può essere collegato a un CI CMDB per allineamento ITSM, ma sono entità separate con tabelle separate.</li>
 </ul>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Esame:</strong> "Quale tabella traccia i prodotti distribuiti del cliente in CSM?" → <code>install_base_item</code>. I CMDB CI (<code>cmdb_ci</code>) appartengono a ITSM — possono essere collegati ma NON sono la stessa cosa.</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Esame:</strong> "Quale tabella traccia i prodotti distribuiti del cliente in CSM?" → <code>sn_install_base_item</code>. I CMDB CI (<code>cmdb_ci</code>) appartengono a ITSM — possono essere collegati ma NON sono la stessa cosa.</div></div>
 <div class="scenario-box" id="sc-ib-1-it">
   <div class="scenario-hdr" onclick="toggleScenario('sc-ib-1-it')"><span>💼</span><span class="sc-badge">Scenario</span><span class="sc-title">Vendor SaaS: traccia versioni software per cliente</span><span class="sc-arr">▶</span></div>
   <div class="scenario-body">
@@ -271,13 +271,13 @@ const THEORY_D1 = {
         title:{en:"Contracts & Entitlements",it:"Contratti ed Entitlement"},
         tag:"amber",
         quiz:[
-          {q:"A customer's support package allows 100 cases per year. Which entitlement type models this?",opts:["Service Entitlement","Time-Based Entitlement","Allocated Entitlement","Product Entitlement"],ans:2,exp:"Allocated Entitlement limits the NUMBER of cases. 100 cases per year is the classic allocated entitlement scenario. Time-Based limits by hours, not case count."},
+          {q:"In CSM, what does an Entitlement record primarily define for a customer?",opts:["The physical location of the customer's hardware","The type/level of support and the supported communication channels the customer is entitled to","The customer's billing address","Which agent is assigned to the account"],ans:1,exp:"Per ServiceNow docs, an entitlement defines the type of support a customer receives and the supported communication channels, and is associated with a product, asset, account, or contract. It lives in the service_entitlement table with states Draft, Active, Expired, Canceled, and Suspended. ServiceNow does not ship fixed built-in 'entitlement types' — coverage comes from the association plus the supported channels and schedule."},
           {q:"What happens when a case is opened for a customer with NO valid entitlement?",opts:["Case creation is automatically blocked","A warning is shown but agents CAN still create the case","The case is auto-escalated","A temporary entitlement is created"],ans:1,exp:"Entitlement Verification shows a warning indicator but does NOT block case creation. Agents can proceed at their discretion."},
           {q:"One Contract can have how many Entitlements?",opts:["Only one","Maximum two","As many as needed","One per product only"],ans:2,exp:"One Contract can have multiple Entitlements of different types. For example, one Contract can include both an Allocated Entitlement (case limit) and a Service Entitlement (SLA tier). When the Contract expires, all linked Entitlements expire."}
         ],
         body:{
-          en:`<p class="theory-p">Entitlements define a customer's <em>right</em> to receive support. This is <strong>heavily tested</strong> — know all 4 types and their exam keywords.</p>
-<table class="info-table2"><thead><tr><th>Type</th><th>Limits By</th><th>Example</th><th>Exam Keyword</th></tr></thead><tbody>
+          en:`<p class="theory-p">An <strong>Entitlement</strong> defines the type/level of support a customer is entitled to and the <strong>supported communication channels</strong>. It is associated with a product, asset, account, or contract and is stored in the <code>service_entitlement</code> table (states: Draft, Active, Expired, Canceled, Suspended). ServiceNow doesn't ship fixed built-in "types" — coverage comes from the association plus channels and schedule. Coverage is commonly scoped in these practical ways:</p>
+<table class="info-table2"><thead><tr><th>Scoping pattern</th><th>Limits By</th><th>Example</th><th>Typical wording</th></tr></thead><tbody>
 <tr><td><strong>Allocated</strong></td><td>Number of cases</td><td>50 cases per quarter</td><td>"limited number", "case count"</td></tr>
 <tr><td><strong>Time-Based</strong></td><td>Support hours</td><td>20 hours/month</td><td>"support hours", "time window"</td></tr>
 <tr><td><strong>Product</strong></td><td>Product purchased</td><td>Buying Prod X → 24/7 support</td><td>"product purchase", "license"</td></tr>
@@ -320,8 +320,8 @@ const THEORY_D1 = {
     <em>No Allocated Entitlement needed</em> — "unlimited cases" means no cap.</div>
   </div>
 </div>`,
-          it:`<p class="theory-p">Gli Entitlement definiscono il <em>diritto</em> di un cliente a ricevere supporto. Argomento <strong>molto testato</strong> — conosci tutti e 4 i tipi e le loro parole chiave d'esame.</p>
-<table class="info-table2"><thead><tr><th>Tipo</th><th>Limita per</th><th>Esempio</th><th>Parola chiave esame</th></tr></thead><tbody>
+          it:`<p class="theory-p">Un <strong>Entitlement</strong> definisce il tipo/livello di supporto a cui un cliente ha diritto e i <strong>canali di comunicazione supportati</strong>. È associato a un prodotto, asset, account o contratto ed è memorizzato nella tabella <code>service_entitlement</code> (stati: Draft, Active, Expired, Canceled, Suspended). ServiceNow non fornisce "tipi" predefiniti — la copertura deriva dall'associazione più canali e schedule. La copertura viene comunemente definita in questi modi pratici:</p>
+<table class="info-table2"><thead><tr><th>Pattern di scoping</th><th>Limita per</th><th>Esempio</th><th>Formulazione tipica</th></tr></thead><tbody>
 <tr><td><strong>Allocated</strong></td><td>Numero di case</td><td>50 case a trimestre</td><td>"numero di case", "limite case"</td></tr>
 <tr><td><strong>Time-Based</strong></td><td>Ore di supporto</td><td>20 ore al mese</td><td>"ore di supporto", "finestra temporale"</td></tr>
 <tr><td><strong>Product</strong></td><td>Prodotto acquistato</td><td>Acquisto Prod X → supporto 24/7</td><td>"acquisto prodotto", "licenza"</td></tr>
@@ -405,12 +405,12 @@ const THEORY_D1 = {
         tag:"blue",
         quiz:[
           {q:"A CSM agent notices a case has no Account field. The customer is linked as a 'Consumer'. What does this confirm?",opts:["The system is misconfigured","The case was created in B2B mode","The instance is running in B2C mode","The Contact account was accidentally deleted"],ans:2,exp:"In B2C mode, cases link to Consumer records (no Account required). The absence of an Account field confirms B2C configuration. Consumer is the standalone customer entity for individual end-users."},
-          {q:"Which table stores Consumer records in ServiceNow CSM?",opts:["sys_user","customer_contact","customer_account","customer_service_consumer"],ans:3,exp:"Consumer records are stored in the 'customer_service_consumer' table. Contact records are in 'customer_contact'. These are completely separate tables with different fields and relationships."}
+          {q:"Which table stores Consumer records in ServiceNow CSM?",opts:["sys_user","customer_contact","customer_account","csm_consumer"],ans:3,exp:"Consumer records are stored in the 'csm_consumer' table. Contact records are in 'customer_contact'. These are completely separate tables with different fields and relationships."}
         ],
         body:{
           en:`<p class="theory-p">Contact and Consumer are two distinct customer entity types. Mixing them up is the most common Domain 1 exam mistake.</p>
 <table class="info-table2"><thead><tr><th>Attribute</th><th>Contact (B2B)</th><th>Consumer (B2C)</th></tr></thead><tbody>
-<tr><td>Table</td><td>customer_contact</td><td>customer_service_consumer</td></tr>
+<tr><td>Table</td><td>customer_contact</td><td>csm_consumer</td></tr>
 <tr><td>Extends</td><td>sys_user</td><td>standalone</td></tr>
 <tr><td>Account required?</td><td>✅ Yes — mandatory</td><td>❌ No — none</td></tr>
 <tr><td>Portal visibility</td><td>Account-level (sees company cases)</td><td>Individual only</td></tr>
@@ -429,7 +429,7 @@ const THEORY_D1 = {
 </div>`,
           it:`<p class="theory-p">Contact e Consumer sono due entità clienti distinte. Confonderle è l'errore più comune nel Dominio 1.</p>
 <table class="info-table2"><thead><tr><th>Attributo</th><th>Contact (B2B)</th><th>Consumer (B2C)</th></tr></thead><tbody>
-<tr><td>Tabella</td><td>customer_contact</td><td>customer_service_consumer</td></tr>
+<tr><td>Tabella</td><td>customer_contact</td><td>csm_consumer</td></tr>
 <tr><td>Account richiesto?</td><td>✅ Sì — obbligatorio</td><td>❌ No</td></tr>
 <tr><td>Visibilità portale</td><td>A livello Account (vede case aziendali)</td><td>Solo propri case</td></tr>
 <tr><td>Ruoli nell'org</td><td>✅ (Technical Lead, Billing…)</td><td>❌</td></tr>
@@ -448,11 +448,11 @@ const THEORY_D1 = {
         ],
         body:{
           en:`<p class="theory-p">Beyond the basic Account/Contact model, Domain 1 includes several advanced data structures that represent real-world customer asset and relationship complexity. These are high-frequency exam topics.</p>
-<div class="callout info"><span class="ci">💡</span><div><strong>Install Base Item (IBI)</strong> lives in the <code>install_base_item</code> table and represents a specific product that has been deployed at a customer site. Unlike a Product Model (which is just a generic definition) or a Sold Product (which is a purchase record), the IBI captures the live, operational instance — including serial number, status, location, and the owning Account.</div></div>
+<div class="callout info"><span class="ci">💡</span><div><strong>Install Base Item (IBI)</strong> lives in the <code>sn_install_base_item</code> table and represents a specific product that has been deployed at a customer site. Unlike a Product Model (which is just a generic definition) or a Sold Product (which is a purchase record), the IBI captures the live, operational instance — including serial number, status, location, and the owning Account.</div></div>
 <table class="info-table2"><thead><tr><th>Entity</th><th>Table</th><th>What it represents</th><th>Exam distinction</th></tr></thead><tbody>
 <tr><td><strong>Product Model</strong></td><td>cmdb_model</td><td>Generic product definition (e.g., "Cisco Router 3000")</td><td>No customer, no serial — just a template</td></tr>
-<tr><td><strong>Sold Product</strong></td><td>sold_product</td><td>Purchase record linking Product Model + Account</td><td>Records the sale event, not the deployment</td></tr>
-<tr><td><strong>Install Base Item</strong></td><td>install_base_item</td><td>Specific deployed instance of a product at a customer</td><td>Operational record; has serial, location, status</td></tr>
+<tr><td><strong>Sold Product</strong></td><td>sn_install_base_sold_product</td><td>Purchase record linking Product Model + Account</td><td>Records the sale event, not the deployment</td></tr>
+<tr><td><strong>Install Base Item</strong></td><td>sn_install_base_item</td><td>Specific deployed instance of a product at a customer</td><td>Operational record; has serial, location, status</td></tr>
 <tr><td><strong>CMDB CI</strong></td><td>cmdb_ci (and subtypes)</td><td>Infrastructure configuration item managed by ITSM/CMDB</td><td>IT-centric; linked to IBI via SAIB — not the same record</td></tr>
 </tbody></table>
 <p class="theory-p"><strong>Parent Install Base Item</strong> is a reference field on the IBI record that points to another IBI. This creates a hierarchical tree of deployed assets. A classic example: a physical server chassis is the parent IBI, and its installed RAM modules, storage drives, and network cards are child IBIs. This hierarchy helps agents understand the full configuration of what a customer has deployed without leaving the CSM context.</p>
@@ -480,11 +480,11 @@ const THEORY_D1 = {
   <li>Creating duplicate Contact records instead of using multi-account contact associations</li>
 </ul></div>`,
           it:`<p class="theory-p">Al di là del modello base Account/Contact, il Dominio 1 include strutture dati avanzate che rappresentano la complessità reale degli asset cliente. Questi sono argomenti ad alta frequenza d'esame.</p>
-<div class="callout info"><span class="ci">💡</span><div><strong>Install Base Item (IBI)</strong> risiede nella tabella <code>install_base_item</code> e rappresenta un prodotto specifico deployato presso un cliente. A differenza del Product Model (solo una definizione) o del Sold Product (un record d'acquisto), l'IBI cattura l'istanza operativa live — incluso numero seriale, stato, posizione e Account proprietario.</div></div>
+<div class="callout info"><span class="ci">💡</span><div><strong>Install Base Item (IBI)</strong> risiede nella tabella <code>sn_install_base_item</code> e rappresenta un prodotto specifico deployato presso un cliente. A differenza del Product Model (solo una definizione) o del Sold Product (un record d'acquisto), l'IBI cattura l'istanza operativa live — incluso numero seriale, stato, posizione e Account proprietario.</div></div>
 <table class="info-table2"><thead><tr><th>Entità</th><th>Tabella</th><th>Cosa rappresenta</th><th>Distinzione esame</th></tr></thead><tbody>
 <tr><td><strong>Product Model</strong></td><td>cmdb_model</td><td>Definizione generica di prodotto</td><td>Nessun cliente, nessun seriale — solo un template</td></tr>
-<tr><td><strong>Sold Product</strong></td><td>sold_product</td><td>Record d'acquisto: Product Model + Account</td><td>Registra la vendita, non il deployment</td></tr>
-<tr><td><strong>Install Base Item</strong></td><td>install_base_item</td><td>Istanza specifica deployata presso un cliente</td><td>Record operativo; ha seriale, posizione, stato</td></tr>
+<tr><td><strong>Sold Product</strong></td><td>sn_install_base_sold_product</td><td>Record d'acquisto: Product Model + Account</td><td>Registra la vendita, non il deployment</td></tr>
+<tr><td><strong>Install Base Item</strong></td><td>sn_install_base_item</td><td>Istanza specifica deployata presso un cliente</td><td>Record operativo; ha seriale, posizione, stato</td></tr>
 <tr><td><strong>CMDB CI</strong></td><td>cmdb_ci</td><td>Configuration Item gestito da ITSM/CMDB</td><td>IT-centrico; collegato all'IBI via SAIB</td></tr>
 </tbody></table>
 <div class="callout success"><span class="ci">✅</span><div><strong>Service-Aware Install Base (SAIB)</strong> collega un IBI a un CI del CMDB. Senza SAIB, il mondo degli asset cliente (CSM) e quello infrastrutturale (CMDB) sono separati. Con SAIB, quando un cliente apre un case su un dispositivo, l'agente vede il CI CMDB collegato — relazioni, cronologia change e stato — direttamente da CSM.</div></div>

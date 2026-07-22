@@ -8,18 +8,18 @@ const THEORY_D4 = {
         title:{en:"Customer Service Portal & Communities",it:"Customer Service Portal e Communities"},
         tag:"amber",
         quiz:[
-          {q:"The Customer Service Portal (CSP) is built on which framework?",opts:["Next Experience (Polaris)","UI Builder","Service Portal (AngularJS)","Classic GlideRecord UI"],ans:2,exp:"The CSP is built on Service Portal (AngularJS). The Agent Workspace uses Next Experience. These are entirely separate frameworks — do not confuse them on the exam."},
+          {q:"The Customer Service Portal (CSP) is built on which framework?",opts:["Next Experience (Polaris)","UI Builder","Service Portal (AngularJS)","Classic GlideRecord UI"],ans:2,exp:"The CSP is built on Service Portal (AngularJS). The CSM Configurable Workspace (the agent UI) uses Next Experience / UI Builder. These are entirely separate frameworks — do not confuse them on the exam."},
           {q:"Which CSM feature (part of the Professional Suite) lets customers help each other, reducing support case volume?",opts:["Knowledge Base articles","Customer Service Portal","Communities","Service Catalog"],ans:2,exp:"Communities creates customer-facing forums for peer-to-peer support. Part of CSM Professional Suite. Knowledge Base is read-only articles. Service Catalog is for structured service requests."}
         ],
         body:{
           en:`<p class="theory-p">The Customer Service Portal is the self-service hub for customers. Communities adds peer collaboration on top.</p>
 <table class="info-table2"><thead><tr><th>Feature</th><th>Framework</th><th>Configured In</th><th>Purpose</th></tr></thead><tbody>
-<tr><td><strong>Agent Workspace</strong></td><td>Next Experience</td><td>UI Builder</td><td>Agent daily work interface</td></tr>
+<tr><td><strong>CSM Configurable Workspace</strong></td><td>Next Experience</td><td>UI Builder</td><td>Agent daily work interface (replaced the legacy Agent Workspace)</td></tr>
 <tr><td><strong>Customer Service Portal</strong></td><td>Service Portal (AngularJS)</td><td>Service Portal Admin</td><td>Customer self-service</td></tr>
 <tr><td><strong>Engagement Messenger</strong></td><td>Embedded JS widget</td><td>Widget config + JS snippet</td><td>Support from external websites</td></tr>
 <tr><td><strong>Communities</strong></td><td>Service Portal extension</td><td>Communities admin</td><td>Customer peer-to-peer forums</td></tr>
 </tbody></table>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Framework trap:</strong> Agent Workspace (UI Builder) vs CSP (Service Portal admin) — they are DIFFERENT tools for DIFFERENT frameworks. This distinction is tested repeatedly.</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Framework trap:</strong> CSM Configurable Workspace (UI Builder) vs CSP (Service Portal admin) — they are DIFFERENT tools for DIFFERENT frameworks. This distinction is tested repeatedly.</div></div>
 <ul class="theory-ul">
   <li><strong>CSP Key Widgets:</strong> My Cases, Knowledge Articles, Service Catalog, Case Status tracker, Announcements.</li>
   <li><strong>Portal Branding:</strong> Logo, colors, headers at <code>Service Portal › Portals › [Portal] › Theme</code>.</li>
@@ -27,7 +27,7 @@ const THEORY_D4 = {
   <li><strong>Engagement Messenger:</strong> JS snippet on external site. Customer never navigates to ServiceNow. Supports chat, case creation, and status checks.</li>
 </ul>`,
           it:`<p class="theory-p">Il Customer Service Portal è il centro self-service per i clienti. Communities aggiunge collaborazione peer-to-peer.</p>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Trappola framework:</strong> Agent Workspace (UI Builder) vs CSP (Service Portal admin) — sono strumenti DIVERSI per framework DIVERSI. Questa distinzione è testata ripetutamente.</div></div>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Trappola framework:</strong> CSM Configurable Workspace (UI Builder) vs CSP (Service Portal admin) — sono strumenti DIVERSI per framework DIVERSI. Questa distinzione è testata ripetutamente.</div></div>
 <ul class="theory-ul">
   <li><strong>Widget CSP chiave:</strong> My Cases, Knowledge Articles, Service Catalog, Case Status tracker.</li>
   <li><strong>Branding portale:</strong> Logo, colori, header in <code>Service Portal › Portals › [Portale] › Theme</code>.</li>
@@ -44,7 +44,7 @@ const THEORY_D4 = {
           {q:"What is the difference between a PA Target and a Threshold?",opts:["They are identical","Target = the goal value; Threshold = boundary that triggers color change/alert","Target is set by management; Threshold is auto-calculated","Targets are for CSAT; Thresholds for SLA only"],ans:1,exp:"Target = the goal to achieve (e.g., CSAT ≥ 4.5). Threshold = a boundary that changes the indicator's visual status (amber warning / red critical) when performance deteriorates."}
         ],
         body:{
-          en:`<p class="theory-p">Performance Analytics (PA) provides real-time dashboards, trending, and KPI management — much more powerful than standard reports.</p>
+          en:`<p class="theory-p">Performance Analytics (PA) provides real-time dashboards, trending, and KPI management — much more powerful than standard reports. In current releases, PA and Reporting are unified under the <strong>Platform Analytics</strong> experience.</p>
 <table class="info-table2"><thead><tr><th>KPI</th><th>Full Name</th><th>Measures</th><th>Type</th></tr></thead><tbody>
 <tr><td><strong>FCR</strong></td><td>First Contact Resolution</td><td>% cases resolved on first contact</td><td>Efficiency</td></tr>
 <tr><td><strong>AHT</strong></td><td>Average Handle Time</td><td>Avg time per case</td><td>Efficiency</td></tr>
@@ -66,7 +66,7 @@ const THEORY_D4 = {
     Standard reports cannot provide trending + live KPI tracking + breakdown simultaneously.</div>
   </div>
 </div>`,
-          it:`<p class="theory-p">Performance Analytics (PA) fornisce dashboard in tempo reale, trending e gestione KPI — molto più potente dei report standard.</p>
+          it:`<p class="theory-p">Performance Analytics (PA) fornisce dashboard in tempo reale, trending e gestione KPI — molto più potente dei report standard. Nelle release attuali, PA e il Reporting sono unificati nell'esperienza <strong>Platform Analytics</strong>.</p>
 <table class="info-table2"><thead><tr><th>KPI</th><th>Nome completo</th><th>Misura</th></tr></thead><tbody>
 <tr><td><strong>FCR</strong></td><td>First Contact Resolution</td><td>% case risolti al primo contatto</td></tr>
 <tr><td><strong>AHT</strong></td><td>Average Handle Time</td><td>Tempo medio per case</td></tr>

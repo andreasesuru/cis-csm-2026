@@ -10,10 +10,11 @@ const THEORY_D5 = {
         quiz:[
           {q:"According to KCS, when should knowledge articles be created?",opts:["Only by dedicated KM team in advance","At the time of resolving a case — capturing knowledge in the moment","Only after 3 customers report the same issue","Only by senior agents"],ans:1,exp:"KCS principle: knowledge is created and improved AT THE TIME it is used to resolve a case. Agents capture knowledge during resolution — not pre-built by a separate team. Continuous, real-time improvement."},
           {q:"Which article state makes it visible to customers on the Customer Service Portal?",opts:["Draft","In Review","Published","Active"],ans:2,exp:"Only 'Published' articles are visible on the CSP. 'Active' is NOT a valid knowledge article state. Lifecycle: Draft → In Review → Published → Retired."},
-          {q:"A knowledge article has been rated below 2 stars by 10+ customers. What can the system automatically trigger?",opts:["Immediate deletion","A retirement review workflow","A case for the customer's complaint","An escalation to the author"],ans:1,exp:"Knowledge Feedback mechanisms can trigger automatic review/retirement workflows when quality thresholds are breached. The article returns to In Review for update or retirement. Core KCS quality improvement mechanism."}
+          {q:"A knowledge article has been rated below 2 stars by 10+ customers. What can the system automatically trigger?",opts:["Immediate deletion","A retirement review workflow","A case for the customer's complaint","An escalation to the author"],ans:1,exp:"Knowledge Feedback mechanisms can trigger automatic review/retirement workflows when quality thresholds are breached. The article returns to In Review for update or retirement. Core KCS quality improvement mechanism."},
+          {q:"In KCS, what does the Article Quality Index (AQI) measure?",opts:["The number of articles an agent writes per week","The quality of knowledge articles against a scored checklist of criteria","How many times an article is viewed","The SLA on knowledge requests"],ans:1,exp:"The Article Quality Index (AQI) is a KCS quality measure: KCS coaches score articles against a checklist (typically ~10 criteria) for completeness, accuracy, findability, and reuse. It measures article QUALITY, not volume or views."}
         ],
         body:{
-          en:`<p class="theory-p">Knowledge-Centered Support (KCS) is ServiceNow's recommended methodology. The core principle is tested repeatedly.</p>
+          en:`<p class="theory-p">Knowledge-Centered Service (KCS) is ServiceNow's recommended methodology. The core principle is tested repeatedly.</p>
 <div class="callout success"><span class="ci">✅</span><div><strong>KCS Principle:</strong> Knowledge is created and improved <em>at the time it is used to resolve a case</em> — not pre-built in isolation by a dedicated team.</div></div>
 <div class="diagram-wrap2">
 <svg viewBox="0 0 500 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px">
@@ -44,18 +45,20 @@ const THEORY_D5 = {
   <li><strong>Case-Knowledge Link:</strong> Agents create/update articles directly from the case timeline — the KCS "capture in the moment" approach.</li>
   <li><strong>Knowledge Feedback:</strong> Ratings trigger review/retirement workflows automatically when thresholds are breached.</li>
 </ul>
+<div class="callout info"><span class="ci">📊</span><div><strong>Article Quality Index (AQI):</strong> A KCS quality measure — a scored checklist (typically ~10 criteria) that KCS coaches use to assess whether articles are complete, accurate, findable, and reusable. AQI is explicitly part of the CIS-CSM "Best Practices &amp; Knowledge Management" domain, so remember it measures article <em>quality</em>, not article volume or views.</div></div>
 <div class="mistake-box"><div class="mb-title">⚠️ Common Mistakes</div><ul>
   <li>"Active" is NOT a valid article state — the states are Draft, In Review, Published, Retired</li>
   <li>Publishing to the wrong KB — if not "Customer Visible", customers cannot find it on CSP</li>
   <li>Confusing KCS with pre-building knowledge — KCS is about capturing DURING resolution, not before</li>
 </ul></div>`,
-          it:`<p class="theory-p">Knowledge-Centered Support (KCS) è la metodologia raccomandata da ServiceNow. Il principio fondamentale è testato ripetutamente.</p>
+          it:`<p class="theory-p">Knowledge-Centered Service (KCS) è la metodologia raccomandata da ServiceNow. Il principio fondamentale è testato ripetutamente.</p>
 <div class="callout success"><span class="ci">✅</span><div><strong>Principio KCS:</strong> La conoscenza viene creata e migliorata <em>nel momento in cui viene usata per risolvere un case</em> — non pre-costruita isolatamente.</div></div>
 <ul class="theory-ul">
   <li><strong>Knowledge Blocks:</strong> Sezioni strutturate — Symptom, Cause, Resolution.</li>
   <li><strong>Visibilità KB:</strong> Solo le KB configurate come "Customer Visible" appaiono sul CSP.</li>
   <li><strong>Ciclo di vita:</strong> Draft → In Review → Published → Retired. Solo Published è visibile ai clienti.</li>
 </ul>
+<div class="callout info"><span class="ci">📊</span><div><strong>Article Quality Index (AQI):</strong> Una misura di qualità KCS — una checklist con punteggio (tipicamente ~10 criteri) che i KCS coach usano per valutare se gli articoli sono completi, accurati, trovabili e riutilizzabili. L'AQI fa esplicitamente parte del dominio "Best Practices &amp; Knowledge Management" del CIS-CSM: misura la <em>qualità</em> degli articoli, non il volume o le visualizzazioni.</div></div>
 <div class="mistake-box"><div class="mb-title">⚠️ Errori Comuni</div><ul>
   <li>"Active" NON è uno stato valido per gli articoli — gli stati sono Draft, In Review, Published, Retired</li>
   <li>Pubblicare nella KB sbagliata — se non è "Customer Visible", i clienti non la trovano sul CSP</li>
@@ -72,21 +75,30 @@ const THEORY_D5 = {
         body:{
           en:`<p class="theory-p">Now Assist brings generative AI to CSM agents and customers. Updated for 2026 — AI features are increasingly prominent in the exam.</p>
 <table class="info-table2"><thead><tr><th>Feature</th><th>What It Does</th><th>Who Benefits</th></tr></thead><tbody>
-<tr><td><strong>Case Summarization</strong></td><td>AI generates summary of case history</td><td>Agent picking up existing case</td></tr>
-<tr><td><strong>Suggested Resolution</strong></td><td>AI recommends steps based on similar cases + KB</td><td>Agent resolving case</td></tr>
-<tr><td><strong>Chat Assist</strong></td><td>AI-generated response suggestions in chat</td><td>Agent in live chat</td></tr>
-<tr><td><strong>Virtual Agent (AI)</strong></td><td>Handles Tier 0 self-service before human agent</td><td>Customer (self-service)</td></tr>
-<tr><td><strong>Predictive Intelligence</strong></td><td>ML-based auto-suggestion of KB articles + categorization</td><td>Agent + routing engine</td></tr>
+<tr><td><strong>Case Summarization</strong></td><td>AI summary of case history, notes &amp; interactions (in the Now Assist panel)</td><td>Agent picking up an existing case</td></tr>
+<tr><td><strong>Complaint Case Summarization</strong></td><td>Structured, complaint-specific case summaries</td><td>Agent handling complaints</td></tr>
+<tr><td><strong>Resolution Notes Generation</strong></td><td>AI drafts the case resolution notes</td><td>Agent closing a case</td></tr>
+<tr><td><strong>Activity / Chat Response Generation</strong></td><td>AI drafts chat &amp; email replies for the agent to review</td><td>Agent in live chat / email</td></tr>
+<tr><td><strong>Knowledge (KB) Generation</strong></td><td>AI drafts KCS-aligned knowledge articles from resolved cases</td><td>Agent / knowledge author</td></tr>
+<tr><td><strong>Virtual Agent (AI)</strong></td><td>Handles Tier 0 self-service before a human agent</td><td>Customer (self-service)</td></tr>
+<tr><td><strong>Predictive Intelligence</strong></td><td>ML-based auto-suggestion of KB articles + categorization/routing</td><td>Agent + routing engine</td></tr>
 </tbody></table>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>License:</strong> Now Assist = CSM Professional Plus Suite (extra license). Predictive Intelligence = CSM Professional Suite Micro-Certification. Base CSM exam covers awareness, not deep configuration of AI features.</div></div>
-<div class="callout info"><span class="ci">💡</span><div><strong>Now Assist vs Predictive Intelligence:</strong> Now Assist uses <em>generative AI</em> (creates text, suggestions). Predictive Intelligence uses <em>machine learning</em> (classifies, categorizes, matches). Different technologies, different use cases.</div></div>`,
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>License:</strong> Now Assist for CSM (generative-AI skills) requires the <strong>Now Assist / CSM Pro Plus</strong> add-on — an extra license beyond base CSM. Predictive Intelligence (ML) is part of CSM Professional. The base CIS-CSM exam covers <em>awareness</em>, not deep configuration of AI features.</div></div>
+<div class="callout info"><span class="ci">💡</span><div><strong>Now Assist vs Predictive Intelligence:</strong> Now Assist uses <em>generative AI</em> (creates text, suggestions). Predictive Intelligence uses <em>machine learning</em> (classifies, categorizes, matches). Different technologies, different use cases.</div></div>
+<div class="callout success"><span class="ci">🤖</span><div><strong>Agentic AI (2026):</strong> Beyond generative skills, ServiceNow adds <strong>AI Agents</strong> and <strong>Agentic Playbooks</strong> — e.g. a <strong>Triage Cases</strong> AI agent that validates context, detects duplicates, extracts entities, and routes cases, plus <strong>Customer 360</strong> insights. These autonomously handle routine work and hand off to human agents with full context.</div></div>`,
           it:`<p class="theory-p">Now Assist porta l'AI generativa agli agenti e clienti CSM. Aggiornato al 2026.</p>
 <table class="info-table2"><thead><tr><th>Funzionalità</th><th>Cosa fa</th><th>Beneficia</th></tr></thead><tbody>
-<tr><td><strong>Case Summarization</strong></td><td>AI genera riassunto della cronologia del case</td><td>Agente che prende in carico un case esistente</td></tr>
-<tr><td><strong>Suggested Resolution</strong></td><td>AI raccomanda passi basati su case simili + KB</td><td>Agente nella risoluzione</td></tr>
-<tr><td><strong>Chat Assist</strong></td><td>Suggerimenti di risposta AI in chat live</td><td>Agente in chat</td></tr>
-<tr><td><strong>Virtual Agent</strong></td><td>Gestisce Tier 0 self-service prima dell'agente</td><td>Cliente (self-service)</td></tr>
-</tbody></table>`
+<tr><td><strong>Case Summarization</strong></td><td>Riassunto AI di cronologia, note e interazioni del case (nel pannello Now Assist)</td><td>Agente che prende in carico un case esistente</td></tr>
+<tr><td><strong>Complaint Case Summarization</strong></td><td>Riassunti strutturati specifici per i reclami</td><td>Agente che gestisce reclami</td></tr>
+<tr><td><strong>Resolution Notes Generation</strong></td><td>L'AI redige le resolution notes del case</td><td>Agente che chiude un case</td></tr>
+<tr><td><strong>Activity / Chat Response Generation</strong></td><td>L'AI redige risposte chat ed email da revisionare</td><td>Agente in chat / email</td></tr>
+<tr><td><strong>Knowledge (KB) Generation</strong></td><td>L'AI redige articoli KB allineati a KCS dai case risolti</td><td>Agente / autore KB</td></tr>
+<tr><td><strong>Virtual Agent (AI)</strong></td><td>Gestisce Tier 0 self-service prima dell'agente umano</td><td>Cliente (self-service)</td></tr>
+<tr><td><strong>Predictive Intelligence</strong></td><td>Suggerimento ML di articoli KB + categorizzazione/routing</td><td>Agente + motore di routing</td></tr>
+</tbody></table>
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Licenza:</strong> Now Assist for CSM (skill di AI generativa) richiede l'add-on <strong>Now Assist / CSM Pro Plus</strong> — licenza extra oltre al CSM base. La Predictive Intelligence (ML) fa parte di CSM Professional. L'esame CIS-CSM base copre la <em>consapevolezza</em>, non la configurazione approfondita delle funzionalità AI.</div></div>
+<div class="callout info"><span class="ci">💡</span><div><strong>Now Assist vs Predictive Intelligence:</strong> Now Assist usa <em>AI generativa</em> (crea testo, suggerimenti). La Predictive Intelligence usa <em>machine learning</em> (classifica, categorizza, abbina). Tecnologie e casi d'uso diversi.</div></div>
+<div class="callout success"><span class="ci">🤖</span><div><strong>Agentic AI (2026):</strong> Oltre alle skill generative, ServiceNow aggiunge <strong>AI Agent</strong> e <strong>Agentic Playbooks</strong> — es. un AI agent <strong>Triage Cases</strong> che valida il contesto, rileva duplicati, estrae entità e instrada i case, più gli insight <strong>Customer 360</strong>. Gestiscono autonomamente il lavoro di routine e passano il contesto all'agente umano.</div></div>`
         }
       },
       {
@@ -186,18 +198,18 @@ const THEORY_D5 = {
         tag:"red",
         quiz:[
           {q:"What is the correct format for a User Story in the Now Create methodology?",opts:["As a [system], it should [behaviour] when [event]","As a [role], I want [feature] so that [benefit]","Given [context], when [action], then [outcome]","The [stakeholder] requires [feature] by [date]"],ans:1,exp:"The Now Create User Story format is: 'As a [role], I want [feature] so that [benefit].' This Agile format keeps the story focused on the user's perspective and the business value delivered. Example: 'As a support agent, I want to see the customer's open cases on the case form so that I can identify recurring issues quickly.'"},
-          {q:"Which Now Create phase involves validating the solution against acceptance criteria before go-live?",opts:["Discover","Design","Build","Test"],ans:3,exp:"The Test phase validates that all user stories and requirements meet their acceptance criteria. This includes unit testing, integration testing, UAT (User Acceptance Testing), and performance testing before the Deploy phase. On the exam, if a scenario asks 'when should you verify requirements are met', the answer is the Test phase."},
-          {q:"In a ServiceNow CSM implementation using Now Create, who is typically the PRIMARY stakeholder responsible for defining business requirements?",opts:["The ServiceNow platform architect","The Business Process Owner (BPO)","The system administrator","The end-user"],ans:1,exp:"The Business Process Owner (BPO) is the primary stakeholder who owns the CSM business processes and defines requirements. The BPO participates in workshops during the Discover and Design phases, reviews User Stories, and signs off on acceptance criteria. The architect translates requirements into technical design — but requirements originate with the BPO."}
+          {q:"Which Now Create phase includes system testing and UAT (validating against acceptance criteria) plus go-live?",opts:["Plan","Execute","Deliver","Close"],ans:2,exp:"The Deliver phase covers system testing and User Acceptance Testing (UAT), go-live planning, operational readiness, training, and the go-live itself. The five Now Create phases are Initiate → Plan → Execute → Deliver → Close; acceptance validation before go-live happens in Deliver."},
+          {q:"In a ServiceNow CSM implementation using Now Create, who is typically the PRIMARY stakeholder responsible for defining business requirements?",opts:["The ServiceNow platform architect","The Business Process Owner (BPO)","The system administrator","The end-user"],ans:1,exp:"The Business Process Owner (BPO) is the primary stakeholder who owns the CSM business processes and defines requirements. The BPO participates in workshops during the Initiate and Plan phases, reviews User Stories, and signs off on acceptance criteria. The architect translates requirements into technical design — but requirements originate with the BPO."}
         ],
         body:{
           en:`<p class="theory-p">The <strong>Now Create methodology</strong> is ServiceNow's Agile-based implementation framework. It is tested in the CIS-CSM exam as part of Engagement Methodology — approximately 10% of questions touch on project approach, phases, and stakeholder roles.</p>
 <div class="callout info"><span class="ci">💡</span><div><strong>Now Create is mandatory.</strong> "Get Started with the Now Create Methodology" is a required course in the official CIS-CSM learning path. Expect 4–6 exam questions on this topic.</div></div>
 <table class="info-table2"><thead><tr><th>Phase</th><th>Key Activities</th><th>Output</th></tr></thead><tbody>
-<tr><td><strong>1. Discover</strong></td><td>Stakeholder workshops, as-is process mapping, requirement gathering</td><td>User Stories, Business Requirements Document</td></tr>
-<tr><td><strong>2. Design</strong></td><td>Solution design, data model design, integration design, prototype</td><td>Solution Design Document (SDD), data migration plan</td></tr>
-<tr><td><strong>3. Build</strong></td><td>Sprint-based configuration, unit testing per story</td><td>Configured instance, sprint demos</td></tr>
-<tr><td><strong>4. Test</strong></td><td>UAT, integration testing, performance testing, fix defects</td><td>Test results, signed-off acceptance criteria</td></tr>
-<tr><td><strong>5. Deploy</strong></td><td>Go-live preparation, data migration, cutover, hypercare</td><td>Production instance, post-go-live support</td></tr>
+<tr><td><strong>1. Initiate</strong></td><td>Understand business objectives, establish program governance and the project team, formal project kickoff</td><td>Project charter, governance model</td></tr>
+<tr><td><strong>2. Plan</strong></td><td>Process/platform/integration workshops, define &amp; prioritize the product backlog, release &amp; timeline planning, test strategy, environment setup</td><td>Product backlog, release plan, test strategy</td></tr>
+<tr><td><strong>3. Execute</strong></td><td>Agile scrum cycles (configuration/build), define support &amp; hypercare approach, awareness roadshows, plan system &amp; user acceptance testing</td><td>Configured instance, sprint demos</td></tr>
+<tr><td><strong>4. Deliver</strong></td><td>System testing &amp; UAT, go-live planning, operational readiness, training, go-live</td><td>UAT sign-off, production go-live</td></tr>
+<tr><td><strong>5. Close</strong></td><td>Operational handover, hypercare support, project closure &amp; lessons learned</td><td>Handover, hypercare, lessons learned</td></tr>
 </tbody></table>
 <div class="callout success"><span class="ci">✅</span><div><strong>User Story format:</strong> <em>"As a [role], I want [feature] so that [benefit]."</em><br>
 Example: <em>"As a CSM agent, I want to see all open cases for an Account on the case form so that I can identify repeat issues and provide consistent service."</em><br>
@@ -220,18 +232,18 @@ Each story has <strong>Acceptance Criteria</strong> — measurable conditions th
 </div>
 <div class="callout info"><span class="ci">💡</span><div><strong>PDI (Personal Developer Instance):</strong> Always configure and test on a PDI before applying to production. The PDI is a free ServiceNow developer instance available at developer.servicenow.com.</div></div>
 <div class="mistake-box"><div class="mb-title">⚠️ Common Mistakes</div><ul>
-  <li>Confusing Now Create phases — Test comes BEFORE Deploy, not after</li>
+  <li>Confusing the Now Create phases — the order is Initiate → Plan → Execute → Deliver → Close (UAT and go-live both happen in Deliver)</li>
   <li>Thinking the architect defines requirements — the BPO defines requirements, the architect designs the solution</li>
   <li>Adding scope mid-sprint without a change request — this violates the Now Create Agile discipline</li>
-  <li>Skipping UAT — Test phase sign-off by the BPO is required before Deploy</li>
+  <li>Skipping UAT — BPO acceptance sign-off happens in the Deliver phase, as part of go-live readiness</li>
 </ul></div>`,
           it:`<p class="theory-p">La metodologia <strong>Now Create</strong> è il framework Agile di ServiceNow per le implementazioni. È testata nell'esame CIS-CSM come parte dell'Engagement Methodology — circa il 10% delle domande riguarda fasi, ruoli e approccio al progetto.</p>
 <table class="info-table2"><thead><tr><th>Fase</th><th>Attività chiave</th><th>Output</th></tr></thead><tbody>
-<tr><td><strong>1. Discover</strong></td><td>Workshop stakeholder, mappatura processi as-is, raccolta requisiti</td><td>User Story, BRD</td></tr>
-<tr><td><strong>2. Design</strong></td><td>Solution design, data model, prototipo</td><td>Solution Design Document (SDD)</td></tr>
-<tr><td><strong>3. Build</strong></td><td>Configurazione sprint per sprint, unit test</td><td>Istanza configurata, demo sprint</td></tr>
-<tr><td><strong>4. Test</strong></td><td>UAT, test integrazione, test performance, fix difetti</td><td>Acceptance criteria firmati</td></tr>
-<tr><td><strong>5. Deploy</strong></td><td>Go-live, migrazione dati, cutover, hypercare</td><td>Istanza di produzione</td></tr>
+<tr><td><strong>1. Initiate</strong></td><td>Comprendere gli obiettivi di business, governance del programma, team di progetto, kickoff formale</td><td>Project charter, governance</td></tr>
+<tr><td><strong>2. Plan</strong></td><td>Workshop processo/piattaforma/integrazione, definizione e prioritizzazione del product backlog, release &amp; timeline planning, test strategy, setup ambienti</td><td>Product backlog, release plan</td></tr>
+<tr><td><strong>3. Execute</strong></td><td>Cicli scrum agile (configurazione/build), approccio supporto &amp; hypercare, roadshow di awareness, pianificazione test di sistema e UAT</td><td>Istanza configurata, demo sprint</td></tr>
+<tr><td><strong>4. Deliver</strong></td><td>Test di sistema &amp; UAT, go-live planning, operational readiness, formazione, go-live</td><td>Firma UAT, go-live in produzione</td></tr>
+<tr><td><strong>5. Close</strong></td><td>Handover operativo, supporto hypercare, chiusura progetto &amp; lessons learned</td><td>Handover, hypercare, lessons learned</td></tr>
 </tbody></table>
 <div class="callout success"><span class="ci">✅</span><div><strong>Formato User Story:</strong> <em>"Come [ruolo], voglio [funzionalità] affinché [beneficio]."</em><br>
 Ogni story ha <strong>Acceptance Criteria</strong> — condizioni misurabili che devono essere vere per considerare la story "Done".</div></div>
@@ -241,7 +253,7 @@ Ogni story ha <strong>Acceptance Criteria</strong> — condizioni misurabili che
 <tr><td><strong>Architetto ServiceNow</strong></td><td>Traduce i requisiti in design tecnico</td></tr>
 <tr><td><strong>Configuration Consultant</strong></td><td>Costruisce la soluzione negli sprint</td></tr>
 </tbody></table>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Errori comuni:</strong> Test viene PRIMA di Deploy. Il BPO definisce i requisiti (non l'architetto). Le modifiche di scope richiedono una change request formale — non si aggiungono mid-sprint.</div></div>`
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Errori comuni:</strong> L'ordine delle fasi è Initiate → Plan → Execute → Deliver → Close (UAT e go-live avvengono in Deliver). Il BPO definisce i requisiti (non l'architetto). Le modifiche di scope richiedono una change request formale — non si aggiungono mid-sprint.</div></div>`
         }
       },
       {

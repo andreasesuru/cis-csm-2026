@@ -9,7 +9,7 @@ const THEORY_D3 = {
         tag:"purple",
         quiz:[
           {q:"In which Case state can the SLA timer be PAUSED?",opts:["New","Open","Awaiting Info","Resolved"],ans:2,exp:"'Awaiting Info' can be configured with a Pause Condition on the SLA definition. The delay is attributed to the customer (waiting for their response), so the SLA pauses."},
-          {q:"Default auto-close period for a Resolved case with no customer response?",opts:["2 days","5 days","7 days","30 days"],ans:1,exp:"Cases in Resolved state auto-close after 5 days by default (configurable in CSM Properties). After 5 days without customer response, the case moves to Closed automatically."},
+          {q:"With the OOTB 'Auto Close Resolved Cases' flow, after how many days in the Resolved state is a case auto-closed (standard CSM defaults)?",opts:["2 days","5 days","10 days","30 days"],ans:2,exp:"With the standard 'Auto Close Resolved Cases' flow, a reminder is sent at 5 days and the case is auto-closed at 10 days if the customer doesn't respond. Note: this flow is inactive by default, and the timings are configurable."},
           {q:"When a Closed case is reopened, what happens to the SLA?",opts:["SLA continues from where it left off","SLA calculations RESET from the beginning","SLA is permanently voided","SLA gets a 50% time extension"],ans:1,exp:"When a case is reopened, SLA calculations reset completely — the renewed issue is treated as starting fresh. This ensures accurate SLA tracking for reopened cases."}
         ],
         body:{
@@ -30,20 +30,20 @@ const THEORY_D3 = {
   <polygon points="289,47 299,41 299,53" fill="#8b949e"/>
   <rect x="302" y="22" width="90" height="50" rx="5" fill="#0d3035" stroke="#39c5cf" stroke-width="1.5"/>
   <text x="347" y="44" text-anchor="middle" fill="#39c5cf" font-size="11">Resolved</text>
-  <text x="347" y="58" text-anchor="middle" fill="#8b949e" font-size="9">auto-close 5d</text>
+  <text x="347" y="58" text-anchor="middle" fill="#8b949e" font-size="9">auto-close 10d</text>
   <polygon points="395,47 405,41 405,53" fill="#8b949e"/>
   <rect x="408" y="28" width="72" height="38" rx="5" fill="#1a3a22" stroke="#3fb950" stroke-width="1.5"/>
   <text x="444" y="50" text-anchor="middle" fill="#3fb950" font-size="11">Closed ✓</text>
   <rect x="498" y="28" width="116" height="38" rx="5" fill="#3b1c1c" stroke="#f85149" stroke-width="1"/>
   <text x="556" y="50" text-anchor="middle" fill="#f85149" font-size="11">Cancelled ✗</text>
 </svg>
-<div class="diagram-caption">Case state flow · ⏸ SLA pauses in Awaiting Info · Auto-close after 5 days in Resolved</div>
+<div class="diagram-caption">Case state flow · ⏸ SLA pauses in Awaiting Info · Auto-close after 10 days in Resolved (reminder at 5 days)</div>
 </div>
 <table class="info-table2"><thead><tr><th>State</th><th>SLA</th><th>Key Behavior</th></tr></thead><tbody>
 <tr><td><strong>New</strong></td><td>Running</td><td>Created, not yet assigned</td></tr>
 <tr><td><strong>Open</strong></td><td>Running</td><td>Assigned, agent actively working</td></tr>
 <tr><td><strong>Awaiting Info</strong></td><td><strong>Paused ⏸</strong></td><td>Waiting for customer. SLA pause configured via Pause Conditions.</td></tr>
-<tr><td><strong>Resolved</strong></td><td>Stopped</td><td>Solution provided. Auto-closes after 5 days (configurable) if no response.</td></tr>
+<tr><td><strong>Resolved</strong></td><td>Stopped</td><td>Solution provided. Auto-closes after 10 days if no response (reminder at 5 days) — flow off by default, configurable.</td></tr>
 <tr><td><strong>Closed</strong></td><td>—</td><td>Final state. Reopening resets SLA calculations.</td></tr>
 <tr><td><strong>Cancelled</strong></td><td>Stopped</td><td>Abandoned before resolution.</td></tr>
 </tbody></table>
@@ -65,20 +65,20 @@ const THEORY_D3 = {
   <polygon points="289,47 299,41 299,53" fill="#8b949e"/>
   <rect x="302" y="22" width="90" height="50" rx="5" fill="#0d3035" stroke="#39c5cf" stroke-width="1.5"/>
   <text x="347" y="44" text-anchor="middle" fill="#39c5cf" font-size="11">Resolved</text>
-  <text x="347" y="58" text-anchor="middle" fill="#8b949e" font-size="9">auto-chiusura 5gg</text>
+  <text x="347" y="58" text-anchor="middle" fill="#8b949e" font-size="9">auto-chiusura 10gg</text>
   <polygon points="395,47 405,41 405,53" fill="#8b949e"/>
   <rect x="408" y="28" width="72" height="38" rx="5" fill="#1a3a22" stroke="#3fb950" stroke-width="1.5"/>
   <text x="444" y="50" text-anchor="middle" fill="#3fb950" font-size="11">Closed ✓</text>
   <rect x="498" y="28" width="116" height="38" rx="5" fill="#3b1c1c" stroke="#f85149" stroke-width="1"/>
   <text x="556" y="50" text-anchor="middle" fill="#f85149" font-size="11">Cancelled ✗</text>
 </svg>
-<div class="diagram-caption">Flusso stati · ⏸ SLA in pausa in Awaiting Info · Auto-chiusura dopo 5 giorni in Resolved</div>
+<div class="diagram-caption">Flusso stati · ⏸ SLA in pausa in Awaiting Info · Auto-chiusura dopo 10 giorni in Resolved (reminder a 5 giorni)</div>
 </div>
 <table class="info-table2"><thead><tr><th>Stato</th><th>SLA</th><th>Comportamento chiave</th></tr></thead><tbody>
 <tr><td><strong>New</strong></td><td>In corso</td><td>Creato, non ancora assegnato</td></tr>
 <tr><td><strong>Open</strong></td><td>In corso</td><td>Assegnato, agente in lavorazione attiva</td></tr>
 <tr><td><strong>Awaiting Info</strong></td><td><strong>In pausa ⏸</strong></td><td>In attesa di info dal cliente. SLA pausa configurata via Pause Conditions.</td></tr>
-<tr><td><strong>Resolved</strong></td><td>Fermo</td><td>Soluzione fornita. Auto-chiusura dopo 5 giorni (configurabile) senza risposta.</td></tr>
+<tr><td><strong>Resolved</strong></td><td>Fermo</td><td>Soluzione fornita. Auto-chiusura dopo 10 giorni senza risposta (reminder a 5 giorni) — flow disattivo di default, configurabile.</td></tr>
 <tr><td><strong>Closed</strong></td><td>—</td><td>Stato finale. La riapertura azzera il calcolo SLA.</td></tr>
 <tr><td><strong>Cancelled</strong></td><td>Fermo</td><td>Abbandonato prima della risoluzione.</td></tr>
 </tbody></table>
@@ -89,8 +89,8 @@ const THEORY_D3 = {
         title:{en:"Major Issue Management",it:"Gestione Major Issue"},
         tag:"red",
         quiz:[
-          {q:"Which feature sends automatic updates to all customers with cases linked to a Major Case?",opts:["Targeted Communications","Case Digest","SLA Notifications","Bulk Email Service"],ans:1,exp:"Case Digest is specifically for Major Issue Management. It automatically identifies all customers with child cases linked to the Major Case and sends them status updates."},
-          {q:"500 customers are affected. You need to send a custom message ONLY to Gold tier customers. Which feature?",opts:["Case Digest on Major Case","Targeted Communications filtered by Gold entitlement","Individual emails manually","Bulk Case Update"],ans:1,exp:"Targeted Communications allows filtering recipients by Account, product, support tier, or case type. Case Digest sends to ALL linked child case customers — no segmentation options."}
+          {q:"Which CSM feature provides periodic case updates (case action summaries) while a case is in progress, plus post-case reviews after resolution, for high-priority cases?",opts:["Targeted Communications","Case Digests","SLA Notifications","Bulk Email Service"],ans:1,exp:"Case Digests provide periodic updates (case action summaries) and post-case review documents about high-priority customer service cases to customers and internal stakeholders. Targeted Communications, by contrast, builds a segmented recipients list to reach specific customers (e.g., in Major Issue Management)."},
+          {q:"500 customers are affected. You need to send a custom message ONLY to Gold tier customers. Which feature?",opts:["Case Digests on the Major Case","Targeted Communications filtered by Gold entitlement","Individual emails manually","Bulk Case Update"],ans:1,exp:"Targeted Communications builds a segmented recipients list — you can filter by account, product, support tier, or case type, then create child cases / send communications only to that segment. Case Digests are periodic case summaries / post-case reviews, not segmented outreach."}
         ],
         body:{
           en:`<p class="theory-p">When a problem affects many customers simultaneously, Major Issue Management provides structured coordination and communication.</p>
@@ -114,16 +114,17 @@ const THEORY_D3 = {
   <text x="377" y="118" text-anchor="middle" fill="#8b949e" font-size="10">child case</text>
   <rect x="454" y="88" width="80" height="36" rx="6" fill="#21262d" stroke="#8b949e" stroke-width="1"/>
   <text x="494" y="110" text-anchor="middle" fill="#8b949e" font-size="10">+ N more</text>
-  <text x="280" y="152" text-anchor="middle" fill="#39c5cf" font-size="10">Case Digest → auto-notifies ALL child case customers</text>
+  <text x="280" y="152" text-anchor="middle" fill="#39c5cf" font-size="10">Major case updates auto-sync to all child cases</text>
 </svg>
-<div class="diagram-caption">Major Case (parent) → Child Cases → Case Digest notifies all customers</div>
+<div class="diagram-caption">Major Case (parent) → Child Cases (one per impacted customer) → updates sync to all child cases</div>
 </div>
 <table class="info-table2"><thead><tr><th>Feature</th><th>What It Does</th><th>Triggered By</th></tr></thead><tbody>
-<tr><td><strong>Case Digest</strong></td><td>Auto-updates all customers linked via child cases on Major Case progress</td><td>Manual or scheduled from Major Case</td></tr>
-<tr><td><strong>Targeted Communications</strong></td><td>Manual bulk personalized messages to specific customer segments (filterable)</td><td>Agent/manager action</td></tr>
+<tr><td><strong>Major case → child case sync</strong></td><td>Updates on the Major Case automatically synchronize to all linked child cases (via MIM sync properties)</td><td>Major Case update</td></tr>
+<tr><td><strong>Targeted Communications</strong></td><td>Build a <em>segmented</em> recipients list (by conditions, script, or import) to reach specific customers and create child cases</td><td>Agent/manager action</td></tr>
+<tr><td><strong>Case Digests</strong></td><td>Separate feature: periodic case action summaries (in progress) + post-case reviews (after resolution) for high-priority cases</td><td>Configured per case</td></tr>
 </tbody></table>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Key distinction:</strong> Case Digest = automatic update on Major Case progress for ALL linked customers. Targeted Communications = proactive manual custom messaging to SEGMENTED customers. Know the difference.</div></div>
-<div class="callout info"><span class="ci">💡</span><div><strong>Child case closure:</strong> When a Major Case is resolved, child cases are NOT automatically closed. Separate closure actions are required (or configure optional Business Rules to cascade).</div></div>`,
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Key distinction:</strong> <strong>Targeted Communications</strong> builds a <em>segmented</em> recipients list to reach specific customers (and create child cases). <strong>Case Digests</strong> are periodic case summaries / post-case reviews for high-priority cases — a different feature. Don't conflate them.</div></div>
+<div class="callout info"><span class="ci">💡</span><div><strong>Child case closure &amp; sync:</strong> <strong>Closing</strong> the Major Case automatically <strong>closes all its child cases</strong>. Major Issue Management also provides properties to automatically synchronize updates from the major case to the linked child cases.</div></div>`,
           it:`<p class="theory-p">Quando un problema colpisce molti clienti contemporaneamente, il Major Issue Management fornisce coordinamento e comunicazione strutturati.</p>
 <div class="diagram-wrap2">
 <svg viewBox="0 0 560 158" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px">
@@ -145,16 +146,17 @@ const THEORY_D3 = {
   <text x="377" y="118" text-anchor="middle" fill="#8b949e" font-size="10">case figlio</text>
   <rect x="454" y="88" width="80" height="36" rx="6" fill="#21262d" stroke="#8b949e" stroke-width="1"/>
   <text x="494" y="110" text-anchor="middle" fill="#8b949e" font-size="10">+ N altri</text>
-  <text x="280" y="152" text-anchor="middle" fill="#39c5cf" font-size="10">Case Digest → notifica automatica TUTTI i clienti con case figlio</text>
+  <text x="280" y="152" text-anchor="middle" fill="#39c5cf" font-size="10">Gli aggiornamenti del major case si sincronizzano su tutti i case figlio</text>
 </svg>
-<div class="diagram-caption">Major Case (padre) → Case Figli → Case Digest notifica tutti i clienti</div>
+<div class="diagram-caption">Major Case (padre) → Case Figli (uno per cliente impattato) → gli aggiornamenti si sincronizzano su tutti i case figlio</div>
 </div>
 <table class="info-table2"><thead><tr><th>Funzionalità</th><th>Cosa fa</th><th>Attivato da</th></tr></thead><tbody>
-<tr><td><strong>Case Digest</strong></td><td>Aggiorna automaticamente tutti i clienti con case figlio collegati al Major Case</td><td>Manuale o pianificato dal Major Case</td></tr>
-<tr><td><strong>Targeted Communications</strong></td><td>Messaggi bulk personalizzati manuali a segmenti specifici (filtrabile)</td><td>Azione agente/manager</td></tr>
+<tr><td><strong>Sync major case → case figlio</strong></td><td>Gli aggiornamenti sul Major Case si sincronizzano automaticamente su tutti i case figlio collegati (proprietà di sync di MIM)</td><td>Aggiornamento del Major Case</td></tr>
+<tr><td><strong>Targeted Communications</strong></td><td>Costruisce una recipients list <em>segmentata</em> (per condizioni, script o import) per raggiungere clienti specifici e creare case figlio</td><td>Azione agente/manager</td></tr>
+<tr><td><strong>Case Digests</strong></td><td>Funzionalità separata: case action summaries periodici (in corso) + post-case review (dopo la risoluzione) per case ad alta priorità</td><td>Configurato per case</td></tr>
 </tbody></table>
-<div class="callout warn"><span class="ci">⚠️</span><div><strong>Distinzione chiave:</strong> Case Digest = aggiornamento automatico a TUTTI i clienti collegati. Targeted Communications = messaggi personalizzati manuali a clienti SEGMENTATI. Conosci la differenza.</div></div>
-<div class="callout info"><span class="ci">💡</span><div><strong>Chiusura case figlio:</strong> Quando un Major Case viene risolto, i case figlio NON vengono chiusi automaticamente. Sono necessarie azioni di chiusura separate (o configurare Business Rule opzionali per la propagazione).</div></div>`
+<div class="callout warn"><span class="ci">⚠️</span><div><strong>Distinzione chiave:</strong> <strong>Targeted Communications</strong> costruisce una recipients list <em>segmentata</em> per raggiungere clienti specifici (e creare case figlio). I <strong>Case Digests</strong> sono riepiloghi periodici / post-case review per case ad alta priorità — una funzionalità diversa. Non confonderle.</div></div>
+<div class="callout info"><span class="ci">💡</span><div><strong>Chiusura e sincronizzazione case figlio:</strong> <strong>Chiudere</strong> il Major Case chiude automaticamente <strong>tutti i suoi case figlio</strong>. Major Issue Management fornisce anche proprietà per sincronizzare automaticamente gli aggiornamenti dal major case ai case figlio collegati.</div></div>`
         }
       },
       {
@@ -233,7 +235,7 @@ const THEORY_D3 = {
         tag:"purple",
         quiz:[
           {q:"A case shows a RED action status indicator in the Configurable Workspace. What does this mean?",opts:["The case has been escalated to a manager","The case resolution is hard-blocked (e.g., by an open task or pending external dependency)","The customer has sent a new message requiring agent attention","The case SLA is about to breach"],ans:1,exp:"A red indicator signals a hard block — the case cannot progress until the blocking condition is resolved (e.g., an open child task, a waiting-on-vendor situation). Blue indicates the customer or a system has updated the case and the agent needs to review it. Red is about resolution being blocked, not urgency alone."},
-          {q:"An e-commerce order contains 5 products and 3 of them have separate issues. What is the recommended CSM approach?",opts:["Create 3 separate cases, one per product issue","Create 1 case with 3 Case Lines, one per product issue","Use 3 child cases linked to a parent case","Create one case and log all issues in the work notes"],ans:1,exp:"Case Lines (table: sn_customerservice_case_line) are designed for this scenario — one order with multiple line items each potentially having its own issue. One case with N case lines avoids case sprawl while keeping each issue trackable independently."},
+          {q:"An e-commerce order contains 5 products and 3 of them have separate issues. What is the recommended CSM approach?",opts:["Create 3 separate cases, one per product issue","Create 1 case with 3 Case Lines, one per product issue","Use 3 child cases linked to a parent case","Create one case and log all issues in the work notes"],ans:1,exp:"Case Lines (table: sn_case_line) are designed for this scenario — one order with multiple line items each potentially having its own issue. One case with N case lines avoids case sprawl while keeping each issue trackable independently."},
           {q:"What happens to a secondary case when two cases are merged in CSM?",opts:["It is deleted permanently","Its state changes to Cancelled and the primary case inherits its activities and notes","It is archived with read-only access","It becomes a child case of the primary"],ans:1,exp:"When cases are merged, the secondary case is set to 'Cancelled' state. The primary case inherits all work notes, activities, and attachments from the secondary. The secondary record still exists in the system for audit purposes."}
         ],
         body:{
@@ -246,7 +248,7 @@ const THEORY_D3 = {
 <div class="callout warn"><span class="ci">⚠️</span><div><strong>Exam distinction:</strong> Blue does NOT mean high priority — it means "something changed, review this." Red does NOT mean SLA breach — it means the resolution path is specifically blocked. These are workflow state signals, not SLA metrics. Agents can manually override the indicator when the automated trigger does not reflect reality.</div></div>
 <p class="theory-p"><strong>Case Lines</strong> address the e-commerce problem of one order with multiple items, each with potentially different issues. Instead of creating separate cases per item, a single case holds N Case Lines — each tracking its own issue, status, and notes independently.</p>
 <table class="info-table2"><thead><tr><th>Property</th><th>Detail</th></tr></thead><tbody>
-<tr><td><strong>Table</strong></td><td>sn_customerservice_case_line</td></tr>
+<tr><td><strong>Table</strong></td><td>sn_case_line</td></tr>
 <tr><td><strong>Parent</strong></td><td>One Case record (the order container)</td></tr>
 <tr><td><strong>Use case</strong></td><td>E-commerce, field service, subscription orders with multiple products</td></tr>
 </tbody></table>
@@ -261,11 +263,11 @@ const THEORY_D3 = {
 <p class="theory-p"><strong>Auto-Close</strong> automates the Resolved → Closed transition via the OOTB flow <strong>"Auto Close Resolved Cases"</strong>:</p>
 <div class="callout success"><span class="ci">✅</span><div><strong>Auto-Close sequence:</strong>
 <ol style="margin:6px 0 0 16px;padding:0">
-  <li>Case reaches <strong>Resolved</strong> state</li>
-  <li>Flow waits <strong>N days</strong> (configurable; default <strong>3 days</strong>)</li>
-  <li>Sends a <strong>reminder email</strong> to the customer</li>
-  <li>No customer reply → case moves to <strong>Closed</strong></li>
-  <li>Customer replies → case is <strong>reopened</strong> (SLA resets)</li>
+  <li>Case reaches <strong>Resolved</strong> state (the flow is <strong>inactive by default</strong> — an admin must activate it)</li>
+  <li>At <strong>5 days</strong> with no response → a <strong>reminder email</strong> is sent (case pending solution acceptance)</li>
+  <li>At <strong>10 days</strong> with no reply → case moves to <strong>Closed</strong></li>
+  <li>Customer replies first → case stays open / is <strong>reopened</strong> (SLA resets)</li>
+  <li>Timings are configurable in the flow</li>
 </ol></div></div>
 <p class="theory-p"><strong>Case Merge:</strong> When two cases describe the same issue, merge them. The secondary case is set to <strong>Cancelled</strong> (not deleted — kept for audit). The primary case inherits all work notes, activities, and attachments. <strong>Case Reopening:</strong> A Closed case CAN be reopened in CSM — the SLA clock resets from the reopening moment.</p>
 <div class="mistake-box"><div class="mb-title">⚠️ Common Mistakes</div><ul>
@@ -284,7 +286,7 @@ const THEORY_D3 = {
 <div class="callout warn"><span class="ci">⚠️</span><div><strong>Distinzione esame:</strong> Blu NON significa alta priorità — significa "qualcosa è cambiato, revisionalo." Rosso NON significa breach SLA — significa che il percorso di risoluzione è bloccato. Sono segnali di stato workflow, non metriche SLA. Gli agenti possono fare override manuale quando il trigger automatico non riflette la realtà.</div></div>
 <p class="theory-p"><strong>Le Case Lines</strong> risolvono il problema degli ordini e-commerce multi-prodotto. Invece di creare N case per N item, un singolo case contiene N Case Lines, ognuna con il proprio issue, stato e note indipendenti.</p>
 <table class="info-table2"><thead><tr><th>Proprietà</th><th>Dettaglio</th></tr></thead><tbody>
-<tr><td><strong>Tabella</strong></td><td>sn_customerservice_case_line</td></tr>
+<tr><td><strong>Tabella</strong></td><td>sn_case_line</td></tr>
 <tr><td><strong>Padre</strong></td><td>Un record Case (il contenitore ordine)</td></tr>
 <tr><td><strong>Use case</strong></td><td>E-commerce, field service, ordini abbonamento multi-prodotto</td></tr>
 </tbody></table>
@@ -296,7 +298,7 @@ const THEORY_D3 = {
     <div class="scenario-a">✅ Si crea <strong>un solo Case</strong> con <strong>due Case Lines</strong> — una per il laptop danneggiato, una per la docking station mancante. Un numero di case, esperienza cliente unificata.</div>
   </div>
 </div>
-<p class="theory-p"><strong>Auto-Close</strong> automatizza la transizione Resolved → Closed tramite il flow OOTB <strong>"Auto Close Resolved Cases"</strong>: attende N giorni (default <strong>3 giorni</strong>) → invia reminder email → se nessuna risposta → Closed. Se il cliente risponde → case riaperto con SLA resettato.</p>
+<p class="theory-p"><strong>Auto-Close</strong> automatizza la transizione Resolved → Closed tramite il flow OOTB <strong>"Auto Close Resolved Cases"</strong> (<strong>disattivo di default</strong>): reminder email a <strong>5 giorni</strong> → chiusura automatica a <strong>10 giorni</strong> se nessuna risposta. Se il cliente risponde → case riaperto con SLA resettato. Le tempistiche sono configurabili.</p>
 <p class="theory-p"><strong>Case Merge:</strong> Il case secondario viene impostato a <strong>Cancelled</strong> (non eliminato — mantenuto per audit). Il primario eredita note, attività e allegati. <strong>Riapertura:</strong> Un case Closed PUÒ essere riaperto — il contatore SLA riparte dal momento della riapertura.</p>
 <div class="mistake-box"><div class="mb-title">⚠️ Errori Comuni</div><ul>
   <li>Pensare che indicatore blu = alta priorità — significa "c'è un aggiornamento da revisionare"</li>
